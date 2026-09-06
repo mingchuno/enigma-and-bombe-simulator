@@ -414,3 +414,62 @@ test("short cribs transfer, search, and stay separate from the museum example", 
   await crib.fill("ABCDEFGH");
   await expect(page.locator("#short-crib-hint")).toHaveCount(0);
 });
+
+test("changing any search assumption clears candidates and search progress", async ({
+  page,
+}) => {
+  const edits = [
+    () =>
+      page
+        .getByRole("textbox", { name: "Intercepted ciphertext", exact: true })
+        .fill("C"),
+    () =>
+      page
+        .getByRole("textbox", { name: "Plaintext crib", exact: true })
+        .fill("D"),
+    () =>
+      page
+        .getByRole("spinbutton", { name: "Crib offset", exact: true })
+        .fill("1"),
+    () =>
+      page
+        .getByRole("combobox", { name: "Left rotor", exact: true })
+        .selectOption("V"),
+    () =>
+      page
+        .getByRole("combobox", { name: "Middle ring setting", exact: true })
+        .selectOption("B"),
+    () =>
+      page
+        .getByRole("combobox", { name: "Rotor orders to search" })
+        .selectOption("all"),
+    () =>
+      page.getByRole("combobox", { name: "Bombe reflector" }).selectOption("C"),
+    () =>
+      page
+        .getByRole("combobox", { name: "Maximum plugboard cables" })
+        .selectOption("0"),
+  ];
+  for (const edit of edits) {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Bombe", exact: true }).click();
+    await page
+      .getByRole("textbox", { name: "Intercepted ciphertext", exact: true })
+      .fill("B");
+    await page
+      .getByRole("textbox", { name: "Plaintext crib", exact: true })
+      .fill("A");
+    await page
+      .getByRole("button", { name: "Run Bombe search", exact: true })
+      .click();
+    await expect(page.getByRole("status")).toHaveText(
+      "Candidate limit reached · partial search",
+    );
+    await page.locator(".candidate-tabs button").nth(1).click();
+    await edit();
+    await expect(page.getByRole("status")).toHaveText("Ready");
+    await expect(page.getByRole("progressbar")).toHaveAttribute("value", "0");
+    await expect(page.locator(".candidate-detail")).toHaveCount(0);
+    await expect(page.locator(".progress-details")).toContainText("0.0s");
+  }
+});

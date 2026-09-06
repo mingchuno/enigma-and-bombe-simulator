@@ -1,6 +1,6 @@
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useEffect, useMemo, useState } from "react";
-import type { MenuEdge } from "../engine/bombe.ts";
+import type { MenuEdge } from "../engine/crib-menu.ts";
 import type { MachineConfig, SignalStep } from "../engine/enigma.ts";
 import {
   ALPHABET,

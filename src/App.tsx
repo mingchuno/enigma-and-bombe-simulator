@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { AppearanceMenu } from "./components/AppearanceMenu.tsx";
 import { BombeWorkbench } from "./components/BombeWorkbench.tsx";
-import type { Transfer } from "./components/EnigmaWorkbench.tsx";
+import type { SearchExercise } from "./workbench/search-exercise.ts";
 import { EnigmaWorkbench } from "./components/EnigmaWorkbench.tsx";
 import { Guide } from "./components/Guide.tsx";
 import { Icon } from "./components/Icon.tsx";
 
 export function App() {
   const [tab, setTab] = useState<"enigma" | "bombe" | "guide">("enigma");
-  const [transfer, setTransfer] = useState<Transfer | null>(null);
-  function sendToBombe(value: Transfer) {
+  const [transfer, setTransfer] = useState<SearchExercise | null>(null);
+  function sendToBombe(value: SearchExercise) {
     setTransfer(value);
     setTab("bombe");
     window.scrollTo({ top: 0, behavior: "instant" });

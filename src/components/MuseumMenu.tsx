@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { MenuEdge } from "../engine/bombe.ts";
+import type { MenuEdge } from "../engine/crib-menu.ts";
 import { ALPHABET } from "../engine/enigma.ts";
 import { EXHIBIT_MENU, relativeLabel } from "../engine/historical.ts";
 import { HistoricalMenu } from "./HistoricalMenu.tsx";

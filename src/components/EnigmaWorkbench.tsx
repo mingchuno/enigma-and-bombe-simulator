@@ -1,3 +1,4 @@
+import type { SearchExercise } from "../workbench/search-exercise.ts";
 import { useEffect, useMemo, useState } from "react";
 import type { MachineConfig, Trace } from "../engine/enigma.ts";
 import {
@@ -25,15 +26,10 @@ const EXAMPLE_KEYPRESS_INTERVAL_MS = 380;
 const COPY_STATUS_DURATION_MS = 2_200;
 const TRANSFER_CRIB_LENGTH = 40;
 const KEY_ROWS = ["QWERTZUIO", "ASDFGHJK", "PYXCVBNML"];
-export interface Transfer {
-  config: MachineConfig;
-  ciphertext: string;
-  crib: string;
-}
 export function EnigmaWorkbench({
   onTransfer,
 }: {
-  onTransfer: (value: Transfer) => void;
+  onTransfer: (value: SearchExercise) => void;
 }) {
   const [config, setConfig] = useState<MachineConfig>(DEFAULT_CONFIG);
   const [message, setMessage] = useState("");

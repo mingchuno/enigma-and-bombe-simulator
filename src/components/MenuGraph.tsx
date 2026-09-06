@@ -1,5 +1,5 @@
 import { ALPHABET } from "../engine/enigma.ts";
-import type { MenuEdge } from "../engine/bombe.ts";
+import type { MenuEdge } from "../engine/crib-menu.ts";
 
 const GRAPH_WIDTH = 540;
 const GRAPH_HEIGHT = 350;

@@ -1,3 +1,5 @@
+import { buildMenu } from "./crib-menu.ts";
+import type { MenuEdge, ScramblerEdge } from "./crib-menu.ts";
 import {
   ALPHABET,
   ALPHABET_SIZE,
@@ -9,6 +11,10 @@ import {
 } from "./enigma.ts";
 import type { MachineConfig, RotorName, Triple } from "./enigma.ts";
 
+// Preserve the existing engine entry points for callers.
+export { buildMenu } from "./crib-menu.ts";
+export type { MenuEdge, ScramblerEdge } from "./crib-menu.ts";
+
 export const MAX_CIPHERTEXT_LENGTH = 500;
 export const MAX_CRIB_LENGTH = 100;
 export const DEFAULT_RESULT_LIMIT = 50;
@@ -17,14 +23,6 @@ const PROGRESS_UPDATE_INTERVAL = 128;
 const UNASSIGNED_PARTNER = -1;
 const RIGHT_TWO_ROTOR_SETTING_COUNT = ALPHABET_SIZE ** 2;
 
-export interface MenuEdge {
-  a: number;
-  b: number;
-  position: number;
-}
-export interface ScramblerEdge extends MenuEdge {
-  mapping: ArrayLike<number>;
-}
 interface SolverOptions {
   maxPairs: number;
   alphabetSize?: number;
@@ -62,34 +60,6 @@ export interface SearchUpdate {
   candidates: Candidate[];
   current: string;
   reason: "running" | "complete" | "limit";
-}
-
-export function buildMenu(
-  ciphertext: string,
-  crib: string,
-  offset: number,
-): MenuEdge[] {
-  if (!/^[A-Z]+$/.test(ciphertext) || !/^[A-Z]+$/.test(crib))
-    throw new Error("Enter ciphertext and a crib using A–Z.");
-  if (
-    !Number.isInteger(offset) ||
-    offset < 0 ||
-    offset + crib.length > ciphertext.length
-  ) {
-    throw new Error("The crib must fit inside the ciphertext at this offset.");
-  }
-  return [...crib].map((letter, index) => {
-    const position = index + offset;
-    if (letter === ciphertext[position])
-      throw new Error(
-        `At position ${position + 1}, ${letter} would encrypt to itself. Move or change the crib.`,
-      );
-    return {
-      a: ALPHABET.indexOf(letter),
-      b: ALPHABET.indexOf(ciphertext[position]),
-      position,
-    };
-  });
 }
 
 /** Exact Enigma stepping, including all characters before the crib. Cache belongs to one order/ring configuration. */

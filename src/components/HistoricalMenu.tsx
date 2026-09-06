@@ -1,5 +1,5 @@
 import { ScrollRegion } from "./ScrollRegion.tsx";
-import type { MenuEdge } from "../engine/bombe.ts";
+import type { MenuEdge } from "../engine/crib-menu.ts";
 import { ALPHABET, ALPHABET_SIZE } from "../engine/enigma.ts";
 import { relativeLabel } from "../engine/historical.ts";
 import { Help } from "./Help.tsx";

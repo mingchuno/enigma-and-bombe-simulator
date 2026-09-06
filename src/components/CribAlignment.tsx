@@ -1,3 +1,5 @@
+import { inspectCribAlignment } from "../engine/crib-menu.ts";
+
 export function CribAlignment({
   ciphertext,
   crib,
@@ -11,15 +13,10 @@ export function CribAlignment({
   onOffset: (value: number) => void;
   disabled: boolean;
 }) {
-  const maximum = Math.max(0, ciphertext.length - crib.length);
-  const fits =
-    ciphertext.length > 0 &&
-    crib.length > 0 &&
-    Number.isInteger(offset) &&
-    offset >= 0 &&
-    offset + crib.length <= ciphertext.length;
-  const collisions = [...crib].flatMap((letter, index) =>
-    ciphertext[offset + index] === letter ? [offset + index + 1] : [],
+  const { maximum, fits, collisions } = inspectCribAlignment(
+    ciphertext,
+    crib,
+    offset,
   );
   return (
     <details className="alignment-explorer">
@@ -78,7 +75,7 @@ export function CribAlignment({
         {!fits
           ? `Choose a whole-number offset from 0 to ${maximum} and a nonempty crib that fits inside the ciphertext.`
           : collisions.length
-            ? `Impossible matches at positions ${collisions.join(", ")}.`
+            ? `Impossible matches at positions ${collisions.map((position) => position + 1).join(", ")}.`
             : "No self-encryption conflicts at this alignment."}
       </p>
     </details>

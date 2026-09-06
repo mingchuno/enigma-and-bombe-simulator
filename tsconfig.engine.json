@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": [
+    "src/engine/enigma.ts",
+    "src/engine/crib-menu.ts",
+    "src/engine/bombe.ts",
+    "src/engine/historical.ts",
+    "src/workbench/search-exercise.ts"
+  ]
+}

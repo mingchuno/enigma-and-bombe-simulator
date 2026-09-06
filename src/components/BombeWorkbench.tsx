@@ -1,25 +1,21 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import type { MenuEdge } from "../engine/bombe.ts";
-import { BombeSearchSession } from "../engine/bombe-session.ts";
+import { useEffect, useState } from "react";
+import type { MenuEdge } from "../engine/crib-menu.ts";
 import {
-  buildMenu,
   searchSize,
   MAX_CIPHERTEXT_LENGTH,
   MAX_CRIB_LENGTH,
   DEFAULT_RESULT_LIMIT,
 } from "../engine/bombe.ts";
-import type { MachineConfig } from "../engine/enigma.ts";
-import {
-  ALPHABET,
-  MAX_PLUGBOARD_PAIRS,
-  DEFAULT_CONFIG,
-  Enigma,
-  normalizeText,
-} from "../engine/enigma.ts";
+import { ALPHABET, MAX_PLUGBOARD_PAIRS } from "../engine/enigma.ts";
 import { Configuration } from "./Configuration.tsx";
 import { CribAlignment } from "./CribAlignment.tsx";
 import { DrumMechanics } from "./DrumMechanics.tsx";
-import type { Transfer } from "./EnigmaWorkbench.tsx";
+import type {
+  SearchDraft,
+  SearchExercise,
+} from "../workbench/search-exercise.ts";
+import { useBombeSearch } from "./useBombeSearch.ts";
+import { BombeResults } from "./BombeResults.tsx";
 
 import { ConfigurationHelp, Help } from "./Help.tsx";
 import { MuseumMenu } from "./MuseumMenu.tsx";
@@ -31,17 +27,11 @@ import { PaperMethods } from "./PaperMethods.tsx";
 import { RAW_MESSAGE_INPUT_LIMIT } from "./message-input.ts";
 
 const MIN_RECOMMENDED_CRIB_LENGTH = 8;
-const PERCENT_SCALE = 100;
-const PROGRESS_DECIMAL_PLACES = 1;
-const DEMO_CONFIG: MachineConfig = {
-  ...DEFAULT_CONFIG,
-  windows: "AAF",
-  plugs: "AV BS CG DL",
-};
-const DEMO_MAX_PAIRS = DEMO_CONFIG.plugs.split(" ").length;
-const DEMO_PLAIN = "WETTERVORHERSAGEFUERDIEBISKAYA";
-const DEMO_CIPHER = new Enigma(DEMO_CONFIG).process(DEMO_PLAIN);
-export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
+export function BombeWorkbench({
+  transfer,
+}: {
+  transfer: SearchExercise | null;
+}) {
   const [drumExample, setDrumExample] = useState<{
     edges: MenuEdge[];
     selected: number;
@@ -50,83 +40,33 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     "search",
   );
   const [menuView, setMenuView] = useState<"graph" | "historical">("graph");
-  const [config, setConfig] = useState<MachineConfig>(DEFAULT_CONFIG);
-  const [ciphertext, setCiphertext] = useState(DEMO_CIPHER);
-  const [crib, setCrib] = useState(DEMO_PLAIN);
-  const [offset, setOffset] = useState(0);
-  const [allOrders, setAllOrders] = useState(false);
-  const [maxPairs, setMaxPairs] = useState(DEMO_MAX_PAIRS);
   const [selectedEdge, setSelectedEdge] = useState(0);
-  const [selectedCandidate, setSelectedCandidate] = useState(0);
-  const [session] = useState(
-    () =>
-      new BombeSearchSession(
-        () =>
-          new Worker(new URL("../engine/bombe.worker.ts", import.meta.url), {
-            type: "module",
-          }),
-      ),
-  );
-  const { progress, status, error, elapsed } = useSyncExternalStore(
-    session.subscribe,
-    session.getSnapshot,
-  );
-  const [isDemo, setIsDemo] = useState(true);
+  const search = useBombeSearch(transfer);
+  const { config, ciphertext, crib, offset, allOrders, maxPairs } =
+    search.draft;
+  const { menu, isDemo } = search;
+  const { progress, status, error } = search.snapshot;
   const running = status === "running";
 
-  useEffect(() => () => session.dispose(), [session]);
   useEffect(() => {
     if (!transfer) return;
-    session.reset();
     setMode("search");
     setDrumExample(null);
     setSelectedEdge(0);
-    setConfig({ ...transfer.config, windows: "AAA", plugs: "" });
-    setCiphertext(transfer.ciphertext);
-    setCrib(transfer.crib);
-    setOffset(0);
-    setMaxPairs(MAX_PLUGBOARD_PAIRS);
-    setAllOrders(false);
-    setSelectedCandidate(0);
-    setIsDemo(false);
-  }, [transfer, session]);
+  }, [transfer]);
 
-  const menu = useMemo(() => {
-    try {
-      return { edges: buildMenu(ciphertext, crib, offset), error: "" };
-    } catch (problem) {
-      return { edges: [], error: (problem as Error).message };
-    }
-  }, [ciphertext, crib, offset]);
-
-  function invalidate() {
-    session.reset();
+  function changeSearch(patch: Partial<SearchDraft>) {
     setDrumExample(null);
-    setIsDemo(false);
     setSelectedEdge(0);
-    setSelectedCandidate(0);
+    search.change(patch);
   }
   function loadDemo() {
-    invalidate();
-    setConfig(DEFAULT_CONFIG);
-    setCiphertext(DEMO_CIPHER);
-    setCrib(DEMO_PLAIN);
-    setOffset(0);
-    setMaxPairs(DEMO_MAX_PAIRS);
-    setAllOrders(false);
-    setIsDemo(true);
+    setDrumExample(null);
+    setSelectedEdge(0);
+    search.loadDemo();
   }
-  function startSearch() {
-    setSelectedCandidate(0);
-    session.start({ config, ciphertext, crib, offset, allOrders, maxPairs });
-  }
-  function cancelSearch() {
-    session.stop();
-  }
-  const candidate = progress.candidates[selectedCandidate];
   const edge = menu.edges[Math.min(selectedEdge, menu.edges.length - 1)];
   const total = status === "idle" ? searchSize(allOrders) : progress.total;
-  const percentage = (progress.tested / total) * PERCENT_SCALE;
 
   return (
     <>
@@ -226,15 +166,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   value={ciphertext}
                   maxLength={RAW_MESSAGE_INPUT_LIMIT}
                   disabled={running}
-                  onChange={(e) => {
-                    invalidate();
-                    setCiphertext(
-                      normalizeText(e.target.value).slice(
-                        0,
-                        MAX_CIPHERTEXT_LENGTH,
-                      ),
-                    );
-                  }}
+                  onChange={(e) => changeSearch({ ciphertext: e.target.value })}
                   spellCheck={false}
                 />
               </label>
@@ -249,12 +181,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   }
                   value={crib}
                   disabled={running}
-                  onChange={(e) => {
-                    invalidate();
-                    setCrib(
-                      normalizeText(e.target.value).slice(0, MAX_CRIB_LENGTH),
-                    );
-                  }}
+                  onChange={(e) => changeSearch({ crib: e.target.value })}
                   spellCheck={false}
                 />
               </label>
@@ -278,8 +205,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                     value={offset}
                     disabled={running}
                     onChange={(e) => {
-                      invalidate();
-                      setOffset(Number(e.target.value));
+                      changeSearch({ offset: Number(e.target.value) });
                     }}
                   />
                 </label>
@@ -295,8 +221,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 offset={offset}
                 disabled={running}
                 onOffset={(value) => {
-                  invalidate();
-                  setOffset(value);
+                  changeSearch({ offset: value });
                 }}
               />
               <div className="help-row">
@@ -338,8 +263,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
               <Configuration
                 config={config}
                 onChange={(next) => {
-                  invalidate();
-                  setConfig(next);
+                  changeSearch({ config: next });
                 }}
                 disabled={running}
                 showWindows={false}
@@ -353,8 +277,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                     disabled={running}
                     value={allOrders ? "all" : "selected"}
                     onChange={(e) => {
-                      invalidate();
-                      setAllOrders(e.target.value === "all");
+                      changeSearch({ allOrders: e.target.value === "all" });
                     }}
                   >
                     <option value="selected">Selected order</option>
@@ -368,10 +291,11 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                     disabled={running}
                     value={config.reflector}
                     onChange={(e) => {
-                      invalidate();
-                      setConfig({
-                        ...config,
-                        reflector: e.target.value as "B" | "C",
+                      changeSearch({
+                        config: {
+                          ...config,
+                          reflector: e.target.value as "B" | "C",
+                        },
                       });
                     }}
                   >
@@ -386,8 +310,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                     disabled={running}
                     value={maxPairs}
                     onChange={(e) => {
-                      invalidate();
-                      setMaxPairs(Number(e.target.value));
+                      changeSearch({ maxPairs: Number(e.target.value) });
                     }}
                   >
                     {Array.from({ length: MAX_PLUGBOARD_PAIRS + 1 }, (_, i) => (
@@ -412,7 +335,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
               <button
                 className={`primary-button search-button ${running ? "cancel-button" : ""}`}
                 disabled={!running && Boolean(menu.error)}
-                onClick={running ? cancelSearch : startSearch}
+                onClick={running ? search.stop : search.start}
               >
                 <Icon name={running ? "close" : "play"} />
                 {running ? "Stop search" : "Run Bombe search"}
@@ -504,163 +427,12 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 </div>
               )}
             </section>
-            <section className="results-panel">
-              <Help term="Reading search results">
-                Tested counts rotor orientations checked. A candidate is one
-                plugboard assignment that passes the crib check, not a confirmed
-                decryption. Unknown letters are left unplugged only for the
-                preview. A stopped search or candidate limit leaves untested
-                settings.
-              </Help>
-              <div className="section-heading">
-                <h2>Search log</h2>
-                <span
-                  className={`search-status ${running ? "running" : ""}`}
-                  role="status"
-                >
-                  {status === "idle"
-                    ? "Ready"
-                    : running
-                      ? "Searching"
-                      : status === "stopped"
-                        ? "Stopped · partial search"
-                        : status === "error"
-                          ? "Search failed"
-                          : progress.reason === "limit"
-                            ? "Candidate limit reached · partial search"
-                            : progress.unresolved
-                              ? "Finished · unresolved settings"
-                              : "Search complete"}
-                </span>
-              </div>
-              <progress
-                max={total}
-                value={progress.tested}
-                aria-label="Search progress"
-              />
-              <div className="progress-details">
-                <span>
-                  {progress.tested.toLocaleString()} / {total.toLocaleString()}{" "}
-                  tested
-                </span>
-                <span>
-                  {percentage.toFixed(PROGRESS_DECIMAL_PLACES)}% checked{" "}
-                  <b>·</b> {elapsed.toFixed(PROGRESS_DECIMAL_PLACES)}s
-                </span>
-              </div>
-              {progress.reason === "limit" && !running && (
-                <p className="field-hint">
-                  Stopped after finding {progress.candidates.length}{" "}
-                  crib-compatible candidates.{" "}
-                  {(total - progress.tested).toLocaleString()} settings remain
-                  untested. The percentage measures search coverage, not
-                  confidence. Use a longer crib or narrow the rotor orders, then
-                  run again. Selecting a candidate shows its settings and a
-                  decryption preview; a matching crib does not confirm the key.
-                </p>
-              )}
-              {status === "idle" ? (
-                <div className="results-empty">
-                  <span className="search-glyph" aria-hidden="true">
-                    ?
-                  </span>
-                  <div>
-                    <h3>Find what the settings allow.</h3>
-                    <p>
-                      Run the search to test each starting position, propagate
-                      plugboard pairings, and reject contradictions.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="run-summary">
-                    <span>
-                      Last checked{" "}
-                      <code>{progress.current || "Preparing…"}</code>
-                    </span>
-                    <strong>
-                      {progress.candidates.length}{" "}
-                      {progress.candidates.length === 1
-                        ? "candidate"
-                        : "candidates"}
-                    </strong>
-                  </div>
-                  {progress.unresolved > 0 && (
-                    <p className="error-message">
-                      {progress.unresolved} settings exceeded the per-setting
-                      work budget. They are unresolved, not rejected.
-                    </p>
-                  )}
-                  {!progress.candidates.length && !running && (
-                    <p className="muted">
-                      No candidates found in the settings tested. Check the
-                      crib, offset, rings, reflector, and cable limit.
-                    </p>
-                  )}
-                  {progress.candidates.length > 0 && (
-                    <>
-                      <div
-                        className="candidate-tabs"
-                        aria-label="Candidate settings"
-                      >
-                        {progress.candidates.map((result, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedCandidate(index)}
-                            aria-pressed={index === selectedCandidate}
-                            className={
-                              index === selectedCandidate ? "selected" : ""
-                            }
-                          >
-                            {result.windows}
-                            <small>{result.rotors.join("–")}</small>
-                          </button>
-                        ))}
-                      </div>
-                      {candidate && (
-                        <div className="candidate-detail">
-                          <div className="section-heading">
-                            <h3>Crib-compatible candidate</h3>
-                            <span className="validation-badge">
-                              Replay checked
-                            </span>
-                          </div>
-                          <dl>
-                            <div>
-                              <dt>Start windows</dt>
-                              <dd>{candidate.windows}</dd>
-                            </div>
-                            <div>
-                              <dt>Rotor order</dt>
-                              <dd>{candidate.rotors.join("–")}</dd>
-                            </div>
-                            <div>
-                              <dt>Plug pairs</dt>
-                              <dd>
-                                {candidate.pairs.join(" ") ||
-                                  "No cables in this assignment"}
-                              </dd>
-                            </div>
-                          </dl>
-                          <p className="candidate-plaintext">
-                            {candidate.plaintext}
-                          </p>
-                          <p className="muted">
-                            {candidate.unknown.length
-                              ? `Unresolved letters: ${candidate.unknown.join(" ")}. They are treated as unplugged in this preview; other completions may exist.`
-                              : "This candidate assigns all 26 letters; other compatible assignments may exist."}{" "}
-                            These are compatible pairings, not proven original
-                            wiring. A matching crib does not prove that this is
-                            the original key.
-                          </p>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </section>
+            <BombeResults
+              snapshot={search.snapshot}
+              total={total}
+              selectedCandidate={search.selectedCandidate}
+              onSelect={search.selectCandidate}
+            />
             <p className="historical-note">
               <Icon name="book" />
               <span>

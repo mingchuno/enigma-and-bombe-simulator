@@ -65,16 +65,21 @@ npx playwright install chromium
 pnpm test:browser
 ```
 
-`pnpm typecheck` checks application source, engine tests, browser tests, and Playwright configuration with strict TypeScript settings.
+`pnpm typecheck` checks application source, engine tests, browser tests, and Playwright configuration with strict TypeScript settings. It also compiles the cipher, menu, solver, historical calculations, and exercise preparation without browser or Node globals (`tsconfig.engine.json`). Worker and session adapters remain in the browser compilation.
 
 The engine tests cover independent Enigma fixtures, double stepping, non-A rings, plug validation, reciprocity, crib offsets, solver budget handling, and agreement with exhaustive toy-alphabet plugboards. Browser tests exercise both desktop and mobile: encoding, trace inspection, validation, message transfer, full demo search, cancellation, and horizontal overflow.
 
 ## Structure
 
 - `src/engine/enigma.ts`: framework-independent rotor machine and per-key traces.
-- `src/engine/bombe.ts`: menu construction, plugboard propagation, and search generator.
+- `src/engine/crib-menu.ts`: crib placement, self-encryption conflicts, and menu construction shared by search and learning views.
+- `src/engine/bombe.ts`: plugboard propagation and search generator; retains the original menu exports for existing callers.
+- `src/engine/bombe-session.ts`: worker lifecycle, progress, cancellation, elapsed time, and rejection of late events.
 - `src/engine/bombe.worker.ts`: worker message boundary.
-- `src/components/`: controls, Enigma/Bombe workspaces, signal trace, menu graph, and field guide.
+- `src/workbench/search-exercise.ts`: transfer contract and demo preparation; preserves known assumptions while withholding starting windows and plug pairs.
+- `src/components/useBombeSearch.ts`: owns search inputs and invalidates old results whenever assumptions change. Raw field setters and the session stay private.
+- `src/components/BombeResults.tsx`: displays a search snapshot and candidate selection without controlling the worker.
+- `src/components/`: controls, workspaces, learning views, and field guide. The Bombe workspace owns lesson navigation independently of the search session.
 - `src/styles.css`: responsive visual system, with locally bundled fonts.
 - `tests/`: engine tests and Playwright browser scenarios.
 

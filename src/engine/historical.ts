@@ -1,4 +1,4 @@
-import type { MenuEdge, ScramblerEdge } from "./bombe.ts";
+import type { MenuEdge, ScramblerEdge } from "./crib-menu.ts";
 import type { MachineConfig, Triple } from "./enigma.ts";
 import {
   ALPHABET,
