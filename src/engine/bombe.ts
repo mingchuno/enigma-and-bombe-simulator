@@ -201,10 +201,6 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
   )
     throw new Error("Maximum cables must be between 0 and 13.");
   const menu = buildMenu(options.ciphertext, options.crib, options.offset);
-  if (options.crib.length < 8)
-    throw new Error(
-      "Use a crib of at least 8 letters; longer cribs reduce ambiguous matches.",
-    );
   if (options.ciphertext.length > 500 || options.crib.length > 100)
     throw new Error("Use up to 500 ciphertext letters and 100 crib letters.");
   const orders = options.allOrders ? rotorOrders() : [options.config.rotors];

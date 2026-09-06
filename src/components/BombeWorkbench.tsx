@@ -15,6 +15,7 @@ import { DrumMechanics } from "./DrumMechanics.tsx";
 import type { Transfer } from "./EnigmaWorkbench.tsx";
 
 import { ConfigurationHelp, Help } from "./Help.tsx";
+import { MuseumMenu } from "./MuseumMenu.tsx";
 import { HistoricalMenu } from "./HistoricalMenu.tsx";
 import { Icon } from "./Icon.tsx";
 import { MenuGraph } from "./MenuGraph.tsx";
@@ -32,7 +33,9 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     edges: MenuEdge[];
     selected: number;
   } | null>(null);
-  const [mode, setMode] = useState<"search" | "drums" | "paper">("search");
+  const [mode, setMode] = useState<"search" | "drums" | "paper" | "museum">(
+    "search",
+  );
   const [menuView, setMenuView] = useState<"graph" | "historical">("graph");
   const [config, setConfig] = useState<MachineConfig>(DEFAULT_CONFIG);
   const [ciphertext, setCiphertext] = useState(DEMO_CIPHER);
@@ -133,7 +136,21 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
         >
           Paper methods
         </button>
+        <button
+          aria-pressed={mode === "museum"}
+          onClick={() => setMode("museum")}
+        >
+          Museum example
+        </button>
       </div>
+      {mode === "museum" && (
+        <MuseumMenu
+          onIllustrate={(edges, selected) => {
+            setDrumExample({ edges, selected });
+            setMode("drums");
+          }}
+        />
+      )}
       {mode === "drums" &&
         ((drumExample?.edges.length ?? menu.edges.length) ? (
           <>
@@ -201,9 +218,14 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 />
               </label>
               <label>
-                Crib <span>8–100 letters</span>
+                Crib <span>1–100 letters</span>
                 <input
                   aria-label="Plaintext crib"
+                  aria-describedby={
+                    crib.length > 0 && crib.length < 8
+                      ? "short-crib-hint"
+                      : undefined
+                  }
                   value={crib}
                   disabled={running}
                   onChange={(e) => {
@@ -213,6 +235,13 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   spellCheck={false}
                 />
               </label>
+              {crib.length > 0 && crib.length < 8 && (
+                <p className="field-hint" id="short-crib-hint">
+                  Short cribs usually produce many possible settings. Try a
+                  longer crib to narrow the results. Searches stop after 50
+                  candidates.
+                </p>
+              )}
               <div className="offset-control">
                 <label>
                   Crib offset
@@ -359,7 +388,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
               </div>
               <button
                 className={`primary-button search-button ${running ? "cancel-button" : ""}`}
-                disabled={!running && (Boolean(menu.error) || crib.length < 8)}
+                disabled={!running && Boolean(menu.error)}
                 onClick={running ? cancelSearch : startSearch}
               >
                 <Icon name={running ? "close" : "play"} />
@@ -387,8 +416,9 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 </span>
               </div>
               <p className="muted">
-                Letters become nodes. Each plaintext–ciphertext pair connects
-                them through a rotor state.
+                The connection graph updates with your crib, ciphertext, and
+                alignment. Letters are nodes; each plaintext–ciphertext pair
+                connects them through the rotor state at that message position.
               </p>
               <div className="mode-switch compact" aria-label="Menu view">
                 <button
@@ -408,10 +438,6 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 <>
                   {menuView === "historical" ? (
                     <HistoricalMenu
-                      onIllustrate={(edges, selected) => {
-                        setDrumExample({ edges, selected });
-                        setMode("drums");
-                      }}
                       edges={menu.edges}
                       selected={selectedEdge}
                       onSelect={setSelectedEdge}
@@ -477,7 +503,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                         : status === "error"
                           ? "Search failed"
                           : progress.reason === "limit"
-                            ? "Candidate limit reached"
+                            ? "Candidate limit reached · partial search"
                             : progress.unresolved
                               ? "Finished · unresolved settings"
                               : "Search complete"}
@@ -494,9 +520,21 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   tested
                 </span>
                 <span>
-                  {percentage.toFixed(1)}% <b>·</b> {elapsed.toFixed(1)}s
+                  {percentage.toFixed(1)}% checked <b>·</b> {elapsed.toFixed(1)}
+                  s
                 </span>
               </div>
+              {progress.reason === "limit" && !running && (
+                <p className="field-hint">
+                  Stopped after finding {progress.candidates.length}{" "}
+                  crib-compatible candidates.{" "}
+                  {(total - progress.tested).toLocaleString()} settings remain
+                  untested. The percentage measures search coverage, not
+                  confidence. Use a longer crib or narrow the rotor orders, then
+                  run again. Selecting a candidate shows its settings and a
+                  decryption preview; a matching crib does not confirm the key.
+                </p>
+              )}
               {status === "idle" ? (
                 <div className="results-empty">
                   <span className="search-glyph" aria-hidden="true">

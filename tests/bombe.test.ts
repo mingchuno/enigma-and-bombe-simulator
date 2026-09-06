@@ -136,3 +136,23 @@ test("solver agrees with exhaustive toy plugboards including disconnected menus 
     }
   }
 });
+
+test("one-letter cribs return verified candidates while empty cribs are rejected", () => {
+  const options = {
+    config: DEFAULT_CONFIG,
+    ciphertext: "B",
+    crib: "A",
+    offset: 0,
+    allOrders: false,
+    maxPairs: 0,
+    resultLimit: 1,
+  };
+  const final = [...searchBombe(options)].at(-1)!;
+  assert.equal(final.reason, "limit");
+  assert.equal(final.candidates[0].windows, "AAA");
+  assert.equal(final.candidates[0].plaintext, "A");
+  assert.throws(
+    () => [...searchBombe({ ...options, crib: "" })],
+    /Enter ciphertext and a crib/,
+  );
+});

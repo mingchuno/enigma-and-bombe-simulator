@@ -324,7 +324,7 @@ export function EnigmaWorkbench({
           </div>
           <button
             className="primary-button"
-            disabled={message.length < 8 || Boolean(processed.error)}
+            disabled={message.length === 0 || Boolean(processed.error)}
             onClick={() =>
               onTransfer({
                 config,

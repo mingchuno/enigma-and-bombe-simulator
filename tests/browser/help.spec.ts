@@ -63,3 +63,30 @@ test("tap help fits the viewport and an outside tap dismisses it", async ({
   await page.getByRole("heading", { level: 1 }).tap();
   await expect(tip).toBeHidden();
 });
+
+test("historical notation help keeps its icon beside its label", async ({
+  page,
+}, testInfo) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Historical notation", exact: true })
+    .click();
+  const trigger = page.getByRole("button", {
+    name: "Explain ZZZ, ZZA and the numbered lines",
+    exact: true,
+  });
+  await trigger.scrollIntoViewIfNeeded();
+  const icon = await trigger.locator("svg").boundingBox();
+  const label = await trigger.locator("span").boundingBox();
+  expect(icon!.width).toBe(20);
+  expect(label!.x - (icon!.x + icon!.width)).toBeLessThanOrEqual(8);
+  await trigger.click();
+  const tip = page.getByRole("tooltip");
+  await expect(tip).toContainText("ZZZ is the reference");
+  const bounds = await tip.boundingBox();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(
+    page.viewportSize()!.width,
+  );
+  await page.screenshot({ path: testInfo.outputPath("historical-help.png") });
+});

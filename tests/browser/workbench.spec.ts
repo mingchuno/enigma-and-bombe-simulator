@@ -152,7 +152,7 @@ test("help is keyboard accessible and both plugboard passes are visible", async 
   ).toBeVisible();
   await page
     .getByRole("textbox", { name: "Message input", exact: true })
-    .fill("A");
+    .fill("HELLOWORLD");
   await expect(
     page.locator(".signal-node").filter({ hasText: "Plugboard →" }),
   ).toBeVisible();
@@ -161,23 +161,20 @@ test("help is keyboard accessible and both plugboard passes are visible", async 
   ).toBeVisible();
 });
 
-test("historical notation links the supplied parallel edge to a drum column", async ({
+test("museum example links the supplied parallel edge to a drum column", async ({
   page,
 }) => {
   await page.getByRole("button", { name: "Bombe", exact: true }).click();
   await page
-    .getByRole("button", { name: "Historical notation", exact: true })
+    .getByRole("button", { name: "Museum example", exact: true })
     .click();
-  await page
-    .getByRole("checkbox", { name: "Use the supplied museum-menu example" })
-    .check();
   await page
     .getByRole("button", {
       name: "Inspect menu connection 12, G to R",
       exact: true,
     })
     .click();
-  await expect(page.locator(".notation-reading")).toContainText("ZZL");
+  await expect(page.locator(".notation-reading:visible")).toContainText("ZZL");
   await page
     .getByRole("button", { name: "Put the supplied menu on the drums" })
     .click();
@@ -304,4 +301,116 @@ test("wide paper diagrams can be scrolled with the keyboard", async ({
   await expect(
     page.getByRole("slider", { name: "Shift punched strip" }),
   ).toBeDisabled();
+});
+
+test("candidate limit explains partial search coverage", async ({ page }) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page
+    .getByRole("textbox", { name: "Intercepted ciphertext", exact: true })
+    .fill("ILBDAAMTAZ");
+  await page
+    .getByRole("textbox", { name: "Plaintext crib", exact: true })
+    .fill("HELLOWORLD");
+  await page
+    .getByRole("combobox", { name: "Maximum plugboard cables", exact: true })
+    .selectOption("13");
+  await page
+    .getByRole("button", { name: "Run Bombe search", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toHaveText(
+    "Candidate limit reached · partial search",
+  );
+  await expect(page.locator(".results-panel")).toContainText(
+    "Stopped after finding 50 crib-compatible candidates.",
+  );
+  await expect(page.locator(".results-panel")).toContainText(
+    "settings remain untested.",
+  );
+  await expect(page.locator(".results-panel")).toContainText(
+    "The percentage measures search coverage, not confidence.",
+  );
+  const progress = page.getByRole("progressbar");
+  expect(Number(await progress.getAttribute("value"))).toBeLessThan(
+    Number(await progress.getAttribute("max")),
+  );
+});
+
+test("short cribs transfer, search, and stay separate from the museum example", async ({
+  page,
+}, testInfo) => {
+  const transfer = page.getByRole("button", {
+    name: "Send to Bombe",
+    exact: true,
+  });
+  await expect(transfer).toBeDisabled();
+  await page
+    .getByRole("textbox", { name: "Message input", exact: true })
+    .fill("A");
+  await transfer.click();
+  const crib = page.getByRole("textbox", {
+    name: "Plaintext crib",
+    exact: true,
+  });
+  await expect(crib).toHaveValue("A");
+  await expect(crib).toHaveAccessibleDescription(
+    /Short cribs usually produce many possible settings/,
+  );
+  await page
+    .getByRole("button", { name: "Historical notation", exact: true })
+    .click();
+  await expect(page.getByRole("table")).toHaveAccessibleName(
+    "Current crib wiring schedule",
+  );
+  await expect(
+    page.getByRole("button", {
+      name: "Inspect menu connection 1, A to B",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("checkbox", { name: /museum example/ }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Run Bombe search", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toHaveText(
+    "Candidate limit reached · partial search",
+  );
+  await page
+    .getByRole("button", { name: "Museum example", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Museum example", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("table")).toHaveAccessibleName(
+    "Museum example wiring schedule",
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: testInfo.outputPath("museum-example.png"),
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Crib & search", exact: true })
+    .click();
+  await expect(crib).toHaveValue("A");
+  await expect(page.getByRole("status")).toHaveText(
+    "Candidate limit reached · partial search",
+  );
+  await expect(
+    page.getByRole("button", {
+      name: "Inspect menu connection 1, A to B",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await crib.fill("");
+  await expect(
+    page.getByRole("button", { name: "Run Bombe search", exact: true }),
+  ).toBeDisabled();
+  await crib.fill("ABCDEFGH");
+  await expect(page.locator("#short-crib-hint")).toHaveCount(0);
 });
