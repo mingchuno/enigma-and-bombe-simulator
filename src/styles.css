@@ -135,6 +135,60 @@ button svg {
   margin-left: auto;
   gap: 10px;
 }
+footer button {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+.machine-bottom button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+.output-label button {
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  padding: 0;
+  color: #5b6e5f;
+}
+.message-footer button {
+  font-size: 11px;
+}
+.alignment button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 26px;
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 5px 3px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.candidate-tabs button {
+  flex-shrink: 0;
+  min-width: 78px;
+  border: 1px solid #cbd5c1;
+  background: transparent;
+  border-radius: 5px;
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 15px;
+}
 .site-header nav button {
   position: relative;
   border: 0;
@@ -155,6 +209,9 @@ button svg {
   background: var(--green);
   left: 20px;
   right: 20px;
+}
+footer button:hover {
+  text-decoration: underline;
 }
 .site-header nav button:hover {
   background: #eaece3;
@@ -301,6 +358,17 @@ main {
   color: #f3eedc;
   line-height: 1;
 }
+label > span {
+  float: right;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+footer > span {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--green);
+}
 .rotor-window > span {
   font-family: var(--mono);
   font-size: 18px;
@@ -310,6 +378,12 @@ main {
   display: flex;
   justify-content: center;
   gap: 16px;
+}
+label,
+.output-label {
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
 }
 .rotor-settings label {
   display: flex;
@@ -442,15 +516,6 @@ main {
   background: #96b58d;
   display: inline-block;
 }
-.machine-bottom button {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  border: 0;
-  background: none;
-  color: inherit;
-  padding: 0;
-}
 .section-heading {
   display: flex;
   align-items: center;
@@ -484,18 +549,6 @@ main {
   gap: 18px;
   margin-top: 18px;
 }
-label,
-.output-label {
-  font-size: 12px;
-  font-weight: 500;
-  display: block;
-}
-label > span {
-  float: right;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 400;
-}
 .message-columns textarea {
   width: 100%;
   height: 112px;
@@ -524,16 +577,6 @@ textarea::placeholder {
   align-items: center;
   min-height: 18px;
 }
-.output-label button {
-  border: 0;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  padding: 0;
-  color: #5b6e5f;
-}
 .output-field textarea {
   background: #eaf0e3;
   border-color: #d5dfca;
@@ -546,9 +589,6 @@ textarea::placeholder {
   margin-top: 9px;
   font-size: 10px;
   color: var(--muted);
-}
-.message-footer button {
-  font-size: 11px;
 }
 .plugboard-panel {
   padding: 23px 0 24px;
@@ -606,6 +646,17 @@ textarea::placeholder {
 .plug-sockets .connected {
   color: #183b32;
   font-weight: 600;
+}
+.alignment button small {
+  font-size: 8px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.candidate-tabs button small {
+  display: block;
+  font-size: 9px;
+  margin-top: 4px;
+  color: var(--muted);
 }
 .plug-sockets .connected small {
   background: #e1e9d5;
@@ -782,6 +833,29 @@ input[type="range"] {
   font-weight: 400;
   letter-spacing: 0.12em;
 }
+.empty-circuit span {
+  border: 1px solid #c8d1bd;
+  border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 30px;
+  color: #6d8067;
+}
+.search-space span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.constraint-equation > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.run-summary > span {
+  color: var(--muted);
+}
 .step-explanation strong span {
   color: #85947b;
   margin: 0 8px;
@@ -799,18 +873,6 @@ input[type="range"] {
   display: flex;
   align-items: center;
   margin-bottom: 32px;
-}
-.empty-circuit span {
-  border: 1px solid #c8d1bd;
-  border-radius: 50%;
-  width: 58px;
-  height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-size: 30px;
-  color: #6d8067;
 }
 .empty-circuit i {
   height: 1px;
@@ -838,23 +900,6 @@ footer {
   gap: 25px;
   color: var(--muted);
   font-size: 11px;
-}
-footer > span {
-  font-family: var(--serif);
-  font-size: 18px;
-  color: var(--green);
-}
-footer button {
-  margin-left: auto;
-  border: 0;
-  background: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-}
-footer button:hover {
-  text-decoration: underline;
 }
 .bombe-grid {
   display: grid;
@@ -933,6 +978,17 @@ footer button:hover {
   color: var(--muted);
   font-size: 10px;
 }
+.search-fields select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 8px;
+  background: #fcfbf7;
+  border: 1px solid #cdd5c6;
+  border-radius: 5px;
+  color: var(--ink);
+  font-size: 12px;
+}
 .search-settings .rotor-heading select {
   display: block;
   margin-top: 6px;
@@ -944,6 +1000,9 @@ footer button:hover {
 }
 .search-settings .rotor-settings {
   margin-top: 10px;
+}
+.search-fields label {
+  font-size: 11px;
 }
 .search-settings .rotor-settings label {
   color: var(--muted);
@@ -958,22 +1017,8 @@ footer button:hover {
   grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
-.search-fields label {
-  font-size: 11px;
-}
 .search-fields label:first-child {
   grid-column: 1 / -1;
-}
-.search-fields select {
-  display: block;
-  width: 100%;
-  margin-top: 8px;
-  padding: 10px 8px;
-  background: #fcfbf7;
-  border: 1px solid #cdd5c6;
-  border-radius: 5px;
-  color: var(--ink);
-  font-size: 12px;
 }
 .search-space {
   display: flex;
@@ -986,10 +1031,6 @@ footer button:hover {
   font-family: var(--mono);
   font-weight: 400;
   letter-spacing: -0.04em;
-}
-.search-space span {
-  font-size: 11px;
-  color: var(--muted);
 }
 .search-button {
   width: 100%;
@@ -1083,23 +1124,14 @@ footer button:hover {
   overflow-x: auto;
   padding: 0 0 8px;
 }
-.alignment button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-width: 26px;
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 5px 3px;
-  border-radius: 4px;
-  font-family: var(--mono);
-  font-size: 11px;
+.progress-details b {
+  font-weight: 400;
+  margin: 0 5px;
 }
-.alignment button small {
-  font-size: 8px;
-  color: var(--muted);
-  margin-bottom: 3px;
+.stepping-example b {
+  font-size: 22px;
+  color: #81916e;
+  font-weight: 400;
 }
 .alignment button b {
   font-weight: 400;
@@ -1120,10 +1152,6 @@ footer button:hover {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 20px;
-}
-.constraint-equation > span {
-  color: var(--muted);
-  font-size: 11px;
 }
 .constraint-equation code {
   font-size: 14px;
@@ -1188,10 +1216,6 @@ progress::-moz-progress-bar {
   font-family: var(--mono);
   font-size: 10px;
 }
-.progress-details b {
-  font-weight: 400;
-  margin: 0 5px;
-}
 .results-empty {
   display: flex;
   align-items: center;
@@ -1223,9 +1247,6 @@ progress::-moz-progress-bar {
   margin: 22px 0;
   font-size: 11px;
 }
-.run-summary > span {
-  color: var(--muted);
-}
 .run-summary code {
   display: block;
   margin-top: 7px;
@@ -1239,22 +1260,6 @@ progress::-moz-progress-bar {
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 13px;
-}
-.candidate-tabs button {
-  flex-shrink: 0;
-  min-width: 78px;
-  border: 1px solid #cbd5c1;
-  background: transparent;
-  border-radius: 5px;
-  padding: 9px 12px;
-  font-family: var(--mono);
-  font-size: 15px;
-}
-.candidate-tabs button small {
-  display: block;
-  font-size: 9px;
-  margin-top: 4px;
-  color: var(--muted);
 }
 .candidate-tabs button.selected {
   background: #e5ecda;
@@ -1356,11 +1361,6 @@ progress::-moz-progress-bar {
   margin: 27px 0;
   font-family: var(--mono);
   font-size: 30px;
-}
-.stepping-example b {
-  font-size: 22px;
-  color: #81916e;
-  font-weight: 400;
 }
 .stepping-example > span > span {
   color: #936426;
@@ -1514,6 +1514,9 @@ progress::-moz-progress-bar {
     grid-row: 1 / 3;
     margin: 0;
   }
+  footer p {
+    display: none;
+  }
   .trace-empty p {
     margin: 0;
     max-width: none;
@@ -1575,9 +1578,6 @@ progress::-moz-progress-bar {
   .page-intro {
     padding-top: 33px;
   }
-  footer p {
-    display: none;
-  }
 }
 @media (max-width: 600px) {
   main {
@@ -1601,6 +1601,17 @@ progress::-moz-progress-bar {
     margin: 0;
     gap: 10px;
     height: 49px;
+  }
+  footer button {
+    font-size: 10px;
+    gap: 6px;
+  }
+  .machine-bottom button {
+    gap: 4px;
+  }
+  .message-footer button {
+    white-space: nowrap;
+    font-size: 10px;
   }
   .site-header nav button {
     padding: 0 16px;
@@ -1681,6 +1692,9 @@ progress::-moz-progress-bar {
   .rotor-window strong {
     font-size: 35px;
   }
+  footer > span {
+    font-size: 16px;
+  }
   .rotor-window > span {
     font-size: 12px;
   }
@@ -1736,9 +1750,6 @@ progress::-moz-progress-bar {
   .machine-bottom {
     font-size: 9px;
   }
-  .machine-bottom button {
-    gap: 4px;
-  }
   .section-heading h2 {
     font-size: 18px;
   }
@@ -1767,10 +1778,6 @@ progress::-moz-progress-bar {
   }
   .message-footer > span {
     max-width: 22ch;
-  }
-  .message-footer button {
-    white-space: nowrap;
-    font-size: 10px;
   }
   .plugboard-form {
     grid-template-columns: 1fr;
@@ -1946,20 +1953,16 @@ progress::-moz-progress-bar {
     padding: 22px 18px;
     gap: 12px;
   }
-  footer > span {
-    font-size: 16px;
-  }
-  footer button {
-    font-size: 10px;
-    gap: 6px;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   *,
   *:before,
   *:after {
+    /* biome-ignore lint/complexity/noImportantStyles: Respect reduced motion regardless of component specificity. */
     animation: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: Respect reduced motion regardless of component specificity. */
     transition: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: Respect reduced motion regardless of component specificity. */
     scroll-behavior: auto !important;
   }
 }
