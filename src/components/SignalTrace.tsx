@@ -1,6 +1,80 @@
-import { REFLECTOR_TRACE_INDEX, ROTOR_SLOT } from "../engine/enigma.ts";
 import type { Trace } from "../engine/enigma.ts";
+import { REFLECTOR_TRACE_INDEX, ROTOR_SLOT } from "../engine/enigma.ts";
 import { Help } from "./Help.tsx";
+
+function SignalStages({ trace }: { trace: Trace }) {
+  const groups = [
+    {
+      title: "Toward the reflector",
+      start: 1,
+      end: REFLECTOR_TRACE_INDEX,
+      className: "",
+    },
+    {
+      title: "Reflection",
+      start: REFLECTOR_TRACE_INDEX,
+      end: REFLECTOR_TRACE_INDEX + 1,
+      className: "reflection",
+    },
+    {
+      title: "Back to the lamp",
+      start: REFLECTOR_TRACE_INDEX + 1,
+      end: trace.path.length - 1,
+      className: "return-path",
+    },
+  ];
+
+  return (
+    <div className="signal-path">
+      {groups.map((group) => (
+        <table className={`signal-stage ${group.className}`} key={group.title}>
+          <caption>{group.title}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Component</th>
+              <th scope="col">In</th>
+              <td aria-hidden="true" />
+              <th scope="col">Out</th>
+            </tr>
+          </thead>
+          <tbody>
+            {trace.path.slice(group.start, group.end).map((step, offset) => {
+              const input = trace.path[group.start + offset - 1].letter;
+              const component = step.label.replace(/ [→←]$/, "");
+              const unchangedPlug =
+                component === "Plugboard" && input === step.letter;
+              return (
+                <tr key={step.label}>
+                  <th scope="row">
+                    {component}
+                    {unchangedPlug && (
+                      <small className="signal-note">
+                        {input} has no plugboard connection; unchanged.
+                      </small>
+                    )}
+                    {group.className === "reflection" && (
+                      <small className="signal-note">
+                        Signal returns through the rotors.
+                      </small>
+                    )}
+                  </th>
+                  <td className="signal-input">{input}</td>
+                  <td className="signal-direction" aria-hidden="true">
+                    →
+                  </td>
+                  <td>
+                    <strong className="signal-letter">{step.letter}</strong>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      ))}
+    </div>
+  );
+}
+
 export function SignalTrace({
   trace,
   selected,
@@ -26,9 +100,15 @@ export function SignalTrace({
       {trace ? (
         <>
           <div className="trace-summary">
-            <span>{trace.input}</span>
+            <div>
+              <small className="trace-endpoint-label">Key pressed</small>
+              <span>{trace.input}</span>
+            </div>
             <span className="trace-arrow">→</span>
-            <span>{trace.output}</span>
+            <div>
+              <small className="trace-endpoint-label">Lamp lit</small>
+              <span>{trace.output}</span>
+            </div>
           </div>
           <label className="trace-scrubber">
             Inspect letter{" "}
@@ -44,18 +124,7 @@ export function SignalTrace({
               onChange={(e) => onSelect(Number(e.target.value))}
             />
           </label>
-          <div className="signal-path">
-            {trace.path.map((step, index) => (
-              <div
-                key={index}
-                className={`signal-node ${index === REFLECTOR_TRACE_INDEX ? "reflection" : ""} ${index > REFLECTOR_TRACE_INDEX ? "return-path" : ""}`}
-              >
-                <span className="signal-letter">{step.letter}</span>
-                <span>{step.label}</span>
-                {index === REFLECTOR_TRACE_INDEX && <small>turn back</small>}
-              </div>
-            ))}
-          </div>
+          <SignalStages trace={trace} />
           <div className="step-explanation">
             <strong>
               {trace.before} <span>→</span> {trace.after}
