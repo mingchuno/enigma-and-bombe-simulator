@@ -1,5 +1,5 @@
-import { ALPHABET, ROTOR_NAMES } from '../engine/enigma.ts';
-import type { MachineConfig, RotorName, Triple } from '../engine/enigma.ts';
+import { ALPHABET, ROTOR_NAMES } from "../engine/enigma.ts";
+import type { MachineConfig, RotorName, Triple } from "../engine/enigma.ts";
 
 interface Props {
   config: MachineConfig;
@@ -8,7 +8,13 @@ interface Props {
   disabled?: boolean;
   showWindows?: boolean;
 }
-export function Configuration({ config, onChange, current, disabled, showWindows = true }: Props) {
+export function Configuration({
+  config,
+  onChange,
+  current,
+  disabled,
+  showWindows = true,
+}: Props) {
   function changeRotor(slot: number, name: RotorName) {
     const next = [...config.rotors] as Triple<RotorName>;
     const existing = next.indexOf(name);
@@ -16,19 +22,23 @@ export function Configuration({ config, onChange, current, disabled, showWindows
     next[slot] = name;
     onChange({ ...config, rotors: next });
   }
-  function changeLetter(field: 'rings' | 'windows', slot: number, value: string) {
+  function changeLetter(
+    field: "rings" | "windows",
+    slot: number,
+    value: string,
+  ) {
     const next = [...config[field]];
     next[slot] = value;
-    onChange({ ...config, [field]: next.join('') });
+    onChange({ ...config, [field]: next.join("") });
   }
   return (
     <div className="rotor-controls">
       {config.rotors.map((name, slot) => (
         <div className="rotor-control" key={slot}>
           <div className="rotor-heading">
-            <span>{['Left · slow', 'Middle', 'Right · fast'][slot]}</span>
+            <span>{["Left · slow", "Middle", "Right · fast"][slot]}</span>
             <select
-              aria-label={`${['Left', 'Middle', 'Right'][slot]} rotor`}
+              aria-label={`${["Left", "Middle", "Right"][slot]} rotor`}
               value={name}
               disabled={disabled}
               onChange={(e) => changeRotor(slot, e.target.value as RotorName)}
@@ -44,7 +54,9 @@ export function Configuration({ config, onChange, current, disabled, showWindows
                 {ALPHABET[(ALPHABET.indexOf(current[slot]) + 25) % 26]}
               </span>
               <strong>{current[slot]}</strong>
-              <span aria-hidden="true">{ALPHABET[(ALPHABET.indexOf(current[slot]) + 1) % 26]}</span>
+              <span aria-hidden="true">
+                {ALPHABET[(ALPHABET.indexOf(current[slot]) + 1) % 26]}
+              </span>
             </div>
           )}
           <div className="rotor-settings">
@@ -52,10 +64,12 @@ export function Configuration({ config, onChange, current, disabled, showWindows
               <label>
                 Start
                 <select
-                  aria-label={`${['Left', 'Middle', 'Right'][slot]} starting window`}
+                  aria-label={`${["Left", "Middle", "Right"][slot]} starting window`}
                   value={config.windows[slot]}
                   disabled={disabled}
-                  onChange={(e) => changeLetter('windows', slot, e.target.value)}
+                  onChange={(e) =>
+                    changeLetter("windows", slot, e.target.value)
+                  }
                 >
                   {[...ALPHABET].map((letter) => (
                     <option key={letter}>{letter}</option>
@@ -66,14 +80,14 @@ export function Configuration({ config, onChange, current, disabled, showWindows
             <label>
               Ring
               <select
-                aria-label={`${['Left', 'Middle', 'Right'][slot]} ring setting`}
+                aria-label={`${["Left", "Middle", "Right"][slot]} ring setting`}
                 value={config.rings[slot]}
                 disabled={disabled}
-                onChange={(e) => changeLetter('rings', slot, e.target.value)}
+                onChange={(e) => changeLetter("rings", slot, e.target.value)}
               >
                 {[...ALPHABET].map((letter, index) => (
                   <option key={letter} value={letter}>
-                    {letter} · {String(index + 1).padStart(2, '0')}
+                    {letter} · {String(index + 1).padStart(2, "0")}
                   </option>
                 ))}
               </select>

@@ -1,4 +1,4 @@
-import type { Trace } from '../engine/enigma.ts';
+import type { Trace } from "../engine/enigma.ts";
 export function SignalTrace({
   trace,
   selected,
@@ -27,7 +27,7 @@ export function SignalTrace({
             <span>{trace.output}</span>
           </div>
           <label className="trace-scrubber">
-            Inspect letter{' '}
+            Inspect letter{" "}
             <strong>
               {selected + 1} / {count}
             </strong>
@@ -44,7 +44,7 @@ export function SignalTrace({
             {trace.path.map((step, index) => (
               <div
                 key={index}
-                className={`signal-node ${index === 5 ? 'reflection' : ''} ${index > 5 ? 'return-path' : ''}`}
+                className={`signal-node ${index === 5 ? "reflection" : ""} ${index > 5 ? "return-path" : ""}`}
               >
                 <span className="signal-letter">{step.letter}</span>
                 <span>{step.label}</span>
@@ -58,10 +58,10 @@ export function SignalTrace({
             </strong>
             <p>
               {trace.stepped[0]
-                ? 'The middle rotor is at its notch: both the left and middle rotors advance.'
+                ? "The middle rotor is at its notch: both the left and middle rotors advance."
                 : trace.stepped[1]
-                  ? 'The right rotor reaches turnover and advances the middle rotor.'
-                  : 'The right rotor advances before the signal enters.'}
+                  ? "The right rotor reaches turnover and advances the middle rotor."
+                  : "The right rotor advances before the signal enters."}
             </p>
           </div>
         </>
@@ -73,7 +73,10 @@ export function SignalTrace({
             <span>?</span>
           </div>
           <h3>A letter’s journey</h3>
-          <p>Press a key or enter a message to see every substitution, from keyboard to lamp.</p>
+          <p>
+            Press a key or enter a message to see every substitution, from
+            keyboard to lamp.
+          </p>
         </div>
       )}
     </aside>

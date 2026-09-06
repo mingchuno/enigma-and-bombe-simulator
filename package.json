@@ -9,8 +9,10 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:browser": "playwright test",
-    "format": "prettier --write src tests *.json *.ts *.html *.md",
-    "format:check": "prettier --check src tests *.json *.ts *.html *.md"
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
   },
   "dependencies": {
     "@fontsource/ibm-plex-sans": "^5.3.0",
@@ -23,10 +25,11 @@
     "@types/node": "^26.4.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
-    "prettier": "^3.9.6",
+    "@biomejs/biome": "^2.4.8",
     "typescript": "^7.0.2",
     "vite": "^8.2.2"
   },
+  "packageManager": "pnpm@10.18.0",
   "engines": {
     "node": ">=24"
   }

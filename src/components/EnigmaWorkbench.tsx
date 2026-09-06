@@ -1,48 +1,55 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import {
   ALPHABET,
   DEFAULT_CONFIG,
   Enigma,
   normalizeText,
   parsePlugboard,
-} from '../engine/enigma.ts';
-import type { MachineConfig, Trace } from '../engine/enigma.ts';
-import { Configuration } from './Configuration.tsx';
-import { SignalTrace } from './SignalTrace.tsx';
-import { Icon } from './Icon.tsx';
+} from "../engine/enigma.ts";
+import type { MachineConfig, Trace } from "../engine/enigma.ts";
+import { Configuration } from "./Configuration.tsx";
+import { SignalTrace } from "./SignalTrace.tsx";
+import { Icon } from "./Icon.tsx";
 
-const KEY_ROWS = ['QWERTZUIO', 'ASDFGHJK', 'PYXCVBNML'];
+const KEY_ROWS = ["QWERTZUIO", "ASDFGHJK", "PYXCVBNML"];
 export interface Transfer {
   config: MachineConfig;
   ciphertext: string;
   crib: string;
 }
-export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) => void }) {
+export function EnigmaWorkbench({
+  onTransfer,
+}: {
+  onTransfer: (value: Transfer) => void;
+}) {
   const [config, setConfig] = useState<MachineConfig>(DEFAULT_CONFIG);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [selection, setSelection] = useState<number | null>(null);
   const [isPlaying, setPlaying] = useState(false);
-  const [copyStatus, setCopyStatus] = useState('Copy');
+  const [copyStatus, setCopyStatus] = useState("Copy");
   const processed = useMemo(() => {
     try {
       const enigma = new Enigma(config);
       const traces = [...message].map((letter) => enigma.press(letter));
       return {
         traces,
-        output: traces.map((trace) => trace.output).join(''),
+        output: traces.map((trace) => trace.output).join(""),
         windows: enigma.windows,
-        error: '',
+        error: "",
       };
     } catch (error) {
       return {
         traces: [] as Trace[],
-        output: '',
+        output: "",
         windows: config.windows,
         error: (error as Error).message,
       };
     }
   }, [config, message]);
-  const selected = Math.min(selection ?? processed.traces.length - 1, processed.traces.length - 1);
+  const selected = Math.min(
+    selection ?? processed.traces.length - 1,
+    processed.traces.length - 1,
+  );
   const trace = processed.traces[selected];
   let pairs: number[] = [];
   try {
@@ -53,7 +60,7 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
 
   useEffect(() => {
     if (!isPlaying) return;
-    const sample = 'HELLOWORLD';
+    const sample = "HELLOWORLD";
     let index = 0;
     const timer = window.setInterval(() => {
       index++;
@@ -71,17 +78,17 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
   function playExample() {
     setConfig(DEFAULT_CONFIG);
     setSelection(null);
-    setMessage('');
+    setMessage("");
     setPlaying(true);
   }
   async function copy() {
     try {
       await navigator.clipboard.writeText(processed.output);
-      setCopyStatus('Copied');
+      setCopyStatus("Copied");
     } catch {
-      setCopyStatus('Select text to copy');
+      setCopyStatus("Select text to copy");
     }
-    window.setTimeout(() => setCopyStatus('Copy'), 2200);
+    window.setTimeout(() => setCopyStatus("Copy"), 2200);
   }
 
   return (
@@ -108,7 +115,12 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
               <select
                 aria-label="Reflector"
                 value={config.reflector}
-                onChange={(e) => setConfig({ ...config, reflector: e.target.value as 'B' | 'C' })}
+                onChange={(e) =>
+                  setConfig({
+                    ...config,
+                    reflector: e.target.value as "B" | "C",
+                  })
+                }
               >
                 <option>B</option>
                 <option>C</option>
@@ -121,10 +133,11 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
             <span>
               {trace ? (
                 <>
-                  {trace.input} <span className="tiny-arrow">→</span> <b>{trace.output}</b>
+                  {trace.input} <span className="tiny-arrow">→</span>{" "}
+                  <b>{trace.output}</b>
                 </>
               ) : (
-                'Ready for a keypress'
+                "Ready for a keypress"
               )}
             </span>
           </div>
@@ -134,7 +147,7 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
                 {[...row].map((letter) => (
                   <button
                     key={letter}
-                    className={`machine-key ${trace?.output === letter ? 'lit' : ''} ${trace?.input === letter ? 'pressed' : ''}`}
+                    className={`machine-key ${trace?.output === letter ? "lit" : ""} ${trace?.input === letter ? "pressed" : ""}`}
                     onClick={() => changeMessage(message + letter)}
                     aria-label={`Type ${letter}`}
                     disabled={Boolean(processed.error) || message.length >= 500}
@@ -150,7 +163,10 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
               <i className="status-dot" />
               {message.length} letters processed
             </span>
-            <button onClick={() => changeMessage(message.slice(0, -1))} disabled={!message}>
+            <button
+              onClick={() => changeMessage(message.slice(0, -1))}
+              disabled={!message}
+            >
               <Icon name="undo" size={15} />
               Undo letter
             </button>
@@ -159,9 +175,13 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
         <section className="message-panel">
           <div className="section-heading">
             <h2>Your message</h2>
-            <button className="text-button" onClick={playExample} disabled={isPlaying}>
+            <button
+              className="text-button"
+              onClick={playExample}
+              disabled={isPlaying}
+            >
               <Icon name="play" size={14} />
-              {isPlaying ? 'Playing example…' : 'Play an example'}
+              {isPlaying ? "Playing example…" : "Play an example"}
             </button>
           </div>
           <div className="message-columns">
@@ -178,7 +198,7 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
             </label>
             <div className="output-field">
               <div className="output-label">
-                Output{' '}
+                Output{" "}
                 <button onClick={copy} disabled={!processed.output}>
                   <Icon name="copy" size={14} />
                   {copyStatus}
@@ -187,14 +207,18 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
               <textarea
                 aria-label="Message output"
                 readOnly
-                value={processed.output.match(/.{1,5}/g)?.join(' ') ?? ''}
+                value={processed.output.match(/.{1,5}/g)?.join(" ") ?? ""}
                 placeholder="Your enciphered message appears here."
               />
             </div>
           </div>
           <div className="message-footer">
             <span>Same settings + ciphertext = original message.</span>
-            <button className="text-button" onClick={() => changeMessage('')} disabled={!message}>
+            <button
+              className="text-button"
+              onClick={() => changeMessage("")}
+              disabled={!message}
+            >
               <Icon name="reset" size={14} />
               Clear message
             </button>
@@ -204,7 +228,8 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
           <div className="section-heading">
             <h2>Plugboard</h2>
             <span className="muted">
-              {pairs.filter((partner, letter) => partner > letter).length} / 13 cables
+              {pairs.filter((partner, letter) => partner > letter).length} / 13
+              cables
             </span>
           </div>
           <div className="plugboard-form">
@@ -214,13 +239,15 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
                 aria-label="Plugboard pairs"
                 placeholder="e.g. AV BS CG DL"
                 value={config.plugs}
-                onChange={(e) => setConfig({ ...config, plugs: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setConfig({ ...config, plugs: e.target.value.toUpperCase() })
+                }
                 spellCheck={false}
               />
             </label>
             <p>
-              Each cable swaps two letters on both the outward and return journey. Leave empty for
-              no swaps.
+              Each cable swaps two letters on both the outward and return
+              journey. Leave empty for no swaps.
             </p>
           </div>
           {processed.error && (
@@ -232,18 +259,22 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
             {[...ALPHABET].map((letter, index) => (
               <span
                 key={letter}
-                className={pairs[index] !== undefined && pairs[index] !== index ? 'connected' : ''}
+                className={
+                  pairs[index] !== undefined && pairs[index] !== index
+                    ? "connected"
+                    : ""
+                }
                 title={
                   pairs[index] === index
                     ? `${letter}: unplugged`
-                    : `${letter} connected to ${ALPHABET[pairs[index]] ?? '?'}`
+                    : `${letter} connected to ${ALPHABET[pairs[index]] ?? "?"}`
                 }
               >
                 {letter}
                 <small>
                   {pairs[index] !== undefined && pairs[index] !== index
                     ? ALPHABET[pairs[index]]
-                    : '·'}
+                    : "·"}
                 </small>
               </span>
             ))}
@@ -258,7 +289,11 @@ export function EnigmaWorkbench({ onTransfer }: { onTransfer: (value: Transfer) 
             className="primary-button"
             disabled={message.length < 8 || Boolean(processed.error)}
             onClick={() =>
-              onTransfer({ config, ciphertext: processed.output, crib: message.slice(0, 40) })
+              onTransfer({
+                config,
+                ciphertext: processed.output,
+                crib: message.slice(0, 40),
+              })
             }
           >
             Send to Bombe

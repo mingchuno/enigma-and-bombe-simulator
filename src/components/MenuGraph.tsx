@@ -1,5 +1,5 @@
-import { ALPHABET } from '../engine/enigma.ts';
-import type { MenuEdge } from '../engine/bombe.ts';
+import { ALPHABET } from "../engine/enigma.ts";
+import type { MenuEdge } from "../engine/bombe.ts";
 
 export function MenuGraph({
   edges,
@@ -10,11 +10,16 @@ export function MenuGraph({
   selected: number;
   onSelect: (index: number) => void;
 }) {
-  const letters = [...new Set(edges.flatMap((edge) => [edge.a, edge.b]))].sort((a, b) => a - b);
+  const letters = [...new Set(edges.flatMap((edge) => [edge.a, edge.b]))].sort(
+    (a, b) => a - b,
+  );
   const points = new Map(
     letters.map((letter, index) => {
       const angle = (index / letters.length) * Math.PI * 2 - Math.PI / 2;
-      return [letter, { x: 270 + 225 * Math.cos(angle), y: 175 + 135 * Math.sin(angle) }];
+      return [
+        letter,
+        { x: 270 + 225 * Math.cos(angle), y: 175 + 135 * Math.sin(angle) },
+      ];
     }),
   );
   const selectedEdge = edges[selected];
@@ -32,7 +37,9 @@ export function MenuGraph({
             <path
               key={index}
               d={`M${a.x} ${a.y} Q270 ${150 + (index % 5) * 12} ${b.x} ${b.y}`}
-              className={selected === index ? 'menu-edge selected' : 'menu-edge'}
+              className={
+                selected === index ? "menu-edge selected" : "menu-edge"
+              }
             />
           );
         })}
@@ -43,9 +50,10 @@ export function MenuGraph({
               key={letter}
               transform={`translate(${point.x} ${point.y})`}
               className={
-                selectedEdge && [selectedEdge.a, selectedEdge.b].includes(letter)
-                  ? 'menu-node selected'
-                  : 'menu-node'
+                selectedEdge &&
+                [selectedEdge.a, selectedEdge.b].includes(letter)
+                  ? "menu-node selected"
+                  : "menu-node"
               }
             >
               <circle r="17" />
@@ -67,7 +75,7 @@ export function MenuGraph({
         {edges.map((edge, index) => (
           <button
             key={index}
-            className={selected === index ? 'selected' : ''}
+            className={selected === index ? "selected" : ""}
             aria-label={`Position ${edge.position + 1}: ${ALPHABET[edge.a]} to ${ALPHABET[edge.b]}`}
             aria-pressed={selected === index}
             onClick={() => onSelect(index)}

@@ -1,41 +1,51 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { Enigma, DEFAULT_CONFIG, parsePlugboard, normalizeText } from '../src/engine/enigma.ts';
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  Enigma,
+  DEFAULT_CONFIG,
+  parsePlugboard,
+  normalizeText,
+} from "../src/engine/enigma.ts";
 
-const machine = (overrides = {}) => new Enigma({ ...DEFAULT_CONFIG, ...overrides });
+const machine = (overrides = {}) =>
+  new Enigma({ ...DEFAULT_CONFIG, ...overrides });
 
-test('published encryption vector and reset decryption', () => {
-  assert.equal(machine().process('AAAAA'), 'BDZGO');
-  assert.equal(machine().process('BDZGO'), 'AAAAA');
-  assert.equal(machine().process('HELLOWORLD'), 'ILBDAAMTAZ');
+test("published encryption vector and reset decryption", () => {
+  assert.equal(machine().process("AAAAA"), "BDZGO");
+  assert.equal(machine().process("BDZGO"), "AAAAA");
+  assert.equal(machine().process("HELLOWORLD"), "ILBDAAMTAZ");
 });
 
-test('middle rotor double steps; rings do not move visible turnover letters', () => {
-  for (const rings of ['AAA', 'BUL']) {
-    const enigma = machine({ rotors: ['III', 'II', 'I'], windows: 'KDO', rings });
+test("middle rotor double steps; rings do not move visible turnover letters", () => {
+  for (const rings of ["AAA", "BUL"]) {
+    const enigma = machine({
+      rotors: ["III", "II", "I"],
+      windows: "KDO",
+      rings,
+    });
     const windows = Array.from({ length: 6 }, () => {
-      enigma.press('A');
+      enigma.press("A");
       return enigma.windows;
     });
-    assert.deepEqual(windows, ['KDP', 'KDQ', 'KER', 'LFS', 'LFT', 'LFU']);
+    assert.deepEqual(windows, ["KDP", "KDQ", "KER", "LFS", "LFT", "LFU"]);
   }
 });
 
-test('nonzero rings and ten plugs reproduce independent fixture', () => {
+test("nonzero rings and ten plugs reproduce independent fixture", () => {
   const config = {
-    rotors: ['II', 'IV', 'V'],
-    rings: 'BUL',
-    plugs: 'AV BS CG DL FU HZ IN KM OW RX',
+    rotors: ["II", "IV", "V"],
+    rings: "BUL",
+    plugs: "AV BS CG DL FU HZ IN KM OW RX",
   };
-  assert.equal(machine({ ...config, windows: 'WXC' }).process('KCH'), 'BLA');
+  assert.equal(machine({ ...config, windows: "WXC" }).process("KCH"), "BLA");
   assert.equal(
-    machine({ ...config, windows: 'BLA' }).process('NIBLFMYMLLUFWCASCSSNVHAZ'),
-    'THEXRUSSIANSXAREXCOMINGX',
+    machine({ ...config, windows: "BLA" }).process("NIBLFMYMLLUFWCASCSSNVHAZ"),
+    "THEXRUSSIANSXAREXCOMINGX",
   );
 });
 
-test('fixed-state maps are reciprocal and have no fixed points', () => {
-  const enigma = machine({ rings: 'BUL', windows: 'ZEV', plugs: 'AZ BY CX' });
+test("fixed-state maps are reciprocal and have no fixed points", () => {
+  const enigma = machine({ rings: "BUL", windows: "ZEV", plugs: "AZ BY CX" });
   for (let i = 0; i < 26; i++) {
     const result = enigma.scramble(i);
     assert.notEqual(result, i);
@@ -43,36 +53,36 @@ test('fixed-state maps are reciprocal and have no fixed points', () => {
   }
 });
 
-test('stepping wraps and simultaneous notches advance each wheel once', () => {
-  const enigma = machine({ windows: 'ZEV' });
-  enigma.press('A');
-  assert.equal(enigma.windows, 'AFW');
-  const wrap = machine({ windows: 'ZZZ' });
-  wrap.press('A');
-  assert.equal(wrap.windows, 'ZZA');
+test("stepping wraps and simultaneous notches advance each wheel once", () => {
+  const enigma = machine({ windows: "ZEV" });
+  enigma.press("A");
+  assert.equal(enigma.windows, "AFW");
+  const wrap = machine({ windows: "ZZZ" });
+  wrap.press("A");
+  assert.equal(wrap.windows, "ZZA");
 });
 
-test('invalid configuration fails with actionable errors', () => {
-  assert.throws(() => parsePlugboard('AB AC'), /already/);
-  assert.throws(() => parsePlugboard('AA'), /different/);
-  assert.throws(() => parsePlugboard('ABC'), /two/);
-  assert.throws(() => machine({ rotors: ['I', 'I', 'III'] }), /distinct/);
-  assert.throws(() => machine({ rings: 'AA' }), /three/);
-  assert.throws(() => machine({ reflector: 'D' }), /reflector/i);
+test("invalid configuration fails with actionable errors", () => {
+  assert.throws(() => parsePlugboard("AB AC"), /already/);
+  assert.throws(() => parsePlugboard("AA"), /different/);
+  assert.throws(() => parsePlugboard("ABC"), /two/);
+  assert.throws(() => machine({ rotors: ["I", "I", "III"] }), /distinct/);
+  assert.throws(() => machine({ rings: "AA" }), /three/);
+  assert.throws(() => machine({ reflector: "D" }), /reflector/i);
 });
 
-test('normalization is explicit; core rejects characters rather than stepping silently', () => {
-  assert.equal(normalizeText('Hello, world! 123'), 'HELLOWORLD');
+test("normalization is explicit; core rejects characters rather than stepping silently", () => {
+  assert.equal(normalizeText("Hello, world! 123"), "HELLOWORLD");
   const enigma = machine();
-  assert.throws(() => enigma.press(' '), /A–Z/);
-  assert.equal(enigma.windows, 'AAA');
+  assert.throws(() => enigma.press(" "), /A–Z/);
+  assert.equal(enigma.windows, "AAA");
 });
 
-test('trace describes the actual signal and positions', () => {
-  const trace = machine().press('A');
-  assert.equal(trace.output, 'B');
-  assert.equal(trace.before, 'AAA');
-  assert.equal(trace.after, 'AAB');
-  assert.equal(trace.path[0].letter, 'A');
-  assert.equal(trace.path.at(-1).letter, 'B');
+test("trace describes the actual signal and positions", () => {
+  const trace = machine().press("A");
+  assert.equal(trace.output, "B");
+  assert.equal(trace.before, "AAA");
+  assert.equal(trace.after, "AAB");
+  assert.equal(trace.path[0].letter, "A");
+  assert.equal(trace.path.at(-1).letter, "B");
 });

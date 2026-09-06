@@ -1,0 +1,28 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
+  "files": {
+    "includes": ["**", "!dist", "!node_modules"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useAriaPropsSupportedByRole": "off",
+        "useButtonType": "off",
+        "useValidAnchor": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      }
+    }
+  }
+}

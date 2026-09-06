@@ -7,8 +7,9 @@ An interactive React and TypeScript cipher workbench. Encipher with Enigma I, in
 Requires Node.js 24 or newer.
 
 ```sh
-npm ci
-npm run dev
+corepack enable
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
 Open the local URL printed by Vite. Processing happens in the browser. There is no backend, account, or remote message storage. Refreshing clears the current work.
@@ -44,11 +45,12 @@ A crib-compatible candidate is not proof of unique key recovery. Weak or incorre
 ## Verify
 
 ```sh
-npm test
-npm run build
-npm run format:check
+pnpm test
+pnpm build
+pnpm lint
+pnpm format:check
 npx playwright install chromium
-npm run test:browser
+pnpm test:browser
 ```
 
 The engine tests cover independent Enigma fixtures, double stepping, non-A rings, plug validation, reciprocity, crib offsets, solver budget handling, and agreement with exhaustive toy-alphabet plugboards. Browser tests exercise both desktop and mobile: encoding, trace inspection, validation, message transfer, full demo search, cancellation, and horizontal overflow.
@@ -62,4 +64,4 @@ The engine tests cover independent Enigma fixtures, double stepping, non-A rings
 - `src/styles.css`: responsive visual system, with locally bundled fonts.
 - `tests/`: engine tests and Playwright browser scenarios.
 
-Create a static production bundle with `npm run build`, then serve `dist/` using any static host. `npm run preview` serves the bundle locally for verification.
+Create a static production bundle with `pnpm build`, then serve `dist/` using any static host. `pnpm preview` serves the bundle locally for verification.

@@ -1,23 +1,32 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ALPHABET, DEFAULT_CONFIG, Enigma, normalizeText } from '../engine/enigma.ts';
-import type { MachineConfig } from '../engine/enigma.ts';
-import { buildMenu } from '../engine/bombe.ts';
-import type { SearchUpdate } from '../engine/bombe.ts';
-import type { Transfer } from './EnigmaWorkbench.tsx';
-import { Configuration } from './Configuration.tsx';
-import { Icon } from './Icon.tsx';
-import { MenuGraph } from './MenuGraph.tsx';
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ALPHABET,
+  DEFAULT_CONFIG,
+  Enigma,
+  normalizeText,
+} from "../engine/enigma.ts";
+import type { MachineConfig } from "../engine/enigma.ts";
+import { buildMenu } from "../engine/bombe.ts";
+import type { SearchUpdate } from "../engine/bombe.ts";
+import type { Transfer } from "./EnigmaWorkbench.tsx";
+import { Configuration } from "./Configuration.tsx";
+import { Icon } from "./Icon.tsx";
+import { MenuGraph } from "./MenuGraph.tsx";
 
-const DEMO_CONFIG: MachineConfig = { ...DEFAULT_CONFIG, windows: 'AAF', plugs: 'AV BS CG DL' };
-const DEMO_PLAIN = 'WETTERVORHERSAGEFUERDIEBISKAYA';
+const DEMO_CONFIG: MachineConfig = {
+  ...DEFAULT_CONFIG,
+  windows: "AAF",
+  plugs: "AV BS CG DL",
+};
+const DEMO_PLAIN = "WETTERVORHERSAGEFUERDIEBISKAYA";
 const DEMO_CIPHER = new Enigma(DEMO_CONFIG).process(DEMO_PLAIN);
 const emptyProgress: SearchUpdate = {
   tested: 0,
   total: 17576,
   unresolved: 0,
   candidates: [],
-  current: '',
-  reason: 'running',
+  current: "",
+  reason: "running",
 };
 
 export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
@@ -30,27 +39,29 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   const [selectedEdge, setSelectedEdge] = useState(0);
   const [selectedCandidate, setSelectedCandidate] = useState(0);
   const [progress, setProgress] = useState<SearchUpdate>(emptyProgress);
-  const [status, setStatus] = useState<'idle' | 'running' | 'stopped' | 'done' | 'error'>('idle');
-  const [error, setError] = useState('');
+  const [status, setStatus] = useState<
+    "idle" | "running" | "stopped" | "done" | "error"
+  >("idle");
+  const [error, setError] = useState("");
   const [isDemo, setIsDemo] = useState(true);
   const worker = useRef<Worker | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const startTime = useRef(0);
-  const running = status === 'running';
+  const running = status === "running";
 
   useEffect(() => () => worker.current?.terminate(), []);
   useEffect(() => {
     if (!transfer) return;
     worker.current?.terminate();
-    setConfig({ ...transfer.config, windows: 'AAA', plugs: '' });
+    setConfig({ ...transfer.config, windows: "AAA", plugs: "" });
     setCiphertext(transfer.ciphertext);
     setCrib(transfer.crib);
     setOffset(0);
     setMaxPairs(13);
     setAllOrders(false);
-    setStatus('idle');
+    setStatus("idle");
     setProgress(emptyProgress);
-    setError('');
+    setError("");
     setIsDemo(false);
   }, [transfer]);
   useEffect(() => {
@@ -64,16 +75,16 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
 
   const menu = useMemo(() => {
     try {
-      return { edges: buildMenu(ciphertext, crib, offset), error: '' };
+      return { edges: buildMenu(ciphertext, crib, offset), error: "" };
     } catch (problem) {
       return { edges: [], error: (problem as Error).message };
     }
   }, [ciphertext, crib, offset]);
 
   function invalidate() {
-    setStatus('idle');
+    setStatus("idle");
     setProgress(emptyProgress);
-    setError('');
+    setError("");
     setIsDemo(false);
     setSelectedEdge(0);
     setSelectedCandidate(0);
@@ -91,45 +102,55 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   function startSearch() {
     worker.current?.terminate();
     setProgress({ ...emptyProgress, total: allOrders ? 1054560 : 17576 });
-    setError('');
+    setError("");
     setSelectedCandidate(0);
-    setStatus('running');
+    setStatus("running");
     setElapsed(0);
     startTime.current = performance.now();
     try {
-      const nextWorker = new Worker(new URL('../engine/bombe.worker.ts', import.meta.url), {
-        type: 'module',
-      });
+      const nextWorker = new Worker(
+        new URL("../engine/bombe.worker.ts", import.meta.url),
+        {
+          type: "module",
+        },
+      );
       worker.current = nextWorker;
       nextWorker.onmessage = (event) => {
-        if (event.data.type === 'error') {
+        if (event.data.type === "error") {
           setError(event.data.message);
-          setStatus('error');
+          setStatus("error");
           nextWorker.terminate();
           return;
         }
         const update = event.data.update as SearchUpdate;
         setProgress(update);
-        if (update.reason !== 'running') {
-          setStatus('done');
+        if (update.reason !== "running") {
+          setStatus("done");
           setElapsed((performance.now() - startTime.current) / 1000);
           nextWorker.terminate();
         }
       };
       nextWorker.onerror = () => {
-        setError('The search worker failed. Try running the search again.');
-        setStatus('error');
+        setError("The search worker failed. Try running the search again.");
+        setStatus("error");
         nextWorker.terminate();
       };
-      nextWorker.postMessage({ config, ciphertext, crib, offset, allOrders, maxPairs });
+      nextWorker.postMessage({
+        config,
+        ciphertext,
+        crib,
+        offset,
+        allOrders,
+        maxPairs,
+      });
     } catch (problem) {
       setError((problem as Error).message);
-      setStatus('error');
+      setStatus("error");
     }
   }
   function cancelSearch() {
     worker.current?.terminate();
-    setStatus('stopped');
+    setStatus("stopped");
   }
   const candidate = progress.candidates[selectedCandidate];
   const edge = menu.edges[Math.min(selectedEdge, menu.edges.length - 1)];
@@ -141,12 +162,18 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
         <section className="intercept-panel">
           <div className="section-heading">
             <h2>The intercept</h2>
-            <button className="text-button" onClick={loadDemo} disabled={running}>
+            <button
+              className="text-button"
+              onClick={loadDemo}
+              disabled={running}
+            >
               <Icon name="reset" size={15} />
               Load example
             </button>
           </div>
-          <p className="muted">Start with ciphertext and a fragment of suspected plaintext.</p>
+          <p className="muted">
+            Start with ciphertext and a fragment of suspected plaintext.
+          </p>
           <label>
             Ciphertext <span>{ciphertext.length} / 500</span>
             <textarea
@@ -205,8 +232,9 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
             <details className="demo-note">
               <summary>About this generated example</summary>
               <p>
-                Weather forecast crib, generated with I–II–III, rings AAA, reflector B, start AAF,
-                and plugs AV BS CG DL. The search receives no starting windows or plug pairs.
+                Weather forecast crib, generated with I–II–III, rings AAA,
+                reflector B, start AAF, and plugs AV BS CG DL. The search
+                receives no starting windows or plug pairs.
               </p>
             </details>
           )}
@@ -214,7 +242,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
         <section className="search-settings">
           <h2>Set the search</h2>
           <p className="muted">
-            Ring settings and reflector are known. Starting windows and plugboard are unknown.
+            Ring settings and reflector are known. Starting windows and
+            plugboard are unknown.
           </p>
           <Configuration
             config={config}
@@ -231,10 +260,10 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
               <select
                 aria-label="Rotor orders to search"
                 disabled={running}
-                value={allOrders ? 'all' : 'selected'}
+                value={allOrders ? "all" : "selected"}
                 onChange={(e) => {
                   invalidate();
-                  setAllOrders(e.target.value === 'all');
+                  setAllOrders(e.target.value === "all");
                 }}
               >
                 <option value="selected">Selected order</option>
@@ -249,7 +278,10 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 value={config.reflector}
                 onChange={(e) => {
                   invalidate();
-                  setConfig({ ...config, reflector: e.target.value as 'B' | 'C' });
+                  setConfig({
+                    ...config,
+                    reflector: e.target.value as "B" | "C",
+                  });
                 }}
               >
                 <option>B</option>
@@ -269,7 +301,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
               >
                 {Array.from({ length: 14 }, (_, i) => (
                   <option key={i} value={i}>
-                    {i === 0 ? '0 · no plugboard' : `At most ${i}`}
+                    {i === 0 ? "0 · no plugboard" : `At most ${i}`}
                   </option>
                 ))}
               </select>
@@ -280,16 +312,16 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
             <span>rotor positions to test</span>
           </div>
           <button
-            className={`primary-button search-button ${running ? 'cancel-button' : ''}`}
+            className={`primary-button search-button ${running ? "cancel-button" : ""}`}
             disabled={!running && (Boolean(menu.error) || crib.length < 8)}
             onClick={running ? cancelSearch : startSearch}
           >
-            <Icon name={running ? 'close' : 'play'} />
-            {running ? 'Stop search' : 'Run Bombe search'}
+            <Icon name={running ? "close" : "play"} />
+            {running ? "Stop search" : "Run Bombe search"}
           </button>
           <p className="search-limit">
-            Shows one compatible plugboard per setting. Stops after 50 candidates. Use a longer crib
-            to narrow the results.
+            Shows one compatible plugboard per setting. Stops after 50
+            candidates. Use a longer crib to narrow the results.
           </p>
           {error && (
             <p className="error-message" role="alert">
@@ -302,26 +334,31 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
         <section className="menu-panel">
           <div className="section-heading">
             <h2>The crib menu</h2>
-            <span className={`validation-badge ${menu.error ? 'invalid' : ''}`}>
-              {menu.error ? 'Check alignment' : 'Alignment possible'}
+            <span className={`validation-badge ${menu.error ? "invalid" : ""}`}>
+              {menu.error ? "Check alignment" : "Alignment possible"}
             </span>
           </div>
           <p className="muted">
-            Letters become nodes. Each plaintext–ciphertext pair connects them through a rotor
-            state.
+            Letters become nodes. Each plaintext–ciphertext pair connects them
+            through a rotor state.
           </p>
           {menu.edges.length ? (
             <>
-              <MenuGraph edges={menu.edges} selected={selectedEdge} onSelect={setSelectedEdge} />
+              <MenuGraph
+                edges={menu.edges}
+                selected={selectedEdge}
+                onSelect={setSelectedEdge}
+              />
               {edge && (
                 <div className="constraint-equation">
                   <span>Position {edge.position + 1}</span>
                   <code>
-                    P({ALPHABET[edge.b]}) = S<sub>{edge.position + 1}</sub>(P({ALPHABET[edge.a]}))
+                    P({ALPHABET[edge.b]}) = S<sub>{edge.position + 1}</sub>(P(
+                    {ALPHABET[edge.a]}))
                   </code>
                   <p>
-                    P is the unknown plugboard. S is the rotor path at this position. Pairings must
-                    agree across every connection.
+                    P is the unknown plugboard. S is the rotor path at this
+                    position. Pairings must agree across every connection.
                   </p>
                 </div>
               )}
@@ -335,32 +372,40 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
         <section className="results-panel">
           <div className="section-heading">
             <h2>Search log</h2>
-            <span className={`search-status ${running ? 'running' : ''}`} role="status">
-              {status === 'idle'
-                ? 'Ready'
+            <span
+              className={`search-status ${running ? "running" : ""}`}
+              role="status"
+            >
+              {status === "idle"
+                ? "Ready"
                 : running
-                  ? 'Searching'
-                  : status === 'stopped'
-                    ? 'Stopped · partial search'
-                    : status === 'error'
-                      ? 'Search failed'
-                      : progress.reason === 'limit'
-                        ? 'Candidate limit reached'
+                  ? "Searching"
+                  : status === "stopped"
+                    ? "Stopped · partial search"
+                    : status === "error"
+                      ? "Search failed"
+                      : progress.reason === "limit"
+                        ? "Candidate limit reached"
                         : progress.unresolved
-                          ? 'Finished · unresolved settings'
-                          : 'Search complete'}
+                          ? "Finished · unresolved settings"
+                          : "Search complete"}
             </span>
           </div>
-          <progress max={progress.total} value={progress.tested} aria-label="Search progress" />
+          <progress
+            max={progress.total}
+            value={progress.tested}
+            aria-label="Search progress"
+          />
           <div className="progress-details">
             <span>
-              {progress.tested.toLocaleString()} / {progress.total.toLocaleString()} tested
+              {progress.tested.toLocaleString()} /{" "}
+              {progress.total.toLocaleString()} tested
             </span>
             <span>
               {percentage.toFixed(1)}% <b>·</b> {elapsed.toFixed(1)}s
             </span>
           </div>
-          {status === 'idle' ? (
+          {status === "idle" ? (
             <div className="results-empty">
               <span className="search-glyph" aria-hidden="true">
                 ?
@@ -368,8 +413,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
               <div>
                 <h3>Find what the settings allow.</h3>
                 <p>
-                  Run the search to test each starting position, propagate plugboard pairings, and
-                  reject contradictions.
+                  Run the search to test each starting position, propagate
+                  plugboard pairings, and reject contradictions.
                 </p>
               </div>
             </div>
@@ -377,37 +422,44 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
             <>
               <div className="run-summary">
                 <span>
-                  Last checked <code>{progress.current || 'Preparing…'}</code>
+                  Last checked <code>{progress.current || "Preparing…"}</code>
                 </span>
                 <strong>
-                  {progress.candidates.length}{' '}
-                  {progress.candidates.length === 1 ? 'candidate' : 'candidates'}
+                  {progress.candidates.length}{" "}
+                  {progress.candidates.length === 1
+                    ? "candidate"
+                    : "candidates"}
                 </strong>
               </div>
               {progress.unresolved > 0 && (
                 <p className="error-message">
-                  {progress.unresolved} settings exceeded the per-setting work budget. They are
-                  unresolved, not rejected.
+                  {progress.unresolved} settings exceeded the per-setting work
+                  budget. They are unresolved, not rejected.
                 </p>
               )}
               {!progress.candidates.length && !running && (
                 <p className="muted">
-                  No candidates found in the settings tested. Check the crib, offset, rings,
-                  reflector, and cable limit.
+                  No candidates found in the settings tested. Check the crib,
+                  offset, rings, reflector, and cable limit.
                 </p>
               )}
               {progress.candidates.length > 0 && (
                 <>
-                  <div className="candidate-tabs" aria-label="Candidate settings">
+                  <div
+                    className="candidate-tabs"
+                    aria-label="Candidate settings"
+                  >
                     {progress.candidates.map((result, index) => (
                       <button
                         key={index}
                         onClick={() => setSelectedCandidate(index)}
                         aria-pressed={index === selectedCandidate}
-                        className={index === selectedCandidate ? 'selected' : ''}
+                        className={
+                          index === selectedCandidate ? "selected" : ""
+                        }
                       >
                         {result.windows}
-                        <small>{result.rotors.join('–')}</small>
+                        <small>{result.rotors.join("–")}</small>
                       </button>
                     ))}
                   </div>
@@ -424,19 +476,24 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                         </div>
                         <div>
                           <dt>Rotor order</dt>
-                          <dd>{candidate.rotors.join('–')}</dd>
+                          <dd>{candidate.rotors.join("–")}</dd>
                         </div>
                         <div>
                           <dt>Plug pairs</dt>
-                          <dd>{candidate.pairs.join(' ') || 'No forced pairs'}</dd>
+                          <dd>
+                            {candidate.pairs.join(" ") || "No forced pairs"}
+                          </dd>
                         </div>
                       </dl>
-                      <p className="candidate-plaintext">{candidate.plaintext}</p>
+                      <p className="candidate-plaintext">
+                        {candidate.plaintext}
+                      </p>
                       <p className="muted">
                         {candidate.unknown.length
-                          ? `Unresolved letters: ${candidate.unknown.join(' ')}. They are treated as unplugged in this preview; other completions may exist.`
-                          : 'All plugboard letters are constrained for this candidate.'}{' '}
-                        A matching crib does not prove that this is the original key.
+                          ? `Unresolved letters: ${candidate.unknown.join(" ")}. They are treated as unplugged in this preview; other completions may exist.`
+                          : "All plugboard letters are constrained for this candidate."}{" "}
+                        A matching crib does not prove that this is the original
+                        key.
                       </p>
                     </div>
                   )}
@@ -448,8 +505,9 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
         <p className="historical-note">
           <Icon name="book" />
           <span>
-            This is a Bombe-inspired constraint search with exact Enigma stepping. Historical Bombes
-            used drums, electrical circuits, and a diagonal board to detect potential stops.
+            This is a Bombe-inspired constraint search with exact Enigma
+            stepping. Historical Bombes used drums, electrical circuits, and a
+            diagonal board to detect potential stops.
           </span>
         </p>
       </div>

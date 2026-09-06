@@ -1,5 +1,5 @@
 :root {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   color: #24382f;
   background: #f5f3ed;
   font-synthesis: none;
@@ -11,8 +11,8 @@
   --line: #d9dcd2;
   --green: #183b32;
   --amber: #e9bc6b;
-  --serif: 'Newsreader', Georgia, serif;
-  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --serif: "Newsreader", Georgia, serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 * {
   box-sizing: border-box;
@@ -148,7 +148,7 @@ button svg {
   font-weight: 600;
 }
 .site-header nav button.active:after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -1px;
   height: 3px;
@@ -282,7 +282,7 @@ main {
 }
 .rotor-window:before,
 .rotor-window:after {
-  content: '';
+  content: "";
   width: 7px;
   height: 1px;
   background: #72917a;
@@ -513,7 +513,7 @@ label > span {
   color: var(--ink);
 }
 textarea::placeholder {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 13px;
   letter-spacing: 0;
   color: #5e6c59;
@@ -690,7 +690,7 @@ textarea::placeholder {
   color: #aa7429;
 }
 .trace-arrow {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 29px;
   color: #9da991;
 }
@@ -705,7 +705,7 @@ textarea::placeholder {
   font-weight: 400;
   color: var(--ink);
 }
-input[type='range'] {
+input[type="range"] {
   display: block;
   width: 100%;
   accent-color: #476647;
@@ -726,7 +726,7 @@ input[type='range'] {
   min-height: 39px;
 }
 .signal-node:before {
-  content: '';
+  content: "";
   height: 100%;
   position: absolute;
   left: 14px;

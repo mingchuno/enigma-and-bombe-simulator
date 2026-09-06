@@ -2,7 +2,7 @@ export function Icon({
   name,
   size = 18,
 }: {
-  name: 'arrow' | 'reset' | 'play' | 'copy' | 'close' | 'book' | 'undo';
+  name: "arrow" | "reset" | "play" | "copy" | "close" | "book" | "undo";
   size?: number;
 }) {
   const paths = {
