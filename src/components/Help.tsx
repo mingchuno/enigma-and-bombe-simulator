@@ -1,6 +1,6 @@
 import { Tooltip } from "@base-ui/react/tooltip";
 import type { ReactNode } from "react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 export function Help({
   term,
@@ -11,15 +11,36 @@ export function Help({
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const openedByPress = useRef(false);
   return (
-    <Tooltip.Root open={open} onOpenChange={setOpen} triggerId={id}>
+    <Tooltip.Root
+      open={open}
+      onOpenChange={(nextOpen, details) => {
+        // A touch click can be followed by a delayed compatibility mouseleave.
+        // Explicitly opened help stays visible until a deliberate dismissal.
+        if (
+          !nextOpen &&
+          openedByPress.current &&
+          details.reason === "trigger-hover"
+        ) {
+          details.cancel();
+          return;
+        }
+        if (!nextOpen) openedByPress.current = false;
+        setOpen(nextOpen);
+      }}
+      triggerId={id}
+    >
       <Tooltip.Trigger
         id={id}
         className="concept-help"
         aria-label={`Explain ${term}`}
         aria-describedby={open ? `${id}-description` : undefined}
         closeOnClick={false}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          openedByPress.current = true;
+          setOpen(true);
+        }}
       >
         <svg
           width="20"

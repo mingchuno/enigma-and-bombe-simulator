@@ -90,3 +90,24 @@ test("historical notation help keeps its icon beside its label", async ({
   );
   await page.screenshot({ path: testInfo.outputPath("historical-help.png") });
 });
+
+test("touch-opened help survives a delayed compatibility mouseleave", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "Touch interaction");
+  await page.clock.install();
+  const trigger = page
+    .getByRole("button", { name: "Explain Ring settings", exact: true })
+    .first();
+  await trigger.tap();
+  const tip = page.getByRole("tooltip");
+  await expect(tip).toBeVisible();
+  // Touch browsers can deliver compatibility mouse events after the click.
+  await trigger.dispatchEvent("mouseleave", { relatedTarget: null });
+  // Advance past the provider's delayed hover close, including its animation.
+  await page.clock.runFor(500);
+  await expect(tip).toContainText("The alphabet ring");
+  await page.getByRole("heading", { level: 1 }).tap();
+  await expect(tip).toBeHidden();
+});
