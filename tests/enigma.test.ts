@@ -95,3 +95,40 @@ test("trace shows both plugboard passes before the separate lamp stage", () => {
   assert.equal(trace.path.at(-1)?.label, "Lamp");
   assert.equal(trace.path.at(-2)?.letter, trace.output);
 });
+
+test("reflector C agrees with independent Py-Enigma fixtures, including turnover", () => {
+  // Py-Enigma 1.0.2; reproducible settings documented in historical-accuracy-audit.md.
+  assert.equal(machine({ reflector: "C" }).process("AAAAA"), "PJBUZ");
+  const enigma = machine({
+    rotors: ["V", "IV", "II"],
+    reflector: "C",
+    rings: "BUL",
+    windows: "ZJZ",
+    plugs: "AV BS CG DL FU HZ IN KM OW RX",
+  });
+  assert.equal(
+    enigma.process("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+    "ZWHBZKRWZYVGXXIQFDGPEYBBPBRYPGKQJMGNSMREZJEAGNMFVFPE",
+  );
+  assert.equal(enigma.windows, "AMZ");
+});
+
+test("each rotor I–V turns over at its visible notch with nonzero rings", () => {
+  for (const [rotor, notch, next] of [
+    ["I", "Q", "R"],
+    ["II", "E", "F"],
+    ["III", "V", "W"],
+    ["IV", "J", "K"],
+    ["V", "Z", "A"],
+  ]) {
+    const others = ["I", "II", "III"]
+      .filter((name) => name !== rotor)
+      .slice(0, 2);
+    const enigma = machine({
+      rotors: [...others, rotor],
+      windows: `AA${notch}`,
+      rings: "ZMC",
+    });
+    assert.equal(enigma.press("A").after, `AB${next}`);
+  }
+});

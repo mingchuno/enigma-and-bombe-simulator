@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DEFAULT_CONFIG } from "../src/engine/enigma.ts";
+import { buildMenu } from "../src/engine/bombe.ts";
+import {
+  Enigma,
+  parsePlugboard,
+  DEFAULT_CONFIG,
+} from "../src/engine/enigma.ts";
 import {
   compareStrips,
   driveState,
@@ -56,4 +61,30 @@ test("paper strip alignment counts real letter coincidences and handles both shi
   assert.deepEqual(compareStrips("ABCDE", "XBCD", 0).matches, [1, 2, 3]);
   assert.deepEqual(compareStrips("ABCDE", "BCD", 1).matches, [1, 2, 3]);
   assert.equal(compareStrips("ABCDE", "XABC", -1).overlap, 3);
+});
+
+test("electrical propagation preserves a known plugboard hypothesis across a menu", () => {
+  const plugs = "AV BS CG DL";
+  const plain = "WETTERBERICHT";
+  const config = { ...DEFAULT_CONFIG, plugs };
+  const cipher = new Enigma(config).process(plain);
+  const edges = historicalScramblers(config, buildMenu(cipher, plain, 0), 0);
+  const plugboard = parsePlugboard(plugs);
+  for (const register of new Set(edges.flatMap((edge) => [edge.a, edge.b]))) {
+    const result = electricalReachability(
+      edges,
+      register,
+      plugboard[register],
+      true,
+    );
+    assert.equal(
+      result.registerCount,
+      1,
+      `True hypothesis at ${register} must survive`,
+    );
+    for (let terminal = 0; terminal < 676; terminal++) {
+      if (result.live[terminal])
+        assert.equal(terminal % 26, plugboard[Math.floor(terminal / 26)]);
+    }
+  }
 });

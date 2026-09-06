@@ -11,7 +11,7 @@ export function App() {
   function sendToBombe(value: Transfer) {
     setTransfer(value);
     setTab("bombe");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }
   return (
     <>
@@ -105,7 +105,7 @@ export function App() {
         <button
           onClick={() => {
             setTab("guide");
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ top: 0, behavior: "instant" });
           }}
         >
           About this simulation <Icon name="arrow" size={15} />

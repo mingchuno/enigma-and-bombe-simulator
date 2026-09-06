@@ -1,3 +1,4 @@
+import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useEffect, useMemo, useState } from "react";
 import type { MenuEdge } from "../engine/bombe.ts";
 import type { MachineConfig, SignalStep } from "../engine/enigma.ts";
@@ -199,7 +200,7 @@ export function DrumMechanics({
           Select a column to trace its wiring. On a narrow screen, scroll the
           drum bank sideways.
         </p>
-        <div className="drum-bank-scroll">
+        <ScrollRegion className="drum-bank-scroll" label="Drum bank">
           <div className="drum-bank">
             <div className="drum-row-labels">
               <span>
@@ -238,7 +239,7 @@ export function DrumMechanics({
               </button>
             ))}
           </div>
-        </div>
+        </ScrollRegion>
         <div className="cabinet-footer">
           <span>
             Rotor types top → bottom: {config.rotors.join(" · ")} · reflector{" "}
@@ -491,10 +492,10 @@ export function DrumMechanics({
               ))}
             </svg>
             <p className="field-hint">
-              Rows name cables; columns name possible partners. The permanent
-              reciprocal link joins (A, B) to (B, A). This square layout
-              explains the wiring; the actual rear-board sockets were not laid
-              out as this grid.
+              Rows name cables; columns name possible partners. With the board
+              connected, the reciprocal link joins (A, B) to (B, A). This square
+              layout explains the wiring; the actual rear-board sockets were not
+              laid out as this grid.
             </p>
           </div>
         )}
@@ -505,8 +506,10 @@ export function DrumMechanics({
         not calibrated letters engraved on historical drums or the search’s
         starting windows. It assumes no middle-rotor turnover inside the menu;
         large offsets are schematic. Carry movement is drawn at its boundary;
-        gearing, physical rotation direction, and braking are illustrative. The
-        exact search retains its own Enigma stepping and results.
+        gearing, physical rotation direction, and braking are illustrative.
+        Animation continues through potential stops so you can inspect them;
+        automatic stop-and-cancel relay timing is not simulated. The exact
+        search retains its own Enigma stepping and results.
       </p>
       <p className="source-line">
         <a

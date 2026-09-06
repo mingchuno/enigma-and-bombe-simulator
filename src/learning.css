@@ -12,6 +12,7 @@
   color: #46613e;
   width: fit-content;
   list-style: none;
+  min-height: 32px;
 }
 .concept-help summary::-webkit-details-marker {
   display: none;
@@ -244,6 +245,9 @@
   background: transparent;
   border: 0;
   padding: 2px;
+  min-height: 32px;
+  width: 100%;
+  text-align: left;
   font-family: var(--mono);
 }
 .operator-table :where(button) span {
@@ -266,7 +270,7 @@
 .learning-panel > p {
   font-size: 14px;
   margin-top: 16px;
-  max-width: 85ch;
+  max-width: 72ch;
   color: #53644a;
 }
 .learning-panel h2 {
@@ -834,4 +838,36 @@
   background: #e8eddf;
   padding: 12px;
   border-radius: 5px;
+}
+
+/* Keep explanatory controls comfortable without changing the instrument layout. */
+.operator-diagram-scroll {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+.operator-diagram-scroll svg {
+  display: block;
+  width: 100%;
+  min-width: 540px;
+}
+.progress-details,
+.drive-phase,
+.core-reading,
+.paper-result {
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 600px) {
+  .mode-switch button,
+  .mechanics-controls button,
+  .paper-controls button,
+  .chain-pages button {
+    min-height: 40px;
+  }
+  .inline-checkbox {
+    min-height: 36px;
+  }
+  .source-line a {
+    display: inline-block;
+    padding: 4px 0;
+  }
 }

@@ -1,3 +1,4 @@
+import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useState } from "react";
 import type { MenuEdge } from "../engine/bombe.ts";
 import { ALPHABET } from "../engine/enigma.ts";
@@ -49,69 +50,80 @@ export function HistoricalMenu({
         <>
           <p className="field-hint">
             A redrawn transcription of your diagram, not a crib for the current
-            search. Two G–R connections have different position numbers.
+            search. Two G–R connections have different position numbers. Scroll
+            the diagram sideways on a narrow screen.
           </p>
-          <svg
-            viewBox="0 0 650 470"
-            role="img"
-            aria-label="Historical menu transcription. N joins E at position 2; G and R have parallel connections at 6 and 12. Use the table below to select each edge."
+          <ScrollRegion
+            className="operator-diagram-scroll"
+            label="Historical menu diagram"
           >
-            {shown.map((item, index) => {
-              const a = exhibitPositions[ALPHABET[item.a]],
-                b = exhibitPositions[ALPHABET[item.b]];
-              const parallel =
-                item.position === 5 ? -9 : item.position === 11 ? 9 : 0;
-              const vertical = a[0] === b[0];
-              const x =
-                (a[0] + b[0]) / 2 + (vertical ? (parallel < 0 ? -53 : 16) : 0);
-              const y = (a[1] + b[1]) / 2 + (vertical ? 0 : -18);
-              return (
-                <g
-                  key={item.position}
-                  className={
-                    index === active
-                      ? "operator-edge selected"
-                      : "operator-edge"
-                  }
-                >
-                  <path
-                    d={`M${a[0] + parallel} ${a[1]} L${b[0] + parallel} ${b[1]}`}
-                  />
-                  <text x={x} y={y} textAnchor={vertical ? "start" : "middle"}>
-                    {item.position + 1}
-                  </text>
-                  <text
-                    className="operator-offset"
-                    x={x}
-                    y={y + 14}
-                    textAnchor={vertical ? "start" : "middle"}
+            <svg
+              viewBox="0 0 650 470"
+              role="img"
+              aria-label="Historical menu transcription. N joins E at position 2; G and R have parallel connections at 6 and 12. Use the table below to select each edge."
+            >
+              {shown.map((item, index) => {
+                const a = exhibitPositions[ALPHABET[item.a]],
+                  b = exhibitPositions[ALPHABET[item.b]];
+                const parallel =
+                  item.position === 5 ? -9 : item.position === 11 ? 9 : 0;
+                const vertical = a[0] === b[0];
+                const x =
+                  (a[0] + b[0]) / 2 +
+                  (vertical ? (parallel < 0 ? -53 : 16) : 0);
+                const y = (a[1] + b[1]) / 2 + (vertical ? 0 : -18);
+                return (
+                  <g
+                    key={item.position}
+                    className={
+                      index === active
+                        ? "operator-edge selected"
+                        : "operator-edge"
+                    }
                   >
-                    ({relativeLabel(item.position)})
+                    <path
+                      d={`M${a[0] + parallel} ${a[1]} L${b[0] + parallel} ${b[1]}`}
+                    />
+                    <text
+                      x={x}
+                      y={y}
+                      textAnchor={vertical ? "start" : "middle"}
+                    >
+                      {item.position + 1}
+                    </text>
+                    <text
+                      className="operator-offset"
+                      x={x}
+                      y={y + 14}
+                      textAnchor={vertical ? "start" : "middle"}
+                    >
+                      ({relativeLabel(item.position)})
+                    </text>
+                  </g>
+                );
+              })}
+              {Object.entries(exhibitPositions).map(([letter, [x, y]]) => (
+                <g key={letter}>
+                  <rect
+                    x={x - 13}
+                    y={y - 13}
+                    width="26"
+                    height="26"
+                    fill="#fcfbf7"
+                  />
+                  <text
+                    x={x}
+                    y={y}
+                    dominantBaseline="central"
+                    textAnchor="middle"
+                    className="operator-letter"
+                  >
+                    {letter}
                   </text>
                 </g>
-              );
-            })}
-            {Object.entries(exhibitPositions).map(([letter, [x, y]]) => (
-              <g key={letter}>
-                <rect
-                  x={x - 13}
-                  y={y - 13}
-                  width="26"
-                  height="26"
-                  fill="#fcfbf7"
-                />
-                <text
-                  x={x}
-                  y={y}
-                  dominantBaseline="central"
-                  textAnchor="middle"
-                  className="operator-letter"
-                >
-                  {letter}
-                </text>
-              </g>
-            ))}
-          </svg>
+              ))}
+            </svg>
+          </ScrollRegion>
           <p className="field-hint">
             The original indicator unit connects to G. It watches 26 possible
             plugboard partners of G; it is not a plaintext output display. The
@@ -127,7 +139,10 @@ export function HistoricalMenu({
           graph or drums.
         </p>
       )}
-      <div className="operator-table-scroll">
+      <ScrollRegion
+        className="operator-table-scroll"
+        label="Menu wiring schedule"
+      >
         <table className="operator-table">
           <caption>
             {example
@@ -163,7 +178,7 @@ export function HistoricalMenu({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
       {edge && (
         <p className="notation-reading">
           <strong>Read it aloud:</strong> “Connect cable {ALPHABET[edge.a]} to

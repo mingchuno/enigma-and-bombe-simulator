@@ -74,7 +74,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     setOffset(0);
     setMaxPairs(13);
     setAllOrders(false);
-    setDrumExample(null);
+    setElapsed(0);
+    setSelectedCandidate(0);
     setStatus("idle");
     setProgress(emptyProgress);
     setError("");
@@ -98,6 +99,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   }, [ciphertext, crib, offset]);
 
   function invalidate() {
+    setElapsed(0);
+    setDrumExample(null);
     setStatus("idle");
     setProgress(emptyProgress);
     setError("");
@@ -166,11 +169,14 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   }
   function cancelSearch() {
     worker.current?.terminate();
+    setElapsed((performance.now() - startTime.current) / 1000);
     setStatus("stopped");
   }
   const candidate = progress.candidates[selectedCandidate];
   const edge = menu.edges[Math.min(selectedEdge, menu.edges.length - 1)];
-  const percentage = (progress.tested / progress.total) * 100;
+  const total =
+    status === "idle" ? (allOrders ? 1054560 : 17576) : progress.total;
+  const percentage = (progress.tested / total) * 100;
 
   return (
     <>
@@ -278,6 +284,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   Crib offset
                   <input
                     aria-label="Crib offset"
+                    aria-invalid={Boolean(menu.error)}
+                    aria-describedby={menu.error ? "crib-error" : undefined}
                     type="number"
                     min="0"
                     max={Math.max(0, ciphertext.length - crib.length)}
@@ -320,7 +328,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 </Help>
               </div>
               {menu.error && (
-                <p className="error-message" role="alert">
+                <p id="crib-error" className="error-message" role="alert">
                   {menu.error}
                 </p>
               )}
@@ -544,14 +552,14 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 </span>
               </div>
               <progress
-                max={progress.total}
+                max={total}
                 value={progress.tested}
                 aria-label="Search progress"
               />
               <div className="progress-details">
                 <span>
-                  {progress.tested.toLocaleString()} /{" "}
-                  {progress.total.toLocaleString()} tested
+                  {progress.tested.toLocaleString()} / {total.toLocaleString()}{" "}
+                  tested
                 </span>
                 <span>
                   {percentage.toFixed(1)}% <b>·</b> {elapsed.toFixed(1)}s
@@ -636,7 +644,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                             <div>
                               <dt>Plug pairs</dt>
                               <dd>
-                                {candidate.pairs.join(" ") || "No forced pairs"}
+                                {candidate.pairs.join(" ") ||
+                                  "No cables in this assignment"}
                               </dd>
                             </div>
                           </dl>
@@ -646,9 +655,10 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                           <p className="muted">
                             {candidate.unknown.length
                               ? `Unresolved letters: ${candidate.unknown.join(" ")}. They are treated as unplugged in this preview; other completions may exist.`
-                              : "All plugboard letters are constrained for this candidate."}{" "}
-                            A matching crib does not prove that this is the
-                            original key.
+                              : "This candidate assigns all 26 letters; other compatible assignments may exist."}{" "}
+                            These are compatible pairings, not proven original
+                            wiring. A matching crib does not prove that this is
+                            the original key.
                           </p>
                         </div>
                       )}

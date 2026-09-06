@@ -138,3 +138,5 @@ All buttons, links, fields, selects, and disclosure summaries share a 3px `#b980
 ## Learning extensions
 
 The existing world now includes click/keyboard/touch help disclosures with persistent field hints, Bombe activity controls (Crib & search, Drums & wiring, Paper methods), and historical menu notation. `src/learning.css` owns these extensions. The drum cabinet uses the existing dark instrument surface, rotor-type colors and normalized core letters. The full bank scrolls horizontally on narrow screens; controls and explanations reflow vertically. The paper activity uses ochre sheet stock, two outline colors for covered holes and white for open intersections. Original drum calibration and full Banburismus inference are not implied by the visuals.
+
+The review polish makes mobile rotor selectors full-width below their labels, keeps historical notation at a readable minimum diagram width with horizontal scrolling, and uses a shared named/focusable overflow region for diagrams. Help and selection controls have larger hit areas; changing counters use tabular numerals. Learning prose is limited to 72ch. These are refinements of the existing layout and palette.

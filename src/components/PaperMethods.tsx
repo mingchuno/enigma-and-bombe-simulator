@@ -1,3 +1,4 @@
+import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useState } from "react";
 import { ALPHABET, normalizeText } from "../engine/enigma.ts";
 import { compareStrips } from "../engine/historical.ts";
@@ -62,6 +63,7 @@ export function PaperMethods() {
             min={-Math.max(0, second.length - 1)}
             max={Math.max(0, first.length - 1)}
             value={shift}
+            disabled={!first.length || !second.length}
             onChange={(e) => setShift(Number(e.target.value))}
           />
         </label>
@@ -77,7 +79,16 @@ export function PaperMethods() {
           Reset shift
         </button>
       </div>
-      <div className="punched-scroll">
+      {(!first.length || !second.length) && (
+        <p className="field-hint" role="status">
+          Enter both ciphertexts to compare the sheets.
+        </p>
+      )}
+      <p className="field-hint">
+        Scroll sideways to inspect the full strips. The diagram is a schematic
+        of the holes.
+      </p>
+      <ScrollRegion className="punched-scroll" label="Punched sheet diagram">
         <svg
           viewBox={`0 0 ${Math.max(width, 160)} ${overlay ? 440 : 845}`}
           style={{ minWidth: Math.max(width, 160) }}
@@ -139,7 +150,7 @@ export function PaperMethods() {
             />
           ))}
         </svg>
-      </div>
+      </ScrollRegion>
       <div className="paper-result">
         <strong>
           {matches.length} coincidences / {overlap} overlapping letters
@@ -148,8 +159,9 @@ export function PaperMethods() {
           {matches.length
             ? `First-strip positions: ${matches.map((index) => index + 1).join(", ")}.`
             : "No holes align at this shift."}{" "}
-          Gold outlines locate first-sheet holes; dark outlines locate
-          second-sheet holes. White openings pass through both.
+          {overlay
+            ? "Gold outlines locate first-sheet holes; dark outlines locate second-sheet holes. White openings pass through both."
+            : "The upper strip is the first ciphertext; the lower strip is the second. White openings show every hole in each separate sheet."}
         </p>
       </div>
       <p className="scope-note">

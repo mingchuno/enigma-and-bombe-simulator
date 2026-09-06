@@ -230,3 +230,78 @@ test("paper strips count actual coincidences under a shift and all modes fit mob
     ).toBe(true);
   }
 });
+
+test("invalid crib placements never claim that the alignment is clear", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page
+    .getByText("Slide the crib against the intercept", { exact: true })
+    .click();
+  for (const offset of ["-1", "0.5", "31"]) {
+    await page
+      .getByRole("spinbutton", { name: "Crib offset", exact: true })
+      .fill(offset);
+    await expect(page.locator(".alignment-explorer")).not.toContainText(
+      "No self-encryption conflicts",
+    );
+    await expect(page.locator(".alignment-explorer")).toContainText(
+      "Choose a whole-number offset",
+    );
+    await expect(
+      page.getByRole("button", { name: "Run Bombe search" }),
+    ).toBeDisabled();
+  }
+});
+
+test("editing a search resets its elapsed time and matches the selected search size", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page.getByRole("button", { name: "Run Bombe search" }).click();
+  await expect(page.getByRole("status")).toHaveText("Search complete", {
+    timeout: 30000,
+  });
+  await page
+    .getByRole("combobox", { name: "Rotor orders to search" })
+    .selectOption("all");
+  await expect(page.locator(".progress-details")).toContainText("1,054,560");
+  await expect(page.locator(".progress-details")).toContainText("0.0s");
+});
+
+test("wide paper diagrams can be scrolled with the keyboard", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Paper methods", exact: true })
+    .click();
+  await page
+    .getByRole("textbox", { name: "First Banbury ciphertext" })
+    .fill("A".repeat(60));
+  const diagram = page.getByRole("region", {
+    name: "Punched sheet diagram",
+    exact: true,
+  });
+  await diagram.focus();
+  await expect(diagram).toBeFocused();
+  const hasOverflow = await diagram.evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  );
+  if (hasOverflow) {
+    await diagram.press("ArrowRight");
+    await expect
+      .poll(() => diagram.evaluate((element) => element.scrollLeft))
+      .toBeGreaterThan(0);
+  }
+  await page.getByRole("checkbox", { name: "Overlay both sheets" }).uncheck();
+  await expect(page.locator(".paper-result")).toContainText(
+    "each separate sheet",
+  );
+  await page
+    .getByRole("textbox", { name: "First Banbury ciphertext" })
+    .fill("");
+  await expect(
+    page.getByRole("slider", { name: "Shift punched strip" }),
+  ).toBeDisabled();
+});

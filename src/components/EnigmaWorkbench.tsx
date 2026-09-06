@@ -82,6 +82,10 @@ export function EnigmaWorkbench({
     setMessage("");
     setPlaying(true);
   }
+  function changeConfiguration(next: MachineConfig) {
+    setPlaying(false);
+    setConfig(next);
+  }
   async function copy() {
     try {
       await navigator.clipboard.writeText(processed.output);
@@ -104,10 +108,7 @@ export function EnigmaWorkbench({
           </div>
           <Configuration
             config={config}
-            onChange={(next) => {
-              setPlaying(false);
-              setConfig(next);
-            }}
+            onChange={changeConfiguration}
             current={trace?.after ?? processed.windows}
           />
           <div className="machine-options">
@@ -117,7 +118,7 @@ export function EnigmaWorkbench({
                 aria-label="Reflector"
                 value={config.reflector}
                 onChange={(e) =>
-                  setConfig({
+                  changeConfiguration({
                     ...config,
                     reflector: e.target.value as "B" | "C",
                   })
@@ -188,8 +189,8 @@ export function EnigmaWorkbench({
           </div>
           <p className="field-hint">
             Type plain text to encrypt, or ciphertext to decrypt. Spaces,
-            numbers and punctuation are ignored. Edits replay the message from
-            Start.
+            numbers and punctuation are ignored. Up to 500 letters; edits replay
+            the message from Start.
           </p>
           <div className="message-columns">
             <label>
@@ -257,10 +258,17 @@ export function EnigmaWorkbench({
               Swap pairs of letters
               <input
                 aria-label="Plugboard pairs"
+                aria-invalid={Boolean(processed.error)}
+                aria-describedby={
+                  processed.error ? "plugboard-error" : undefined
+                }
                 placeholder="e.g. AV BS CG DL"
                 value={config.plugs}
                 onChange={(e) =>
-                  setConfig({ ...config, plugs: e.target.value.toUpperCase() })
+                  changeConfiguration({
+                    ...config,
+                    plugs: e.target.value.toUpperCase(),
+                  })
                 }
                 spellCheck={false}
               />
@@ -271,7 +279,7 @@ export function EnigmaWorkbench({
             </p>
           </div>
           {processed.error && (
-            <p className="error-message" role="alert">
+            <p id="plugboard-error" className="error-message" role="alert">
               {processed.error}
             </p>
           )}
@@ -279,7 +287,8 @@ export function EnigmaWorkbench({
             If you connect A to V, A becomes V and V becomes A. The same board
             is crossed before entering the rotors and again after returning from
             the reflector. Unconnected letters pass through unchanged. Each
-            letter can belong to only one pair.
+            letter can belong to only one pair. The board can accept 13 cables;
+            ten was usual wartime practice.
           </Help>
           <div className="plug-sockets" aria-label="Plugboard connections">
             {[...ALPHABET].map((letter, index) => (
@@ -293,7 +302,9 @@ export function EnigmaWorkbench({
                 title={
                   pairs[index] === index
                     ? `${letter}: unplugged`
-                    : `${letter} connected to ${ALPHABET[pairs[index]] ?? "?"}`
+                    : pairs[index] === undefined
+                      ? `${letter}: fix the plugboard entry to see connections`
+                      : `${letter} connected to ${ALPHABET[pairs[index]]}`
                 }
               >
                 {letter}

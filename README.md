@@ -76,3 +76,5 @@ The engine tests cover independent Enigma fixtures, double stepping, non-A rings
 - `tests/`: engine tests and Playwright browser scenarios.
 
 Create a static production bundle with `pnpm build`, then serve `dist/` using any static host. `pnpm preview` serves the bundle locally for verification.
+
+The [historical accuracy audit](docs/research/historical-accuracy-audit.md) records the source review, feature-by-feature verification, independent reflector-C fixtures, resolved findings, and the remaining teaching simplifications.
