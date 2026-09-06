@@ -84,7 +84,7 @@ test("trace describes the actual signal and positions", () => {
   assert.equal(trace.before, "AAA");
   assert.equal(trace.after, "AAB");
   assert.equal(trace.path[0].letter, "A");
-  assert.equal(trace.path.at(-1).letter, "B");
+  assert.equal(trace.path.at(-1)?.letter, "B");
 });
 
 test("trace shows both plugboard passes before the separate lamp stage", () => {

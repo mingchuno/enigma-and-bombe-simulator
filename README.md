@@ -56,6 +56,7 @@ See [the historical-interface research](docs/research/historical-bombe-interface
 ## Verify
 
 ```sh
+pnpm typecheck
 pnpm test
 pnpm build
 pnpm lint
@@ -63,6 +64,8 @@ pnpm format:check
 npx playwright install chromium
 pnpm test:browser
 ```
+
+`pnpm typecheck` checks application source, engine tests, browser tests, and Playwright configuration with strict TypeScript settings.
 
 The engine tests cover independent Enigma fixtures, double stepping, non-A rings, plug validation, reciprocity, crib offsets, solver budget handling, and agreement with exhaustive toy-alphabet plugboards. Browser tests exercise both desktop and mobile: encoding, trace inspection, validation, message transfer, full demo search, cancellation, and horizontal overflow.
 

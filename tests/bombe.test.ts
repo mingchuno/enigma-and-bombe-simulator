@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import type { MachineConfig } from "../src/engine/enigma.ts";
 import { Enigma, DEFAULT_CONFIG } from "../src/engine/enigma.ts";
 import {
   buildMenu,
@@ -9,7 +10,7 @@ import {
   rotorOrders,
 } from "../src/engine/bombe.ts";
 
-const config = {
+const config: MachineConfig = {
   ...DEFAULT_CONFIG,
   rotors: ["III", "II", "I"],
   windows: "KDQ",
@@ -73,6 +74,7 @@ test("search returns checked candidate, explicit result limit, and a witness plu
     }),
   ];
   const final = updates.at(-1);
+  assert.ok(final, "Search must yield a final update");
   assert.equal(final.reason, "limit");
   assert.equal(final.candidates[0].windows, "AAA");
   assert.equal(final.candidates[0].plaintext, plaintext);
@@ -87,11 +89,11 @@ test("budget exhaustion is reported as unresolved, never a rejection", () => {
 });
 
 function involutions(
-  size,
-  maxPairs,
-  partial = Array(size).fill(-1),
+  size: number,
+  maxPairs: number,
+  partial: number[] = Array(size).fill(-1),
   pairs = 0,
-) {
+): number[][] {
   const next = partial.indexOf(-1);
   if (next < 0) return [partial];
   const results = [];
