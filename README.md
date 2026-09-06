@@ -4,6 +4,16 @@ A React and TypeScript workbench for Enigma I encryption and Bombe-inspired code
 
 Everything runs in the browser. There is no backend, account, or remote message storage. Refreshing clears the current work.
 
+## Install and use offline
+
+The production build is a Progressive Web App. Open it online once and let it finish loading to cache the workbench, fonts, and Bombe worker. You can then reopen it offline and run both simulators. Installation requires HTTPS (or localhost for testing).
+
+Use your browser's install option where available. On iPhone or iPad, open the site in Safari and choose **Share → Add to Home Screen**. Installation does not save messages or search progress: refreshing or closing still clears current work.
+
+Updates download when you visit online and activate after all app tabs and installed windows close. Reopen the app to use the update. An update never forces a reload during a simulation.
+
+The service worker is enabled only in production builds; use `pnpm build` and `pnpm preview` to check offline behavior locally. Browser tests build and preview production assets, including offline reload and Bombe search coverage.
+
 ## Run locally
 
 Requires Node.js 24 or newer and pnpm (the version is pinned in `package.json`).
