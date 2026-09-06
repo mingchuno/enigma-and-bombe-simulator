@@ -1,0 +1,6 @@
+node_modules
+dist
+.impeccable
+.playwright-mcp
+playwright-report
+test-results

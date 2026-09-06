@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+.impeccable/cache/
+.impeccable/review/
+.playwright-mcp/
+playwright-report/
+test-results/
+*.tsbuildinfo

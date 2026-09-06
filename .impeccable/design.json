@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-06T08:35:41.345938+00:00",
+  "title": "Design System: Enigma & Bombe",
+  "extensions": {
+    "shadows": [
+      {
+        "name": "instrument",
+        "value": "0 12px 30px #24382f12",
+        "purpose": "Machine surface."
+      },
+      {
+        "name": "key",
+        "value": "0 3px 5px #091d2540",
+        "purpose": "Circular keys at rest."
+      },
+      {
+        "name": "pressed-key",
+        "value": "inset 0 2px 5px #061c1860",
+        "purpose": "Pressed input key."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-colors",
+        "value": "background 0.16s, color 0.16s, border-color 0.16s",
+        "purpose": "Button state transitions."
+      },
+      {
+        "name": "lamp-on",
+        "value": "0.32s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Output-key glow; disabled by reduced-motion CSS."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1450px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1100px"
+      },
+      {
+        "name": "stack-max",
+        "value": "850px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<button class=\"ds-primary-button\">Search settings</button>",
+      "css": ".ds-primary-button {\n  background: var(--green);\n  color: #f3f2e7;\n  border: 1px solid transparent;\n  border-radius: 6px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n  padding: 12px 18px;\n  font-size: 12px;\n  white-space: nowrap;\n}\n.ds-primary-button:hover:not(:disabled) {\n  background: #2b5342;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Text action",
+      "kind": "button",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<button class=\"ds-text-button\">Play example</button>",
+      "css": ".ds-text-button {\n  border: 0;\n  background: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 7px;\n  padding: 4px 0;\n  font-size: 12px;\n}\n.ds-text-button:hover:not(:disabled) {\n  color: #996421;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+    },
+    {
+      "name": "Message field",
+      "kind": "input",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<div class=\"ds-message-columns\"><textarea aria-label=\"Message\">HELLOWORLD</textarea></div>",
+      "css": ".ds-message-columns textarea {\n  width: 100%;\n  height: 112px;\n  background: #fcfbf7;\n  border: 1px solid #d5dacf;\n  border-radius: 8px;\n  margin-top: 9px;\n  padding: 13px 15px;\n  resize: vertical;\n  line-height: 1.75;\n  font-family: var(--mono);\n  font-size: 14px;\n  letter-spacing: 0.055em;\n  word-break: break-all;\n  color: var(--ink);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}",
+      "refersTo": "message-input"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<div class=\"ds-site-header\"><nav aria-label=\"Workbench\"><button class=\"ds-active\" aria-current=\"page\">Enigma</button><button>Bombe</button></nav></div>",
+      "css": ".ds-site-header nav {\n  display: flex;\n  align-self: stretch;\n  align-items: stretch;\n  margin-left: auto;\n  gap: 10px;\n}\n.ds-site-header nav button {\n  position: relative;\n  border: 0;\n  background: none;\n  padding: 0 21px;\n  color: #667166;\n  font-size: 14px;\n}\n.ds-site-header nav button.ds-active {\n  color: var(--green);\n  font-weight: 600;\n}\n.ds-site-header nav button.ds-active:after {\n  content: '';\n  position: absolute;\n  bottom: -1px;\n  height: 3px;\n  background: var(--green);\n  left: 20px;\n  right: 20px;\n}\n.ds-site-header nav button:hover {\n  background: #eaece3;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+    },
+    {
+      "name": "Validation badge",
+      "kind": "chip",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<span class=\"ds-validation-badge\">Crib aligned</span>",
+      "css": ".ds-validation-badge {\n  background: #e9efdf;\n  color: #496044;\n  border-radius: 30px;\n  padding: 5px 9px;\n  font-size: 10px;\n  white-space: nowrap;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+    },
+    {
+      "name": "Analysis panel",
+      "kind": "card",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<section class=\"ds-menu-panel\"><h2>Crib connections</h2><p class=\"ds-muted\">Inspect the selected constraint.</p></section>",
+      "css": ".ds-menu-panel {\n  border: 1px solid var(--line);\n  background: #fcfbf7;\n  border-radius: 12px;\n  padding: 23px 25px;\n}\n.ds-muted {\n  color: var(--muted);\n  font-size: 13px;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+    },
+    {
+      "name": "Machine key",
+      "kind": "button",
+      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "html": "<button class=\"ds-machine-key\" aria-label=\"Type A\">A</button><button class=\"ds-machine-key ds-lit\" aria-label=\"Output B\">B</button>",
+      "css": ".ds-machine-key {\n  border: 1px solid #78907b;\n  width: clamp(34px, 3.8vw, 47px);\n  height: clamp(34px, 3.8vw, 47px);\n  border-radius: 50%;\n  background: #214537;\n  color: #e6ecdf;\n  font-family: var(--mono);\n  font-size: 18px;\n  box-shadow: 0 3px 5px #091d2540;\n  flex-shrink: 0;\n}\n.ds-machine-key:hover:not(:disabled) {\n  background: #345e48;\n  border-color: #c6d5bb;\n}\n.ds-machine-key.ds-pressed {\n  border-color: #dfddbd;\n  box-shadow: inset 0 2px 5px #061c1860;\n}\n.ds-machine-key.ds-lit {\n  background: var(--amber);\n  border-color: var(--amber);\n  color: #183b32;\n  animation: lamp-on 0.32s cubic-bezier(0.16, 1, 0.3, 1);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+    }
+  ]
+}
