@@ -1,10 +1,12 @@
 # Enigma & Bombe
 
-An interactive React and TypeScript cipher workbench. Encipher with Enigma I, inspect each letter's signal path, and use a crib to search for compatible keys with a Bombe-inspired solver.
+A React and TypeScript workbench for Enigma I encryption and Bombe-inspired codebreaking. Inspect each keypress, test a suspected plaintext fragment against ciphertext, and explore drum wiring and paper methods.
+
+Everything runs in the browser. There is no backend, account, or remote message storage. Refreshing clears the current work.
 
 ## Run locally
 
-Requires Node.js 24 or newer.
+Requires Node.js 24 or newer and pnpm (the version is pinned in `package.json`).
 
 ```sh
 corepack enable
@@ -12,77 +14,65 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open the local URL printed by Vite. Processing happens in the browser. There is no backend, account, or remote message storage. Refreshing clears the current work.
+Open the URL printed by Vite. To preview a production build:
+
+```sh
+pnpm build
+pnpm preview
+```
 
 ## Try it
 
-- In **Enigma**, select **Play an example**, or enter `AAAAA` with the default settings to get `BDZGO`. Select a letter with the trace slider to inspect its rotor positions and substitutions.
-- Set rotor order, rings, starting windows, reflector, and disjoint plug pairs such as `AV BS CG DL`. Selecting an already-installed rotor swaps it with the previous occupant. All positions and rotor orders are displayed left to right.
-- Input is normalized to A–Z. Editing input or settings recomputes the entire message from the starting windows. Clearing the message returns to those starting windows. Decipher by entering ciphertext with the same settings.
-- In **Bombe**, run the generated weather-message example. Its full 17,576-position sweep finds the AAF candidate with `AV BS CG DL`. Expand the example description to see how it was generated.
-- **Send to Bombe** transfers your ciphertext, rings, reflector, rotor order, and up to 40 letters of plaintext as the crib. Starting windows and plug pairs are not supplied to the search. The transferred cable limit is 13; narrow it if known.
+- **Enigma:** enter `AAAAA` with the default settings to get `BDZGO`. Enter `BDZGO` with the same starting settings to recover `AAAAA`. Use the slider to inspect each letter's signal path and rotor stepping.
+- **Bombe:** run the generated weather-message example. The full 17,576-position sweep finds starting windows `AAF` with plug pairs `AV BS CG DL`.
+- **Send to Bombe:** transfer your ciphertext and up to 40 plaintext letters as a crib. Rotor order, rings, and reflector are retained; starting windows and plug pairs are withheld from the search.
+- **Learning views:** explore crib alignment, historical menu notation, the supplied museum menu, drum sensing and carry phases, and punched-strip coincidences.
 
-## Historical and search scope
+## Scope and limits
 
-Enigma I supports rotors I–V, B/C reflectors, ring settings, plugboard, pre-encipherment stepping, and the middle rotor's double step. There are no naval M4 or commercial Enigma variants in this release.
+Enigma I supports rotors I–V, reflectors B/C, ring settings, plugboard pairs, and double stepping. Input is normalized to A–Z. Editing a message or its settings replays it from the starting windows.
 
-The Bombe workspace implements modern constraint propagation and backtracking inspired by the British Turing–Welchman Bombe. The separate Drums & wiring lesson models sensing/carry phases and electrical reachability. It is not a calibrated physical replica.
+The Bombe search uses modern constraint propagation and backtracking with exact Enigma stepping. Every candidate is replay-checked against the crib. A match establishes compatibility with the crib; it does not prove unique recovery of the original key.
 
-For each starting-window hypothesis, the solver builds the exact rotor sequence, including characters before the crib and turnover inside it. Each menu edge enforces `P(cᵢ) = Sᵢ(P(pᵢ))`, and plugboard assignments must be reciprocal. Disconnected menu components are checked too. Every emitted candidate is replay-verified against the crib.
+- Rings and reflector are assumed known. Search one rotor order or all 60.
+- Accept up to 500 ciphertext letters and 1–100 crib letters. Short cribs usually produce many candidates. Offsets count normalized letters from zero.
+- Cable counts are upper bounds. Each candidate supplies one compatible plugboard; unconstrained letters remain unknown and are left unplugged in the preview.
+- Stop after 50 candidates. Each setting has a 20,000-branch budget; exhausted settings are reported as unresolved.
+- Search runs in a Web Worker. Stopping retains partial results from the latest progress update; changing assumptions clears them.
 
-Search assumptions and limits are explicit:
+The historical views are teaching models. Drums use normalized wiring-core coordinates, a discrete 39-point sensing/carry cycle, and subsets of up to 12 menu connections. Paper methods demonstrate coincidences rather than full Banburismus scoring.
 
-- Rings and reflector are known. Search the selected rotor order or all 60 orders from I–V.
-- The cable setting is a **maximum**, not an exact number. Unknown letters may be left unplugged for a valid completion.
-- Return one compatible plugboard witness per rotor setting, not all plugboards. Unresolved letters remain marked unknown; plaintext previews leave them unplugged.
-- Stop after 50 candidate settings. This is an incomplete sweep unless all positions were visited.
-- Limit backtracking to 20,000 attempted assignments per setting. Budget exhaustion increments the unresolved count; it is never reported as rejection.
-- Support up to 500 ciphertext letters and 8–100 crib letters. Crib offsets count normalized letters from zero.
-- Search runs in a dedicated Web Worker. Stopping terminates it immediately; displayed counts are from the latest progress update (every 128 positions), and the UI labels the results as partial.
+Sources and modelling details:
 
-A crib-compatible candidate is not proof of unique key recovery. Weak or incorrect cribs can admit other candidates. See [the research reference](docs/research/enigma-and-bombe.md) for primary sources, equations, and historical distinctions.
-
-## Learning views
-
-- The signal trace explicitly shows the outward plugboard, reflector return, second plugboard pass, and separate lamp.
-- Expand the “?” terms for context. Help uses native disclosures that work with a keyboard and touch; essential field instructions remain visible.
-- **Crib & search:** slide the crib strip and see self-encryption conflicts. Switch the menu to **Historical notation** for a wiring schedule or the supplied museum diagram; repeated G–R lines at positions 6 and 12 are preserved. Put that supplied menu on the drums without altering the current search.
-- **Drums & wiring:** run, pause, or step a 39-point drive; 26 sensing points alternate with 13 unsensed carry points. Inspect each three-drum scrambler, actual rotor permutations, indicator-register wires, and the reciprocal diagonal board. Top is the Enigma-left equivalent, even though it moves fastest during the Bombe search.
-- Drum letters are normalized wiring-core coordinates at ring A, not actual drum engravings or the exact search's settings. The model keeps relative bottom-drum offsets and assumes no middle turnover inside the menu. It does not model calibrated direction, gear geometry, continuous carry motion, or braking. Menus larger than 12 edges are paged as teaching subsets, not extra historical chains; the electrical verdict applies to the displayed subset.
-- **Paper methods:** slide two synthetic, editable punched ciphertext strips and count coincident holes. This demonstrates the comparison step of Banbury sheets, not full Banburismus scoring or decryption. Zygalski sheets are described as a different possible exhibit; we cannot identify the remembered display with certainty.
-
-See [the historical-interface research](docs/research/historical-bombe-interfaces.md) for primary sources and modelling boundaries.
+- [Enigma and Bombe research](docs/research/enigma-and-bombe.md)
+- [Historical interfaces and limitations](docs/research/historical-bombe-interfaces.md)
+- [Historical accuracy audit](docs/research/historical-accuracy-audit.md)
 
 ## Verify
 
 ```sh
+pnpm format:check
+pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
-pnpm lint
-pnpm format:check
-npx playwright install chromium
+pnpm exec playwright install chromium
 pnpm test:browser
 ```
 
-`pnpm typecheck` checks application source, engine tests, browser tests, and Playwright configuration with strict TypeScript settings. It also compiles the cipher, menu, solver, historical calculations, and exercise preparation without browser or Node globals (`tsconfig.engine.json`). Worker and session adapters remain in the browser compilation.
+Tests cover independent cipher fixtures, stepping, crib validation, solver consistency, session cleanup, transfers, and desktop/mobile interactions. Typechecks also compile the computational modules without browser or Node globals (`tsconfig.engine.json`).
 
-The engine tests cover independent Enigma fixtures, double stepping, non-A rings, plug validation, reciprocity, crib offsets, solver budget handling, and agreement with exhaustive toy-alphabet plugboards. Browser tests exercise both desktop and mobile: encoding, trace inspection, validation, message transfer, full demo search, cancellation, and horizontal overflow.
+## Deployment
 
-## Structure
+[GitHub Actions](.github/workflows/ci.yml) runs checks, tests, and a production build on pull requests and branch pushes. Only a successful **push to the default branch** deploys to GitHub Pages. Failed browser tests retain diagnostics for seven days.
 
-- `src/engine/enigma.ts`: framework-independent rotor machine and per-key traces.
-- `src/engine/crib-menu.ts`: crib placement, self-encryption conflicts, and menu construction shared by search and learning views.
-- `src/engine/bombe.ts`: plugboard propagation and search generator; retains the original menu exports for existing callers.
-- `src/engine/bombe-session.ts`: worker lifecycle, progress, cancellation, elapsed time, and rejection of late events.
-- `src/engine/bombe.worker.ts`: worker message boundary.
-- `src/workbench/search-exercise.ts`: transfer contract and demo preparation; preserves known assumptions while withholding starting windows and plug pairs.
-- `src/components/useBombeSearch.ts`: owns search inputs and invalidates old results whenever assumptions change. Raw field setters and the session stay private.
-- `src/components/BombeResults.tsx`: displays a search snapshot and candidate selection without controlling the worker.
-- `src/components/`: controls, workspaces, learning views, and field guide. The Bombe workspace owns lesson navigation independently of the search session.
-- `src/styles.css`: responsive visual system, with locally bundled fonts.
-- `tests/`: engine tests and Playwright browser scenarios.
+Pages uses **GitHub Actions** as its publishing source. CI builds `dist/` with `pnpm build --base=./`. Vite's [relative base](https://vite.dev/guide/build.html#relative-base) lets the same build work at the repository URL and at a custom domain root. Switching to `base: "/"` is unnecessary and would make asset URLs point outside the repository path before the domain move.
 
-Create a static production bundle with `pnpm build`, then serve `dist/` using any static host. `pnpm preview` serves the bundle locally for verification.
+To connect a domain later, set **Settings → Pages → Custom domain** and configure the domain's DNS using [GitHub's instructions](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site). No build change is needed. The deployment job reports the published URL.
 
-The [historical accuracy audit](docs/research/historical-accuracy-audit.md) records the source review, feature-by-feature verification, independent reflector-C fixtures, resolved findings, and the remaining teaching simplifications.
+## Code layout
+
+- `src/engine/`: Enigma, crib/menu rules, the solver, historical calculations, and worker/session adapters.
+- `src/workbench/`: demo and transfer preparation, preserving known assumptions while withholding the searched key.
+- `src/components/`: workspaces, controls, and learning views. `useBombeSearch` owns search edits and result invalidation; `BombeResults` renders progress and candidates.
+- `tests/`: engine and workbench tests, plus Playwright browser scenarios.
