@@ -435,12 +435,12 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   </button>
                   {edge && (
                     <div className="constraint-equation">
-                      <span>Current crib · position {edge.position + 1}</span>
                       <code>
                         P({ALPHABET[edge.b]}) = S<sub>{edge.position + 1}</sub>
                         (P(
                         {ALPHABET[edge.a]}))
                       </code>
+                      <span>Current crib · position {edge.position + 1}</span>
                       <p>
                         P is the unknown plugboard. S is the rotor path at this
                         position. Pairings must agree across every connection.

@@ -868,3 +868,26 @@
     padding: 4px 0;
   }
 }
+
+.configuration-help {
+  container-type: inline-size;
+  margin-top: 12px;
+}
+.configuration-help-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 24px;
+}
+@container (min-width: 600px) {
+  .configuration-help-items {
+    grid-template-columns: repeat(4, max-content);
+    justify-content: start;
+  }
+}
+.configuration-help .concept-help {
+  margin: 0;
+  min-height: 44px;
+  font-size: 12px;
+  width: 100%;
+  text-align: left;
+}

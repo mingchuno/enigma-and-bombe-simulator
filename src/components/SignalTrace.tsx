@@ -15,9 +15,6 @@ export function SignalTrace({
     <aside className="signal-panel">
       <div className="section-heading">
         <h2>Follow the signal</h2>
-        <span className="live-mark">
-          <i /> Live
-        </span>
       </div>
       <p className="muted">One keypress. A journey through the machine.</p>
       <Help term="The complete signal route">

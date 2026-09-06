@@ -170,17 +170,6 @@ export function PaperMethods() {
         not that statistical test and does not decrypt a message. This activity
         demonstrates alignment and intersection only.
       </p>
-      <details className="paper-alternative">
-        <summary>Could it have been Zygalski sheets?</summary>
-        <p>
-          Yes. Zygalski sheets were grids of candidate rotor settings, layered
-          and shifted to leave holes in common. They exploited repetitions in an
-          earlier doubled message-key procedure. They were not the long,
-          one-letter-per-column ciphertext strips shown here, and were not a
-          Bombe crib menu. Without a photograph of that exhibit, the
-          identification remains uncertain.
-        </p>
-      </details>
       <p className="source-line">
         Sources:{" "}
         <a

@@ -32,7 +32,7 @@ Correct stepping and explicit assumptions; inspectable intermediate states; resp
 
 ## Learning scope
 
-Contextual help, a sliding crib strip, historical menu transcription, a linked drum and wiring mode, and a separate Banbury sheet comparison activity are implemented. The punched-sheet exhibit identification remains uncertain; Zygalski sheets are explained as an alternative. The tooling follows the user’s pnpm and Biome migration.
+Contextual help, a sliding crib strip, historical menu transcription, a linked drum and wiring mode, and a separate Banbury sheet comparison activity are implemented. The paper activity focuses on Banbury sheet alignment; the speculative exhibit-identification aside was removed. The tooling follows the user’s pnpm and Biome migration.
 
 ## Appearance
 

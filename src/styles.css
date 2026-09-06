@@ -852,7 +852,9 @@ input[type="range"] {
 }
 .constraint-equation > span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 4px;
 }
 .run-summary > span {
   color: var(--muted);
@@ -1146,23 +1148,26 @@ footer {
   border-color: #c8d4b9;
 }
 .constraint-equation {
-  margin-top: 15px;
-  padding-top: 17px;
+  margin-top: 16px;
+  padding: 20px;
   border-top: 1px solid var(--line);
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 .constraint-equation code {
-  font-size: 14px;
+  font-size: 18px;
   font-family: var(--mono);
+  line-height: 1.5;
 }
 .constraint-equation p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
   width: 100%;
   max-width: 65ch;
+  line-height: 1.6;
+  margin: 12px 0 0;
 }
 .menu-empty {
   height: 260px;
@@ -1893,15 +1898,6 @@ progress::-moz-progress-bar {
     font-size: 8px;
     gap: 6px;
   }
-  .constraint-equation {
-    gap: 9px 13px;
-  }
-  .constraint-equation code {
-    font-size: 12px;
-  }
-  .constraint-equation p {
-    font-size: 10px;
-  }
   .menu-visual svg {
     margin-top: 15px;
   }
@@ -1970,4 +1966,25 @@ progress::-moz-progress-bar {
     /* biome-ignore lint/complexity/noImportantStyles: Respect reduced motion regardless of component specificity. */
     scroll-behavior: auto !important;
   }
+}
+
+.simulator-intro {
+  padding: 28px 0;
+}
+.simulator-intro h1 {
+  font-family: var(--serif);
+  font-size: clamp(40.8px, 4.2vw, 55.2px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.simulator-intro .intro-description {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 16.8px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 12px 0 0;
+  max-width: 72ch;
 }

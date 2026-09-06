@@ -62,35 +62,21 @@ export function App() {
         <AppearanceMenu />
       </header>
       <main>
-        <div className="page-intro">
-          <div>
-            <h1>
-              {tab === "enigma" ? (
-                <>
-                  Every letter takes
-                  <br className="mobile-break" /> a different path.
-                </>
-              ) : tab === "bombe" ? (
-                "A clue becomes a constraint."
-              ) : (
-                "Inside the cipher."
-              )}
-            </h1>
-            <p>
-              {tab === "enigma"
-                ? "Set the rotors. Press a key. See the cipher unfold."
-                : tab === "bombe"
-                  ? "Trace a crib through the connections. Search for settings that hold."
-                  : "A working guide to enciphering messages and finding possible keys."}
-            </p>
-          </div>
-          <span className="intro-tag">
+        <div className="simulator-intro">
+          <h1>
             {tab === "enigma"
-              ? "Enigma I · Interactive simulator"
+              ? "Enigma I"
               : tab === "bombe"
-                ? "Bombe · Known-ring search"
-                : "Principles, operation & sources"}
-          </span>
+                ? "Bombe"
+                : "Field guide"}
+          </h1>
+          <p className="intro-description">
+            {tab === "enigma"
+              ? "Set the rotors, type a message, and follow each letter through the machine."
+              : tab === "bombe"
+                ? "Search for possible rotor and plugboard settings using a crib, known rings, and reflector."
+                : "Learn how Enigma works, how to use the simulator, and where the historical details come from."}
+          </p>
         </div>
         <div hidden={tab !== "enigma"}>
           <EnigmaWorkbench onTransfer={sendToBombe} />
@@ -102,7 +88,6 @@ export function App() {
       </main>
       <footer>
         <span>Enigma & Bombe</span>
-        <p>Explore the mechanism. Understand the mathematics.</p>
         <button
           onClick={() => {
             setTab("guide");
