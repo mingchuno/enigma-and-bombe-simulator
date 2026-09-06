@@ -1,5 +1,21 @@
-import { ALPHABET, Enigma, ROTOR_NAMES, validateConfig } from "./enigma.ts";
+import {
+  ALPHABET,
+  ALPHABET_SIZE,
+  Enigma,
+  MAX_PLUGBOARD_PAIRS,
+  ROTOR_NAMES,
+  WINDOW_SETTING_COUNT,
+  validateConfig,
+} from "./enigma.ts";
 import type { MachineConfig, RotorName, Triple } from "./enigma.ts";
+
+export const MAX_CIPHERTEXT_LENGTH = 500;
+export const MAX_CRIB_LENGTH = 100;
+export const DEFAULT_RESULT_LIMIT = 50;
+const DEFAULT_BRANCH_LIMIT = 20_000;
+const PROGRESS_UPDATE_INTERVAL = 128;
+const UNASSIGNED_PARTNER = -1;
+const RIGHT_TWO_ROTOR_SETTING_COUNT = ALPHABET_SIZE ** 2;
 
 export interface MenuEdge {
   a: number;
@@ -92,7 +108,7 @@ export function scramblerEdges(
     const windows = enigma.windows;
     let mapping = cache.get(windows);
     if (!mapping) {
-      mapping = Uint8Array.from({ length: 26 }, (_, input) =>
+      mapping = Uint8Array.from({ length: ALPHABET_SIZE }, (_, input) =>
         enigma.scramble(input),
       );
       cache.set(windows, mapping);
@@ -106,8 +122,8 @@ export function solveMenu(
   edges: ScramblerEdge[],
   options: SolverOptions,
 ): Solution {
-  const size = options.alphabetSize ?? 26;
-  const branchLimit = options.branchLimit ?? 20000;
+  const size = options.alphabetSize ?? ALPHABET_SIZE;
+  const branchLimit = options.branchLimit ?? DEFAULT_BRANCH_LIMIT;
   const adjacency: ScramblerEdge[][] = Array.from({ length: size }, () => []);
   edges.forEach((edge) => {
     adjacency[edge.a].push(edge);
@@ -123,11 +139,11 @@ export function solveMenu(
     const queue = [initial];
     for (let cursor = 0; cursor < queue.length; cursor++) {
       const [a, b] = queue[cursor];
-      if (mapping[a] !== -1) {
+      if (mapping[a] !== UNASSIGNED_PARTNER) {
         if (mapping[a] !== b) return false;
         continue;
       }
-      if (mapping[b] !== -1 && mapping[b] !== a) return false;
+      if (mapping[b] !== UNASSIGNED_PARTNER && mapping[b] !== a) return false;
       mapping[a] = b;
       mapping[b] = a;
       let pairCount = 0;
@@ -144,7 +160,9 @@ export function solveMenu(
   }
 
   function branch(mapping: number[]): number[] | undefined {
-    const letter = letters.find((value) => mapping[value] === -1);
+    const letter = letters.find(
+      (value) => mapping[value] === UNASSIGNED_PARTNER,
+    );
     if (letter === undefined) return mapping;
     // Try self-steckering first; it is a valid hypothesis, not a known fact.
     const partners = [
@@ -152,7 +170,7 @@ export function solveMenu(
       ...Array.from({ length: size }, (_, i) => i).filter((i) => i !== letter),
     ];
     for (const partner of partners) {
-      if (mapping[partner] !== -1) continue;
+      if (mapping[partner] !== UNASSIGNED_PARTNER) continue;
       if (branches >= branchLimit) {
         exhausted = true;
         return;
@@ -166,14 +184,14 @@ export function solveMenu(
     }
   }
 
-  const mapping = branch(Array(size).fill(-1));
+  const mapping = branch(Array(size).fill(UNASSIGNED_PARTNER));
   if (!mapping)
     return { status: exhausted ? "unresolved" : "reject", branches };
   const pairs = mapping.flatMap((partner, letter) =>
     partner > letter ? [ALPHABET[letter] + ALPHABET[partner]] : [],
   );
   const unknown = mapping.flatMap((partner, letter) =>
-    partner === -1 ? [ALPHABET[letter]] : [],
+    partner === UNASSIGNED_PARTNER ? [ALPHABET[letter]] : [],
   );
   return { status: "match", mapping, pairs, unknown, branches };
 }
@@ -189,7 +207,7 @@ export function rotorOrders(): Triple<RotorName>[] {
 }
 
 export function searchSize(allOrders: boolean): number {
-  return (allOrders ? rotorOrders().length : 1) * 26 ** 3;
+  return (allOrders ? rotorOrders().length : 1) * WINDOW_SETTING_COUNT;
 }
 
 export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
@@ -197,14 +215,21 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
   if (
     !Number.isInteger(options.maxPairs) ||
     options.maxPairs < 0 ||
-    options.maxPairs > 13
+    options.maxPairs > MAX_PLUGBOARD_PAIRS
   )
-    throw new Error("Maximum cables must be between 0 and 13.");
+    throw new Error(
+      `Maximum cables must be between 0 and ${MAX_PLUGBOARD_PAIRS}.`,
+    );
   const menu = buildMenu(options.ciphertext, options.crib, options.offset);
-  if (options.ciphertext.length > 500 || options.crib.length > 100)
-    throw new Error("Use up to 500 ciphertext letters and 100 crib letters.");
+  if (
+    options.ciphertext.length > MAX_CIPHERTEXT_LENGTH ||
+    options.crib.length > MAX_CRIB_LENGTH
+  )
+    throw new Error(
+      `Use up to ${MAX_CIPHERTEXT_LENGTH} ciphertext letters and ${MAX_CRIB_LENGTH} crib letters.`,
+    );
   const orders = options.allOrders ? rotorOrders() : [options.config.rotors];
-  const resultLimit = options.resultLimit ?? 50;
+  const resultLimit = options.resultLimit ?? DEFAULT_RESULT_LIMIT;
   const update: SearchUpdate = {
     tested: 0,
     total: searchSize(options.allOrders),
@@ -215,11 +240,11 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
   };
   for (const rotors of orders) {
     const cache = new Map<string, Uint8Array>();
-    for (let index = 0; index < 17576; index++) {
+    for (let index = 0; index < WINDOW_SETTING_COUNT; index++) {
       const windows =
-        ALPHABET[Math.floor(index / 676)] +
-        ALPHABET[Math.floor(index / 26) % 26] +
-        ALPHABET[index % 26];
+        ALPHABET[Math.floor(index / RIGHT_TWO_ROTOR_SETTING_COUNT)] +
+        ALPHABET[Math.floor(index / ALPHABET_SIZE) % ALPHABET_SIZE] +
+        ALPHABET[index % ALPHABET_SIZE];
       const config = { ...options.config, rotors, windows, plugs: "" };
       const result = solveMenu(scramblerEdges(config, menu, cache), {
         maxPairs: options.maxPairs,
@@ -255,7 +280,7 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
           return;
         }
       }
-      if (update.tested % 128 === 0)
+      if (update.tested % PROGRESS_UPDATE_INTERVAL === 0)
         yield { ...update, candidates: [...update.candidates] };
     }
   }

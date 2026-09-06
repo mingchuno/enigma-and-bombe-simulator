@@ -2,8 +2,20 @@ import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useEffect, useMemo, useState } from "react";
 import type { MenuEdge } from "../engine/bombe.ts";
 import type { MachineConfig, SignalStep } from "../engine/enigma.ts";
-import { ALPHABET, Enigma } from "../engine/enigma.ts";
 import {
+  ALPHABET,
+  ALPHABET_SIZE,
+  Enigma,
+  ROTOR_SLOT,
+  ROTOR_SLOTS,
+} from "../engine/enigma.ts";
+import {
+  DRIVE_POINT_COUNT,
+  DRIVE_POINTS_PER_CYCLE,
+  SENSING_POINTS,
+  CARRY_POINTS,
+  SCRAMBLERS_PER_CHAIN,
+  DIAGONAL_BOARD_TERMINAL_COUNT,
   driveState,
   electricalReachability,
   historicalScramblers,
@@ -12,6 +24,23 @@ import {
 import { Help } from "./Help.tsx";
 import { Icon } from "./Icon.tsx";
 
+const DRIVE_ANIMATION_INTERVAL_MS = 180;
+const FULL_TURN_DEGREES = 360;
+const FULL_TURN_RADIANS = 2 * Math.PI;
+const DRUM_CENTER = 40;
+const DRUM_TICK_INNER_RADIUS = 32;
+const DRUM_TICK_OUTER_RADIUS = 35;
+const CONTACT_CIRCLE_RADII = [36, 51, 66, 81];
+const CONTACT_DIAGRAM_CENTER = 95;
+const OUTWARD_CONTACT_CIRCLES = 2;
+const BOARD_CELL_SPACING = 12;
+const BOARD_CELL_ORIGIN = 23;
+const BOARD_ROW_LABEL_BASELINE = 32;
+const BOARD_COLUMN_LABEL_CENTER = 28;
+// scramble() records the entry plugboard, then the rotor circuit, exit plugboard and lamp.
+const ENTRY_PLUGBOARD_STEPS = 1;
+const EXIT_PLUGBOARD_AND_LAMP_STEPS = 2;
+
 const drumColors = {
   I: "#a94332",
   II: "#783b49",
@@ -19,9 +48,9 @@ const drumColors = {
   IV: "#bc952f",
   V: "#765137",
 };
-const tickPath = Array.from({ length: 26 }, (_, i) => {
-  const a = (i / 26) * Math.PI * 2;
-  return `M${40 + 32 * Math.sin(a)} ${40 - 32 * Math.cos(a)}L${40 + 35 * Math.sin(a)} ${40 - 35 * Math.cos(a)}`;
+const tickPath = Array.from({ length: ALPHABET_SIZE }, (_, i) => {
+  const a = (i / ALPHABET_SIZE) * FULL_TURN_RADIANS;
+  return `M${DRUM_CENTER + DRUM_TICK_INNER_RADIUS * Math.sin(a)} ${DRUM_CENTER - DRUM_TICK_INNER_RADIUS * Math.cos(a)}L${DRUM_CENTER + DRUM_TICK_OUTER_RADIUS * Math.sin(a)} ${DRUM_CENTER - DRUM_TICK_OUTER_RADIUS * Math.cos(a)}`;
 }).join(" ");
 function Drum({
   letter,
@@ -34,14 +63,27 @@ function Drum({
 }) {
   return (
     <svg viewBox="0 0 80 80" aria-hidden="true" className="drum-disc">
-      <circle cx="40" cy="40" r="37" fill={color} />
-      <g transform={`rotate(${(orientation * 360) / 26} 40 40)`}>
+      <circle cx={DRUM_CENTER} cy={DRUM_CENTER} r="37" fill={color} />
+      <g
+        transform={`rotate(${(orientation * FULL_TURN_DEGREES) / ALPHABET_SIZE} ${DRUM_CENTER} ${DRUM_CENTER})`}
+      >
         <path d={tickPath} stroke="#eee2bd" strokeWidth="1.1" />
         <path d="M40 5v10" stroke="#fff9db" strokeWidth="3" />
-        <circle cx="40" cy="40" r="24" fill="none" stroke="#d4c38d" />
+        <circle
+          cx={DRUM_CENTER}
+          cy={DRUM_CENTER}
+          r="24"
+          fill="none"
+          stroke="#d4c38d"
+        />
       </g>
-      <circle cx="40" cy="40" r="18" fill="#e3d6b7" />
-      <text x="40" y="41" textAnchor="middle" dominantBaseline="central">
+      <circle cx={DRUM_CENTER} cy={DRUM_CENTER} r="18" fill="#e3d6b7" />
+      <text
+        x={DRUM_CENTER}
+        y={DRUM_CENTER + 1}
+        textAnchor="middle"
+        dominantBaseline="central"
+      >
         {letter}
       </text>
       <path d="m36 0 4 5 4-5" fill="#fcf5d9" />
@@ -65,8 +107,9 @@ export function DrumMechanics({
   const [wire, setWire] = useState(0);
   const [diagonal, setDiagonal] = useState(true);
   const [showBoard, setShowBoard] = useState(false);
-  const pageStart = Math.floor(selected / 12) * 12;
-  const bankEdges = edges.slice(pageStart, pageStart + 12);
+  const pageStart =
+    Math.floor(selected / SCRAMBLERS_PER_CHAIN) * SCRAMBLERS_PER_CHAIN;
+  const bankEdges = edges.slice(pageStart, pageStart + SCRAMBLERS_PER_CHAIN);
   const drive = driveState(point);
   const scramblers = useMemo(
     () => historicalScramblers(config, bankEdges, point),
@@ -97,24 +140,29 @@ export function DrumMechanics({
       rings: "AAA",
       plugs: "",
     }).scramble(wire, path);
-  const rotorPath = path.slice(1, -2);
+  const rotorPath = path.slice(
+    ENTRY_PLUGBOARD_STEPS,
+    -EXIT_PLUGBOARD_AND_LAMP_STEPS,
+  );
   useEffect(() => {
     if (!playing) return;
     const timer = window.setInterval(
-      () => setPoint((value) => (value + 1) % (39 * 676)),
-      180,
+      () => setPoint((value) => (value + 1) % DRIVE_POINT_COUNT),
+      DRIVE_ANIMATION_INTERVAL_MS,
     );
     return () => clearInterval(timer);
   }, [playing]);
   function advance() {
     setPlaying(false);
-    setPoint((value) => (value + 1) % (39 * 676));
+    setPoint((value) => (value + 1) % DRIVE_POINT_COUNT);
   }
   return (
     <section className="mechanics learning-panel">
       <div className="section-heading">
         <h2>What does a rotating drum change?</h2>
-        <span className="validation-badge">39-point drive · slowed down</span>
+        <span className="validation-badge">
+          {DRIVE_POINTS_PER_CYCLE}-point drive · slowed down
+        </span>
       </div>
       <p>
         Each <strong>vertical column of three drums</strong> is one Enigma
@@ -131,7 +179,11 @@ export function DrumMechanics({
         <button
           onClick={() => {
             setPlaying(false);
-            setPoint(Math.floor(point / 39) * 39 + 26);
+            setPoint(
+              Math.floor(point / DRIVE_POINTS_PER_CYCLE) *
+                DRIVE_POINTS_PER_CYCLE +
+                SENSING_POINTS,
+            );
           }}
         >
           Show carry phase
@@ -150,14 +202,17 @@ export function DrumMechanics({
             aria-label="Drive point"
             type="number"
             min={0}
-            max={26363}
+            max={DRIVE_POINT_COUNT - 1}
             value={point}
             onChange={(e) => {
               setPlaying(false);
               setPoint(
                 Math.max(
                   0,
-                  Math.min(26363, Math.floor(Number(e.target.value))),
+                  Math.min(
+                    DRIVE_POINT_COUNT - 1,
+                    Math.floor(Number(e.target.value)),
+                  ),
                 ),
               );
             }}
@@ -167,8 +222,8 @@ export function DrumMechanics({
       <div className={`drive-phase ${drive.sensing ? "sensing" : "carrying"}`}>
         <strong>
           {drive.sensing
-            ? `Sensing point ${drive.phase + 1} of 26`
-            : `Carry point ${drive.phase - 25} of 13 — sensing off`}
+            ? `Sensing point ${drive.phase + 1} of ${SENSING_POINTS}`
+            : `Carry point ${drive.phase - SENSING_POINTS + 1} of ${CARRY_POINTS} — sensing off`}
         </strong>
         <span>
           {drive.sensing
@@ -177,10 +232,10 @@ export function DrumMechanics({
         </span>
       </div>
       <div className="phase-ruler" aria-hidden="true">
-        {Array.from({ length: 39 }, (_, i) => (
+        {Array.from({ length: DRIVE_POINTS_PER_CYCLE }, (_, i) => (
           <i
             key={i}
-            className={`${i < 26 ? "sense" : "carry"} ${drive.phase === i ? "active" : ""}`}
+            className={`${i < SENSING_POINTS ? "sense" : "carry"} ${drive.phase === i ? "active" : ""}`}
           />
         ))}
       </div>
@@ -191,7 +246,7 @@ export function DrumMechanics({
       </p>
       <div className="drum-cabinet">
         <div className="cabinet-heading">
-          <strong>One chain · up to 12 scramblers</strong>
+          <strong>One chain · up to {SCRAMBLERS_PER_CHAIN} scramblers</strong>
           <span>
             Menu connections {pageStart + 1}–{pageStart + bankEdges.length}
           </span>
@@ -219,13 +274,13 @@ export function DrumMechanics({
                 className={`drum-column ${selected === pageStart + index ? "selected" : ""}`}
                 onClick={() => onSelect(pageStart + index)}
                 aria-pressed={selected === pageStart + index}
-                aria-label={`Select scrambler at position ${scrambler.position + 1}, ${ALPHABET[scrambler.a]} to ${ALPHABET[scrambler.b]}, relative setting ${relativeLabel(scrambler.position)}, top core ${scrambler.windows[0]}, middle core ${scrambler.windows[1]}, bottom core ${scrambler.windows[2]}`}
+                aria-label={`Select scrambler at position ${scrambler.position + 1}, ${ALPHABET[scrambler.a]} to ${ALPHABET[scrambler.b]}, relative setting ${relativeLabel(scrambler.position)}, top core ${scrambler.windows[ROTOR_SLOT.LEFT]}, middle core ${scrambler.windows[ROTOR_SLOT.MIDDLE]}, bottom core ${scrambler.windows[ROTOR_SLOT.RIGHT]}`}
               >
                 <span className="drum-connection">
                   {ALPHABET[scrambler.a]}–{ALPHABET[scrambler.b]}
                   <small>#{scrambler.position + 1}</small>
                 </span>
-                {[0, 1, 2].map((row) => (
+                {ROTOR_SLOTS.map((row) => (
                   <Drum
                     key={row}
                     letter={scrambler.windows[row]}
@@ -248,24 +303,30 @@ export function DrumMechanics({
           <span>3 chains × 12 scramblers × 3 drums = 108 drums</span>
         </div>
       </div>
-      {edges.length > 12 && (
+      {edges.length > SCRAMBLERS_PER_CHAIN && (
         <div
           className="chain-pages"
           aria-label="Choose connections to illustrate"
         >
-          {Array.from({ length: Math.ceil(edges.length / 12) }, (_, index) => (
-            <button
-              key={index}
-              aria-pressed={pageStart === index * 12}
-              onClick={() => {
-                setPlaying(false);
-                onSelect(index * 12);
-              }}
-            >
-              Connections {index * 12 + 1}–
-              {Math.min(index * 12 + 12, edges.length)}
-            </button>
-          ))}
+          {Array.from(
+            { length: Math.ceil(edges.length / SCRAMBLERS_PER_CHAIN) },
+            (_, index) => (
+              <button
+                key={index}
+                aria-pressed={pageStart === index * SCRAMBLERS_PER_CHAIN}
+                onClick={() => {
+                  setPlaying(false);
+                  onSelect(index * SCRAMBLERS_PER_CHAIN);
+                }}
+              >
+                Connections {index * SCRAMBLERS_PER_CHAIN + 1}–
+                {Math.min(
+                  index * SCRAMBLERS_PER_CHAIN + SCRAMBLERS_PER_CHAIN,
+                  edges.length,
+                )}
+              </button>
+            ),
+          )}
           <p className="field-hint">
             Pages are teaching subsets, not extra historical banks. Circuit
             sensing below uses only the displayed connections; fewer constraints
@@ -316,27 +377,41 @@ export function DrumMechanics({
               role="img"
               aria-label="Four concentric circles of 26 contacts, a schematic of the 104 brushes on a drum"
             >
-              <circle cx="95" cy="95" r="90" fill="#e7dfc9" />
-              {[36, 51, 66, 81].map((radius, row) => (
+              <circle
+                cx={CONTACT_DIAGRAM_CENTER}
+                cy={CONTACT_DIAGRAM_CENTER}
+                r="90"
+                fill="#e7dfc9"
+              />
+              {CONTACT_CIRCLE_RADII.map((radius, row) => (
                 <g key={radius}>
-                  {Array.from({ length: 26 }, (_, i) => {
-                    const a = ((i + drive.cores[0]) / 26) * Math.PI * 2;
+                  {Array.from({ length: ALPHABET_SIZE }, (_, i) => {
+                    const a =
+                      ((i + drive.cores[ROTOR_SLOT.LEFT]) / ALPHABET_SIZE) *
+                      FULL_TURN_RADIANS;
                     return (
                       <circle
                         key={i}
-                        cx={95 + radius * Math.sin(a)}
-                        cy={95 - radius * Math.cos(a)}
+                        cx={CONTACT_DIAGRAM_CENTER + radius * Math.sin(a)}
+                        cy={CONTACT_DIAGRAM_CENTER - radius * Math.cos(a)}
                         r="2.5"
-                        fill={row < 2 ? "#305640" : "#916027"}
+                        fill={
+                          row < OUTWARD_CONTACT_CIRCLES ? "#305640" : "#916027"
+                        }
                       />
                     );
                   })}
                 </g>
               ))}
-              <circle cx="95" cy="95" r="24" fill="#183b32" />
+              <circle
+                cx={CONTACT_DIAGRAM_CENTER}
+                cy={CONTACT_DIAGRAM_CENTER}
+                r="24"
+                fill="#183b32"
+              />
               <text
-                x="95"
-                y="95"
+                x={CONTACT_DIAGRAM_CENTER}
+                y={CONTACT_DIAGRAM_CENTER}
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill="#f8f0d7"
@@ -434,7 +509,7 @@ export function DrumMechanics({
             <span
               key={letter}
               className={
-                drive.sensing && circuit.live[input * 26 + index]
+                drive.sensing && circuit.live[input * ALPHABET_SIZE + index]
                   ? "energized"
                   : ""
               }
@@ -443,7 +518,7 @@ export function DrumMechanics({
               <small>
                 {!drive.sensing
                   ? "—"
-                  : circuit.live[input * 26 + index]
+                  : circuit.live[input * ALPHABET_SIZE + index]
                     ? "on"
                     : "off"}
               </small>
@@ -453,7 +528,7 @@ export function DrumMechanics({
         <p className="sense-verdict" aria-live={playing ? "off" : "polite"}>
           {!drive.sensing
             ? "Not sensing during carry."
-            : `${circuit.registerCount} of 26 register wires energized — ${circuit.registerCount === 26 ? "reject this orientation." : "potential stop; further checking required."}`}
+            : `${circuit.registerCount} of ${ALPHABET_SIZE} register wires energized — ${circuit.registerCount === ALPHABET_SIZE ? "reject this orientation." : "potential stop; further checking required."}`}
         </p>
         <label className="inline-checkbox">
           <input
@@ -461,7 +536,7 @@ export function DrumMechanics({
             checked={showBoard}
             onChange={(e) => setShowBoard(e.target.checked)}
           />
-          Show all 676 diagonal-board terminals
+          Show all {DIAGONAL_BOARD_TERMINAL_COUNT} diagonal-board terminals
         </label>
         {showBoard && (
           <div className="diagonal-scroll">
@@ -472,10 +547,18 @@ export function DrumMechanics({
             >
               {[...ALPHABET].map((letter, index) => (
                 <g key={letter}>
-                  <text x="8" y={32 + index * 12} className="board-label">
+                  <text
+                    x="8"
+                    y={BOARD_ROW_LABEL_BASELINE + index * BOARD_CELL_SPACING}
+                    className="board-label"
+                  >
                     {letter}
                   </text>
-                  <text x={28 + index * 12} y="12" className="board-label">
+                  <text
+                    x={BOARD_COLUMN_LABEL_CENTER + index * BOARD_CELL_SPACING}
+                    y="12"
+                    className="board-label"
+                  >
                     {letter}
                   </text>
                 </g>
@@ -483,8 +566,14 @@ export function DrumMechanics({
               {circuit.live.map((live, index) => (
                 <rect
                   key={index}
-                  x={23 + (index % 26) * 12}
-                  y={23 + Math.floor(index / 26) * 12}
+                  x={
+                    BOARD_CELL_ORIGIN +
+                    (index % ALPHABET_SIZE) * BOARD_CELL_SPACING
+                  }
+                  y={
+                    BOARD_CELL_ORIGIN +
+                    Math.floor(index / ALPHABET_SIZE) * BOARD_CELL_SPACING
+                  }
                   width="10"
                   height="10"
                   fill={drive.sensing && live ? "#986420" : "#dce4d4"}

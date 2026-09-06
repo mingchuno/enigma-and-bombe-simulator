@@ -5,6 +5,20 @@ import { EXHIBIT_MENU, relativeLabel } from "../engine/historical.ts";
 import { HistoricalMenu } from "./HistoricalMenu.tsx";
 import { ScrollRegion } from "./ScrollRegion.tsx";
 
+const EXHIBIT_LAYOUT = {
+  width: 650,
+  height: 470,
+  parallelEdgeSpacing: 9,
+  leftLabelOffset: -53,
+  rightLabelOffset: 16,
+  horizontalLabelOffset: -18,
+  relativeLabelSpacing: 14,
+  nodeSize: 26,
+} as const;
+// Zero-based positions of the two G–R connections in the supplied exhibit.
+const FIRST_PARALLEL_POSITION = 5;
+const SECOND_PARALLEL_POSITION = 11;
+
 const exhibitPositions: Record<string, [number, number]> = {
   N: [445, 30],
   L: [95, 120],
@@ -38,7 +52,7 @@ export function MuseumMenu({
         label="Historical menu diagram"
       >
         <svg
-          viewBox="0 0 650 470"
+          viewBox={`0 0 ${EXHIBIT_LAYOUT.width} ${EXHIBIT_LAYOUT.height}`}
           role="img"
           aria-label="Historical menu transcription. N joins E at position 2; G and R have parallel connections at 6 and 12. Use the table below to select each edge."
         >
@@ -46,11 +60,22 @@ export function MuseumMenu({
             const a = exhibitPositions[ALPHABET[item.a]],
               b = exhibitPositions[ALPHABET[item.b]];
             const parallel =
-              item.position === 5 ? -9 : item.position === 11 ? 9 : 0;
+              item.position === FIRST_PARALLEL_POSITION
+                ? -EXHIBIT_LAYOUT.parallelEdgeSpacing
+                : item.position === SECOND_PARALLEL_POSITION
+                  ? EXHIBIT_LAYOUT.parallelEdgeSpacing
+                  : 0;
             const vertical = a[0] === b[0];
             const x =
-              (a[0] + b[0]) / 2 + (vertical ? (parallel < 0 ? -53 : 16) : 0);
-            const y = (a[1] + b[1]) / 2 + (vertical ? 0 : -18);
+              (a[0] + b[0]) / 2 +
+              (vertical
+                ? parallel < 0
+                  ? EXHIBIT_LAYOUT.leftLabelOffset
+                  : EXHIBIT_LAYOUT.rightLabelOffset
+                : 0);
+            const y =
+              (a[1] + b[1]) / 2 +
+              (vertical ? 0 : EXHIBIT_LAYOUT.horizontalLabelOffset);
             return (
               <g
                 key={item.position}
@@ -69,7 +94,7 @@ export function MuseumMenu({
                 <text
                   className="operator-offset"
                   x={x}
-                  y={y + 14}
+                  y={y + EXHIBIT_LAYOUT.relativeLabelSpacing}
                   textAnchor={vertical ? "start" : "middle"}
                 >
                   ({relativeLabel(item.position)})
@@ -80,10 +105,10 @@ export function MuseumMenu({
           {Object.entries(exhibitPositions).map(([letter, [x, y]]) => (
             <g key={letter}>
               <rect
-                x={x - 13}
-                y={y - 13}
-                width="26"
-                height="26"
+                x={x - EXHIBIT_LAYOUT.nodeSize / 2}
+                y={y - EXHIBIT_LAYOUT.nodeSize / 2}
+                width={EXHIBIT_LAYOUT.nodeSize}
+                height={EXHIBIT_LAYOUT.nodeSize}
                 fill="#fcfbf7"
               />
               <text

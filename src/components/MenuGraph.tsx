@@ -1,6 +1,19 @@
 import { ALPHABET } from "../engine/enigma.ts";
 import type { MenuEdge } from "../engine/bombe.ts";
 
+const GRAPH_WIDTH = 540;
+const GRAPH_HEIGHT = 350;
+const GRAPH_CENTER_X = GRAPH_WIDTH / 2;
+const GRAPH_CENTER_Y = GRAPH_HEIGHT / 2;
+const NODE_RADIUS_X = 225;
+const NODE_RADIUS_Y = 135;
+const NODE_RADIUS = 17;
+const EDGE_CURVE_BASE_Y = 150;
+const EDGE_CURVE_LANES = 5;
+const EDGE_CURVE_SPACING = 12;
+const FULL_TURN_RADIANS = 2 * Math.PI;
+const TOP_START_ANGLE = -Math.PI / 2;
+
 export function MenuGraph({
   edges,
   selected,
@@ -15,10 +28,14 @@ export function MenuGraph({
   );
   const points = new Map(
     letters.map((letter, index) => {
-      const angle = (index / letters.length) * Math.PI * 2 - Math.PI / 2;
+      const angle =
+        (index / letters.length) * FULL_TURN_RADIANS + TOP_START_ANGLE;
       return [
         letter,
-        { x: 270 + 225 * Math.cos(angle), y: 175 + 135 * Math.sin(angle) },
+        {
+          x: GRAPH_CENTER_X + NODE_RADIUS_X * Math.cos(angle),
+          y: GRAPH_CENTER_Y + NODE_RADIUS_Y * Math.sin(angle),
+        },
       ];
     }),
   );
@@ -26,7 +43,7 @@ export function MenuGraph({
   return (
     <div className="menu-visual">
       <svg
-        viewBox="0 0 540 350"
+        viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`}
         role="img"
         aria-label={`Crib menu with ${letters.length} letters and ${edges.length} position constraints. Select a letter pair below to highlight its connection.`}
       >
@@ -36,7 +53,7 @@ export function MenuGraph({
           return (
             <path
               key={index}
-              d={`M${a.x} ${a.y} Q270 ${150 + (index % 5) * 12} ${b.x} ${b.y}`}
+              d={`M${a.x} ${a.y} Q${GRAPH_CENTER_X} ${EDGE_CURVE_BASE_Y + (index % EDGE_CURVE_LANES) * EDGE_CURVE_SPACING} ${b.x} ${b.y}`}
               className={
                 selected === index ? "menu-edge selected" : "menu-edge"
               }
@@ -56,7 +73,7 @@ export function MenuGraph({
                   : "menu-node"
               }
             >
-              <circle r="17" />
+              <circle r={NODE_RADIUS} />
               <text textAnchor="middle" dominantBaseline="central">
                 {ALPHABET[letter]}
               </text>

@@ -1,3 +1,4 @@
+import { REFLECTOR_TRACE_INDEX, ROTOR_SLOT } from "../engine/enigma.ts";
 import type { Trace } from "../engine/enigma.ts";
 import { Help } from "./Help.tsx";
 export function SignalTrace({
@@ -47,11 +48,11 @@ export function SignalTrace({
             {trace.path.map((step, index) => (
               <div
                 key={index}
-                className={`signal-node ${index === 5 ? "reflection" : ""} ${index > 5 ? "return-path" : ""}`}
+                className={`signal-node ${index === REFLECTOR_TRACE_INDEX ? "reflection" : ""} ${index > REFLECTOR_TRACE_INDEX ? "return-path" : ""}`}
               >
                 <span className="signal-letter">{step.letter}</span>
                 <span>{step.label}</span>
-                {index === 5 && <small>turn back</small>}
+                {index === REFLECTOR_TRACE_INDEX && <small>turn back</small>}
               </div>
             ))}
           </div>
@@ -60,9 +61,9 @@ export function SignalTrace({
               {trace.before} <span>→</span> {trace.after}
             </strong>
             <p>
-              {trace.stepped[0]
+              {trace.stepped[ROTOR_SLOT.LEFT]
                 ? "The middle rotor is at its notch: both the left and middle rotors advance."
-                : trace.stepped[1]
+                : trace.stepped[ROTOR_SLOT.MIDDLE]
                   ? "The right rotor reaches turnover and advances the middle rotor."
                   : "The right rotor advances before the signal enters."}
             </p>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { MachineConfig, Trace } from "../engine/enigma.ts";
 import {
   ALPHABET,
+  MAX_PLUGBOARD_PAIRS,
   DEFAULT_CONFIG,
   Enigma,
   normalizeText,
@@ -12,6 +13,17 @@ import { ConfigurationHelp, Help } from "./Help.tsx";
 import { Icon } from "./Icon.tsx";
 import { SignalTrace } from "./SignalTrace.tsx";
 
+import { MAX_CIPHERTEXT_LENGTH } from "../engine/bombe.ts";
+import { RAW_MESSAGE_INPUT_LIMIT } from "./message-input.ts";
+
+const CIPHERTEXT_GROUP_SIZE = 5;
+const CIPHERTEXT_GROUP_PATTERN = new RegExp(
+  `.{1,${CIPHERTEXT_GROUP_SIZE}}`,
+  "g",
+);
+const EXAMPLE_KEYPRESS_INTERVAL_MS = 380;
+const COPY_STATUS_DURATION_MS = 2_200;
+const TRANSFER_CRIB_LENGTH = 40;
 const KEY_ROWS = ["QWERTZUIO", "ASDFGHJK", "PYXCVBNML"];
 export interface Transfer {
   config: MachineConfig;
@@ -67,14 +79,14 @@ export function EnigmaWorkbench({
       index++;
       setMessage(sample.slice(0, index));
       if (index === sample.length) setPlaying(false);
-    }, 380);
+    }, EXAMPLE_KEYPRESS_INTERVAL_MS);
     return () => window.clearInterval(timer);
   }, [isPlaying]);
 
   function changeMessage(value: string) {
     setPlaying(false);
     setSelection(null);
-    setMessage(normalizeText(value).slice(0, 500));
+    setMessage(normalizeText(value).slice(0, MAX_CIPHERTEXT_LENGTH));
   }
   function playExample() {
     setConfig(DEFAULT_CONFIG);
@@ -93,7 +105,7 @@ export function EnigmaWorkbench({
     } catch {
       setCopyStatus("Select text to copy");
     }
-    window.setTimeout(() => setCopyStatus("Copy"), 2200);
+    window.setTimeout(() => setCopyStatus("Copy"), COPY_STATUS_DURATION_MS);
   }
 
   return (
@@ -153,7 +165,10 @@ export function EnigmaWorkbench({
                     className={`machine-key ${trace?.output === letter ? "lit" : ""} ${trace?.input === letter ? "pressed" : ""}`}
                     onClick={() => changeMessage(message + letter)}
                     aria-label={`Type ${letter}`}
-                    disabled={Boolean(processed.error) || message.length >= 500}
+                    disabled={
+                      Boolean(processed.error) ||
+                      message.length >= MAX_CIPHERTEXT_LENGTH
+                    }
                   >
                     {letter}
                   </button>
@@ -189,8 +204,8 @@ export function EnigmaWorkbench({
           </div>
           <p className="field-hint">
             Type plain text to encrypt, or ciphertext to decrypt. Spaces,
-            numbers and punctuation are ignored. Up to 500 letters; edits replay
-            the message from Start.
+            numbers and punctuation are ignored. Up to {MAX_CIPHERTEXT_LENGTH}{" "}
+            letters; edits replay the message from Start.
           </p>
           <div className="message-columns">
             <label>
@@ -201,7 +216,7 @@ export function EnigmaWorkbench({
                 onChange={(e) => changeMessage(e.target.value)}
                 placeholder="Type a message, or use the keys above…"
                 spellCheck={false}
-                maxLength={1000}
+                maxLength={RAW_MESSAGE_INPUT_LIMIT}
               />
             </label>
             <div className="output-field">
@@ -215,7 +230,10 @@ export function EnigmaWorkbench({
               <textarea
                 aria-label="Message output"
                 readOnly
-                value={processed.output.match(/.{1,5}/g)?.join(" ") ?? ""}
+                value={
+                  processed.output.match(CIPHERTEXT_GROUP_PATTERN)?.join(" ") ??
+                  ""
+                }
                 placeholder="Your enciphered message appears here."
               />
             </div>
@@ -249,8 +267,8 @@ export function EnigmaWorkbench({
           <div className="section-heading">
             <h2>Plugboard</h2>
             <span className="muted">
-              {pairs.filter((partner, letter) => partner > letter).length} / 13
-              cables
+              {pairs.filter((partner, letter) => partner > letter).length} /{" "}
+              {MAX_PLUGBOARD_PAIRS} cables
             </span>
           </div>
           <div className="plugboard-form">
@@ -329,7 +347,7 @@ export function EnigmaWorkbench({
               onTransfer({
                 config,
                 ciphertext: processed.output,
-                crib: message.slice(0, 40),
+                crib: message.slice(0, TRANSFER_CRIB_LENGTH),
               })
             }
           >

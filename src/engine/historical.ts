@@ -1,27 +1,42 @@
 import type { MenuEdge, ScramblerEdge } from "./bombe.ts";
 import type { MachineConfig, Triple } from "./enigma.ts";
-import { ALPHABET, Enigma, mod26 } from "./enigma.ts";
+import {
+  ALPHABET,
+  ALPHABET_SIZE,
+  Enigma,
+  ROTOR_SLOT,
+  mod26,
+} from "./enigma.ts";
+
+export const SENSING_POINTS = ALPHABET_SIZE;
+export const CARRY_POINTS = 13;
+export const DRIVE_POINTS_PER_CYCLE = SENSING_POINTS + CARRY_POINTS;
+export const DRIVE_POINT_COUNT = DRIVE_POINTS_PER_CYCLE * ALPHABET_SIZE ** 2;
+export const DIAGONAL_BOARD_TERMINAL_COUNT = ALPHABET_SIZE ** 2;
+export const SCRAMBLERS_PER_CHAIN = 12;
 
 // Discrete sense/carry model of a 39-point Bombe. See historical-bombe-interfaces.md.
 export function driveState(point: number) {
-  const tick = Math.max(0, Math.floor(point)) % (39 * 26 * 26);
-  const cycle = Math.floor(tick / 39);
-  const phase = tick % 39;
+  const tick = Math.max(0, Math.floor(point)) % DRIVE_POINT_COUNT;
+  const cycle = Math.floor(tick / DRIVE_POINTS_PER_CYCLE);
+  const phase = tick % DRIVE_POINTS_PER_CYCLE;
   return {
     phase,
-    sensing: phase < 26,
-    tested: cycle * 26 + Math.min(phase + 1, 26),
+    sensing: phase < SENSING_POINTS,
+    tested: cycle * SENSING_POINTS + Math.min(phase + 1, SENSING_POINTS),
     cores: [
-      tick % 26,
-      cycle % 26,
-      Math.floor(cycle / 26) % 26,
+      tick % ALPHABET_SIZE,
+      cycle % ALPHABET_SIZE,
+      Math.floor(cycle / ALPHABET_SIZE) % ALPHABET_SIZE,
     ] as Triple<number>,
   };
 }
 
 /** Position is zero-based. Beyond one revolution, avoid inventing an Enigma carry. */
 export function relativeLabel(position: number): string {
-  return position < 26 ? `ZZ${ALPHABET[position]}` : `+${position + 1}`;
+  return position < ALPHABET_SIZE
+    ? `ZZ${ALPHABET[position]}`
+    : `+${position + 1}`;
 }
 
 export function historicalScramblers(
@@ -32,11 +47,13 @@ export function historicalScramblers(
   const { cores } = driveState(point);
   return edges.map((edge) => {
     const positions = [...cores];
-    positions[2] = mod26(positions[2] + edge.position + 1);
+    positions[ROTOR_SLOT.RIGHT] = mod26(
+      positions[ROTOR_SLOT.RIGHT] + edge.position + 1,
+    );
     const windows = positions.map((value) => ALPHABET[value]).join("");
     // Core coordinates, not actual window/ring settings or printed Bombe drum letters.
     const enigma = new Enigma({ ...config, windows, rings: "AAA", plugs: "" });
-    const mapping = Array.from({ length: 26 }, (_, input) =>
+    const mapping = Array.from({ length: ALPHABET_SIZE }, (_, input) =>
       enigma.scramble(input),
     );
     return { ...edge, mapping, windows };
@@ -49,13 +66,16 @@ export function electricalReachability(
   hypothesis: number,
   diagonal: boolean,
 ) {
-  const adjacency = Array.from({ length: 26 }, () => [] as ScramblerEdge[]);
+  const adjacency = Array.from(
+    { length: ALPHABET_SIZE },
+    () => [] as ScramblerEdge[],
+  );
   for (const edge of edges) {
     adjacency[edge.a].push(edge);
     adjacency[edge.b].push(edge);
   }
-  const live = Array<boolean>(676).fill(false);
-  const queue = [register * 26 + hypothesis];
+  const live = Array<boolean>(DIAGONAL_BOARD_TERMINAL_COUNT).fill(false);
+  const queue = [register * ALPHABET_SIZE + hypothesis];
   live[queue[0]] = true;
   const activate = (terminal: number) => {
     if (!live[terminal]) {
@@ -65,16 +85,16 @@ export function electricalReachability(
   };
   for (let cursor = 0; cursor < queue.length; cursor++) {
     const terminal = queue[cursor];
-    const letter = Math.floor(terminal / 26);
-    const wire = terminal % 26;
-    if (diagonal) activate(wire * 26 + letter);
+    const letter = Math.floor(terminal / ALPHABET_SIZE);
+    const wire = terminal % ALPHABET_SIZE;
+    if (diagonal) activate(wire * ALPHABET_SIZE + letter);
     for (const edge of adjacency[letter]) {
       const other = edge.a === letter ? edge.b : edge.a;
-      activate(other * 26 + edge.mapping[wire]);
+      activate(other * ALPHABET_SIZE + edge.mapping[wire]);
     }
   }
   const registerCount = live
-    .slice(register * 26, register * 26 + 26)
+    .slice(register * ALPHABET_SIZE, register * ALPHABET_SIZE + ALPHABET_SIZE)
     .filter(Boolean).length;
   return { live, registerCount, energized: queue.length };
 }

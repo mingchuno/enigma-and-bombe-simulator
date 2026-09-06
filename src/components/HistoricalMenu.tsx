@@ -1,6 +1,6 @@
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import type { MenuEdge } from "../engine/bombe.ts";
-import { ALPHABET } from "../engine/enigma.ts";
+import { ALPHABET, ALPHABET_SIZE } from "../engine/enigma.ts";
 import { relativeLabel } from "../engine/historical.ts";
 import { Help } from "./Help.tsx";
 
@@ -59,7 +59,7 @@ export function HistoricalMenu({
           <strong>Read it aloud:</strong> “Connect cable {ALPHABET[edge.a]} to
           cable {ALPHABET[edge.b]} through the scrambler for message letter{" "}
           {edge.position + 1}.”{" "}
-          {edge.position < 26
+          {edge.position < ALPHABET_SIZE
             ? `${relativeLabel(edge.position)} is a relative setup mark, not the recovered message key.`
             : "The + offset is shown numerically because another revolution requires explicit turnover assumptions."}
         </p>

@@ -1,5 +1,20 @@
 /** Enigma I conventions and wiring sources: docs/research/enigma-and-bombe.md. */
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const ALPHABET_SIZE = ALPHABET.length;
+export const ROTOR_SLOT = { LEFT: 0, MIDDLE: 1, RIGHT: 2 } as const;
+export type RotorSlot = (typeof ROTOR_SLOT)[keyof typeof ROTOR_SLOT];
+export const ROTOR_SLOTS = [
+  ROTOR_SLOT.LEFT,
+  ROTOR_SLOT.MIDDLE,
+  ROTOR_SLOT.RIGHT,
+] as const;
+export const ROTOR_COUNT = ROTOR_SLOTS.length;
+export const WINDOW_SETTING_COUNT = ALPHABET_SIZE ** ROTOR_COUNT;
+export const MAX_PLUGBOARD_PAIRS = ALPHABET_SIZE / 2;
+const FORWARD_ROTOR_SLOTS = [...ROTOR_SLOTS].reverse();
+// A key and an entry plugboard precede the forward rotor traversal.
+export const REFLECTOR_TRACE_INDEX = 2 + ROTOR_COUNT;
+const ROTOR_SETTING_PATTERN = new RegExp(`^[A-Z]{${ROTOR_COUNT}}$`);
 export const ROTOR_NAMES = ["I", "II", "III", "IV", "V"] as const;
 export type RotorName = (typeof ROTOR_NAMES)[number];
 export type Triple<T> = [T, T, T];
@@ -42,7 +57,8 @@ const reflectors = {
   B: indices("YRUHQSLDPXNGOKMIEBFZCWVJAT"),
   C: indices("FVPJIAOYEDRZXWGCTKUQSBNMHL"),
 };
-export const mod26 = (value: number): number => ((value % 26) + 26) % 26;
+export const mod26 = (value: number): number =>
+  ((value % ALPHABET_SIZE) + ALPHABET_SIZE) % ALPHABET_SIZE;
 export const normalizeText = (text: string): string =>
   text.toUpperCase().replace(/[^A-Z]/g, "");
 
@@ -50,7 +66,7 @@ const rotors = Object.fromEntries(
   ROTOR_NAMES.map((name) => {
     const [wiring, notch] = specifications[name];
     const forward = indices(wiring);
-    const reverse = Array<number>(26);
+    const reverse = Array<number>(ALPHABET_SIZE);
     forward.forEach((value, index) => {
       reverse[value] = index;
     });
@@ -59,7 +75,7 @@ const rotors = Object.fromEntries(
 ) as Record<RotorName, { forward: number[]; reverse: number[]; notch: number }>;
 
 export function parsePlugboard(text: string): number[] {
-  const mapping = Array.from({ length: 26 }, (_, index) => index);
+  const mapping = Array.from({ length: ALPHABET_SIZE }, (_, index) => index);
   const used = new Set<string>();
   for (const pair of text.trim().toUpperCase().split(/\s+/).filter(Boolean)) {
     if (!/^[A-Z]{2}$/.test(pair))
@@ -80,13 +96,16 @@ export function parsePlugboard(text: string): number[] {
 
 export function validateConfig(config: MachineConfig): void {
   if (
-    config.rotors.length !== 3 ||
-    new Set(config.rotors).size !== 3 ||
+    config.rotors.length !== ROTOR_COUNT ||
+    new Set(config.rotors).size !== ROTOR_COUNT ||
     config.rotors.some((name) => !rotors[name])
   ) {
     throw new Error("Choose three distinct rotors from I–V.");
   }
-  if (!/^[A-Z]{3}$/.test(config.windows) || !/^[A-Z]{3}$/.test(config.rings)) {
+  if (
+    !ROTOR_SETTING_PATTERN.test(config.windows) ||
+    !ROTOR_SETTING_PATTERN.test(config.rings)
+  ) {
     throw new Error("Windows and rings must each contain three letters A–Z.");
   }
   if (!reflectors[config.reflector])
@@ -117,8 +136,11 @@ export class Enigma {
   }
 
   step(): boolean[] {
-    const middleNotch = this.positions[1] === this.wheels[1].notch;
-    const rightNotch = this.positions[2] === this.wheels[2].notch;
+    const middleNotch =
+      this.positions[ROTOR_SLOT.MIDDLE] ===
+      this.wheels[ROTOR_SLOT.MIDDLE].notch;
+    const rightNotch =
+      this.positions[ROTOR_SLOT.RIGHT] === this.wheels[ROTOR_SLOT.RIGHT].notch;
     const stepped = [middleNotch, middleNotch || rightNotch, true];
     this.positions = this.positions.map((position, index) =>
       mod26(position + Number(stepped[index])),
@@ -126,7 +148,7 @@ export class Enigma {
     return stepped;
   }
 
-  private passRotor(input: number, slot: number, wiring: number[]): number {
+  private passRotor(input: number, slot: RotorSlot, wiring: number[]): number {
     const offset = this.positions[slot] - this.ringOffsets[slot];
     return mod26(wiring[mod26(input + offset)] - offset);
   }
@@ -137,13 +159,13 @@ export class Enigma {
     const record = (label: string) =>
       path?.push({ label, letter: ALPHABET[letter] });
     record("Plugboard →");
-    for (const slot of [2, 1, 0]) {
+    for (const slot of FORWARD_ROTOR_SLOTS) {
       letter = this.passRotor(letter, slot, this.wheels[slot].forward);
       record(`Rotor ${this.names[slot]} →`);
     }
     letter = this.reflector[letter];
     record("Reflector");
-    for (const slot of [0, 1, 2]) {
+    for (const slot of ROTOR_SLOTS) {
       letter = this.passRotor(letter, slot, this.wheels[slot].reverse);
       record(`Rotor ${this.names[slot]} ←`);
     }

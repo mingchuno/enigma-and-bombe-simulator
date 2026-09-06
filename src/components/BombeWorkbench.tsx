@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { MenuEdge } from "../engine/bombe.ts";
 import { BombeSearchSession } from "../engine/bombe-session.ts";
-import { buildMenu, searchSize } from "../engine/bombe.ts";
+import {
+  buildMenu,
+  searchSize,
+  MAX_CIPHERTEXT_LENGTH,
+  MAX_CRIB_LENGTH,
+  DEFAULT_RESULT_LIMIT,
+} from "../engine/bombe.ts";
 import type { MachineConfig } from "../engine/enigma.ts";
 import {
   ALPHABET,
+  MAX_PLUGBOARD_PAIRS,
   DEFAULT_CONFIG,
   Enigma,
   normalizeText,
@@ -21,11 +28,17 @@ import { Icon } from "./Icon.tsx";
 import { MenuGraph } from "./MenuGraph.tsx";
 import { PaperMethods } from "./PaperMethods.tsx";
 
+import { RAW_MESSAGE_INPUT_LIMIT } from "./message-input.ts";
+
+const MIN_RECOMMENDED_CRIB_LENGTH = 8;
+const PERCENT_SCALE = 100;
+const PROGRESS_DECIMAL_PLACES = 1;
 const DEMO_CONFIG: MachineConfig = {
   ...DEFAULT_CONFIG,
   windows: "AAF",
   plugs: "AV BS CG DL",
 };
+const DEMO_MAX_PAIRS = DEMO_CONFIG.plugs.split(" ").length;
 const DEMO_PLAIN = "WETTERVORHERSAGEFUERDIEBISKAYA";
 const DEMO_CIPHER = new Enigma(DEMO_CONFIG).process(DEMO_PLAIN);
 export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
@@ -42,7 +55,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   const [crib, setCrib] = useState(DEMO_PLAIN);
   const [offset, setOffset] = useState(0);
   const [allOrders, setAllOrders] = useState(false);
-  const [maxPairs, setMaxPairs] = useState(4);
+  const [maxPairs, setMaxPairs] = useState(DEMO_MAX_PAIRS);
   const [selectedEdge, setSelectedEdge] = useState(0);
   const [selectedCandidate, setSelectedCandidate] = useState(0);
   const [session] = useState(
@@ -72,7 +85,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     setCiphertext(transfer.ciphertext);
     setCrib(transfer.crib);
     setOffset(0);
-    setMaxPairs(13);
+    setMaxPairs(MAX_PLUGBOARD_PAIRS);
     setAllOrders(false);
     setSelectedCandidate(0);
     setIsDemo(false);
@@ -99,7 +112,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     setCiphertext(DEMO_CIPHER);
     setCrib(DEMO_PLAIN);
     setOffset(0);
-    setMaxPairs(4);
+    setMaxPairs(DEMO_MAX_PAIRS);
     setAllOrders(false);
     setIsDemo(true);
   }
@@ -113,7 +126,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   const candidate = progress.candidates[selectedCandidate];
   const edge = menu.edges[Math.min(selectedEdge, menu.edges.length - 1)];
   const total = status === "idle" ? searchSize(allOrders) : progress.total;
-  const percentage = (progress.tested / total) * 100;
+  const percentage = (progress.tested / total) * PERCENT_SCALE;
 
   return (
     <>
@@ -204,25 +217,33 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 Start with ciphertext and a fragment of suspected plaintext.
               </p>
               <label>
-                Ciphertext <span>{ciphertext.length} / 500</span>
+                Ciphertext{" "}
+                <span>
+                  {ciphertext.length} / {MAX_CIPHERTEXT_LENGTH}
+                </span>
                 <textarea
                   aria-label="Intercepted ciphertext"
                   value={ciphertext}
-                  maxLength={1000}
+                  maxLength={RAW_MESSAGE_INPUT_LIMIT}
                   disabled={running}
                   onChange={(e) => {
                     invalidate();
-                    setCiphertext(normalizeText(e.target.value).slice(0, 500));
+                    setCiphertext(
+                      normalizeText(e.target.value).slice(
+                        0,
+                        MAX_CIPHERTEXT_LENGTH,
+                      ),
+                    );
                   }}
                   spellCheck={false}
                 />
               </label>
               <label>
-                Crib <span>1–100 letters</span>
+                Crib <span>1–{MAX_CRIB_LENGTH} letters</span>
                 <input
                   aria-label="Plaintext crib"
                   aria-describedby={
-                    crib.length > 0 && crib.length < 8
+                    crib.length > 0 && crib.length < MIN_RECOMMENDED_CRIB_LENGTH
                       ? "short-crib-hint"
                       : undefined
                   }
@@ -230,16 +251,18 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   disabled={running}
                   onChange={(e) => {
                     invalidate();
-                    setCrib(normalizeText(e.target.value).slice(0, 100));
+                    setCrib(
+                      normalizeText(e.target.value).slice(0, MAX_CRIB_LENGTH),
+                    );
                   }}
                   spellCheck={false}
                 />
               </label>
-              {crib.length > 0 && crib.length < 8 && (
+              {crib.length > 0 && crib.length < MIN_RECOMMENDED_CRIB_LENGTH && (
                 <p className="field-hint" id="short-crib-hint">
                   Short cribs usually produce many possible settings. Try a
-                  longer crib to narrow the results. Searches stop after 50
-                  candidates.
+                  longer crib to narrow the results. Searches stop after{" "}
+                  {DEFAULT_RESULT_LIMIT} candidates.
                 </p>
               )}
               <div className="offset-control">
@@ -367,7 +390,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                       setMaxPairs(Number(e.target.value));
                     }}
                   >
-                    {Array.from({ length: 14 }, (_, i) => (
+                    {Array.from({ length: MAX_PLUGBOARD_PAIRS + 1 }, (_, i) => (
                       <option key={i} value={i}>
                         {i === 0 ? "0 · no plugboard" : `At most ${i}`}
                       </option>
@@ -395,8 +418,9 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 {running ? "Stop search" : "Run Bombe search"}
               </button>
               <p className="search-limit">
-                Shows one compatible plugboard per setting. Stops after 50
-                candidates. Use a longer crib to narrow the results.
+                Shows one compatible plugboard per setting. Stops after{" "}
+                {DEFAULT_RESULT_LIMIT} candidates. Use a longer crib to narrow
+                the results.
               </p>
               {error && (
                 <p className="error-message" role="alert">
@@ -520,8 +544,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                   tested
                 </span>
                 <span>
-                  {percentage.toFixed(1)}% checked <b>·</b> {elapsed.toFixed(1)}
-                  s
+                  {percentage.toFixed(PROGRESS_DECIMAL_PLACES)}% checked{" "}
+                  <b>·</b> {elapsed.toFixed(PROGRESS_DECIMAL_PLACES)}s
                 </span>
               </div>
               {progress.reason === "limit" && !running && (

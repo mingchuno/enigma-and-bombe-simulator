@@ -3,6 +3,25 @@ import { useState } from "react";
 import { ALPHABET, normalizeText } from "../engine/enigma.ts";
 import { compareStrips } from "../engine/historical.ts";
 
+const MAX_STRIP_LENGTH = 60;
+const SHEET_LAYOUT = {
+  horizontalPadding: 55,
+  columnSpacing: 19,
+  minimumWidth: 160,
+  overlayHeight: 440,
+  layerSpacing: 405,
+  top: 10,
+  height: 400,
+  cornerRadius: 5,
+  rowLabelX: 11,
+  rowLabelBaseline: 41,
+  rowSpacing: 14,
+  firstColumnX: 42,
+  columnLabelY: 25,
+  firstHoleY: 37,
+  holeRadius: 5,
+} as const;
+
 export function PaperMethods() {
   const [first, setFirst] = useState("QWERTYUIOPASDFGHJKLZXCVBNM");
   const [second, setSecond] = useState("RTYUBOPASDFXHJKLQXCV");
@@ -11,7 +30,9 @@ export function PaperMethods() {
   const { matches, overlap } = compareStrips(first, second, shift);
   const origin = Math.min(0, shift),
     end = Math.max(first.length, shift + second.length);
-  const width = 55 + (end - origin) * 19;
+  const width =
+    SHEET_LAYOUT.horizontalPadding +
+    (end - origin) * SHEET_LAYOUT.columnSpacing;
   return (
     <section className="paper-methods learning-panel">
       <div className="section-heading">
@@ -33,7 +54,9 @@ export function PaperMethods() {
             aria-label="First Banbury ciphertext"
             value={first}
             onChange={(e) => {
-              setFirst(normalizeText(e.target.value).slice(0, 60));
+              setFirst(
+                normalizeText(e.target.value).slice(0, MAX_STRIP_LENGTH),
+              );
               setShift(0);
             }}
           />
@@ -44,15 +67,17 @@ export function PaperMethods() {
             aria-label="Second Banbury ciphertext"
             value={second}
             onChange={(e) => {
-              setSecond(normalizeText(e.target.value).slice(0, 60));
+              setSecond(
+                normalizeText(e.target.value).slice(0, MAX_STRIP_LENGTH),
+              );
               setShift(0);
             }}
           />
         </label>
       </div>
       <p className="field-hint">
-        Editable synthetic strips, up to 60 letters each. These are two
-        ciphertexts, not ciphertext and a plaintext crib.
+        Editable synthetic strips, up to {MAX_STRIP_LENGTH} letters each. These
+        are two ciphertexts, not ciphertext and a plaintext crib.
       </p>
       <div className="paper-controls">
         <label>
@@ -90,26 +115,32 @@ export function PaperMethods() {
       </p>
       <ScrollRegion className="punched-scroll" label="Punched sheet diagram">
         <svg
-          viewBox={`0 0 ${Math.max(width, 160)} ${overlay ? 440 : 845}`}
-          style={{ minWidth: Math.max(width, 160) }}
+          viewBox={`0 0 ${Math.max(width, SHEET_LAYOUT.minimumWidth)} ${SHEET_LAYOUT.overlayHeight + (overlay ? 0 : SHEET_LAYOUT.layerSpacing)}`}
+          style={{ minWidth: Math.max(width, SHEET_LAYOUT.minimumWidth) }}
           role="img"
           aria-label={`${matches.length} coincident holes in ${overlap} overlapping columns at shift ${shift}`}
         >
           {[0, ...(!overlay ? [1] : [])].map((layer) => (
-            <g key={layer} transform={`translate(0 ${layer * 405})`}>
+            <g
+              key={layer}
+              transform={`translate(0 ${layer * SHEET_LAYOUT.layerSpacing})`}
+            >
               <rect
                 x="0"
-                y="10"
-                width={Math.max(width, 160)}
-                height="400"
-                rx="5"
+                y={SHEET_LAYOUT.top}
+                width={Math.max(width, SHEET_LAYOUT.minimumWidth)}
+                height={SHEET_LAYOUT.height}
+                rx={SHEET_LAYOUT.cornerRadius}
                 fill="#e4d3ad"
               />
               {[...ALPHABET].map((letter, row) => (
                 <text
                   key={letter}
-                  x="11"
-                  y={41 + row * 14}
+                  x={SHEET_LAYOUT.rowLabelX}
+                  y={
+                    SHEET_LAYOUT.rowLabelBaseline +
+                    row * SHEET_LAYOUT.rowSpacing
+                  }
                   className="paper-row-label"
                 >
                   {letter}
@@ -120,16 +151,25 @@ export function PaperMethods() {
           {[...first].map((letter, col) => (
             <g key={col}>
               <text
-                x={42 + (col - origin) * 19}
-                y="25"
+                x={
+                  SHEET_LAYOUT.firstColumnX +
+                  (col - origin) * SHEET_LAYOUT.columnSpacing
+                }
+                y={SHEET_LAYOUT.columnLabelY}
                 className="paper-position"
               >
                 {col + 1}
               </text>
               <circle
-                cx={42 + (col - origin) * 19}
-                cy={37 + ALPHABET.indexOf(letter) * 14}
-                r="5"
+                cx={
+                  SHEET_LAYOUT.firstColumnX +
+                  (col - origin) * SHEET_LAYOUT.columnSpacing
+                }
+                cy={
+                  SHEET_LAYOUT.firstHoleY +
+                  ALPHABET.indexOf(letter) * SHEET_LAYOUT.rowSpacing
+                }
+                r={SHEET_LAYOUT.holeRadius}
                 className={overlay ? "hole-first" : "hole-open"}
               />
             </g>
@@ -137,9 +177,16 @@ export function PaperMethods() {
           {[...second].map((letter, col) => (
             <circle
               key={col}
-              cx={42 + (col + shift - origin) * 19}
-              cy={(overlay ? 0 : 405) + 37 + ALPHABET.indexOf(letter) * 14}
-              r="5"
+              cx={
+                SHEET_LAYOUT.firstColumnX +
+                (col + shift - origin) * SHEET_LAYOUT.columnSpacing
+              }
+              cy={
+                (overlay ? 0 : SHEET_LAYOUT.layerSpacing) +
+                SHEET_LAYOUT.firstHoleY +
+                ALPHABET.indexOf(letter) * SHEET_LAYOUT.rowSpacing
+              }
+              r={SHEET_LAYOUT.holeRadius}
               className={
                 overlay
                   ? matches.includes(col + shift)

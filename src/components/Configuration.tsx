@@ -1,5 +1,7 @@
-import { ALPHABET, ROTOR_NAMES } from "../engine/enigma.ts";
+import { ALPHABET, ROTOR_NAMES, mod26 } from "../engine/enigma.ts";
 import type { MachineConfig, RotorName, Triple } from "../engine/enigma.ts";
+
+const RING_NUMBER_DIGITS = 2;
 
 interface Props {
   config: MachineConfig;
@@ -51,11 +53,11 @@ export function Configuration({
           {current && (
             <div className="rotor-window">
               <span aria-hidden="true">
-                {ALPHABET[(ALPHABET.indexOf(current[slot]) + 25) % 26]}
+                {ALPHABET[mod26(ALPHABET.indexOf(current[slot]) - 1)]}
               </span>
               <strong>{current[slot]}</strong>
               <span aria-hidden="true">
-                {ALPHABET[(ALPHABET.indexOf(current[slot]) + 1) % 26]}
+                {ALPHABET[mod26(ALPHABET.indexOf(current[slot]) + 1)]}
               </span>
             </div>
           )}
@@ -87,7 +89,8 @@ export function Configuration({
               >
                 {[...ALPHABET].map((letter, index) => (
                   <option key={letter} value={letter}>
-                    {letter} · {String(index + 1).padStart(2, "0")}
+                    {letter} ·{" "}
+                    {String(index + 1).padStart(RING_NUMBER_DIGITS, "0")}
                   </option>
                 ))}
               </select>

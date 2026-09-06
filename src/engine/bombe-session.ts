@@ -1,6 +1,9 @@
 import type { SearchOptions, SearchUpdate } from "./bombe.ts";
 import { searchSize } from "./bombe.ts";
 
+const ELAPSED_UPDATE_INTERVAL_MS = 100;
+const MILLISECONDS_PER_SECOND = 1_000;
+
 export type SearchResponse =
   | { type: "progress"; update: SearchUpdate }
   | { type: "error"; message: string };
@@ -95,7 +98,7 @@ export class BombeSearchSession {
       this.timer = setInterval(() => {
         if (this.worker === worker)
           this.publish({ ...this.snapshot, elapsed: this.elapsed() });
-      }, 100);
+      }, ELAPSED_UPDATE_INTERVAL_MS);
       worker.postMessage(options);
     } catch (error) {
       this.finish(
@@ -119,7 +122,7 @@ export class BombeSearchSession {
   }
 
   private elapsed() {
-    return (this.now() - this.startedAt) / 1000;
+    return (this.now() - this.startedAt) / MILLISECONDS_PER_SECOND;
   }
 
   private finish(status: "done" | "stopped" | "error", error = "") {
