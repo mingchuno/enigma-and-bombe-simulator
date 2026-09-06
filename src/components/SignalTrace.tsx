@@ -1,4 +1,5 @@
 import type { Trace } from "../engine/enigma.ts";
+import { Help } from "./Help.tsx";
 export function SignalTrace({
   trace,
   selected,
@@ -19,6 +20,11 @@ export function SignalTrace({
         </span>
       </div>
       <p className="muted">One keypress. A journey through the machine.</p>
+      <Help term="The complete signal route">
+        Key → plugboard → right, middle, left rotors → reflector → left, middle,
+        right rotors in reverse → plugboard again → lamp. The lamp only displays
+        the final letter; it does not scramble it.
+      </Help>
       {trace ? (
         <>
           <div className="trace-summary">

@@ -136,7 +136,7 @@ export class Enigma {
     let letter = this.plugboard[input];
     const record = (label: string) =>
       path?.push({ label, letter: ALPHABET[letter] });
-    record("Plugboard");
+    record("Plugboard →");
     for (const slot of [2, 1, 0]) {
       letter = this.passRotor(letter, slot, this.wheels[slot].forward);
       record(`Rotor ${this.names[slot]} →`);
@@ -148,6 +148,7 @@ export class Enigma {
       record(`Rotor ${this.names[slot]} ←`);
     }
     letter = this.plugboard[letter];
+    record("Plugboard ←");
     record("Lamp");
     return letter;
   }

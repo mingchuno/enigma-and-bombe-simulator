@@ -1,10 +1,10 @@
-import test from "node:test";
 import assert from "node:assert/strict";
+import test from "node:test";
 import {
-  Enigma,
   DEFAULT_CONFIG,
-  parsePlugboard,
+  Enigma,
   normalizeText,
+  parsePlugboard,
 } from "../src/engine/enigma.ts";
 
 const machine = (overrides = {}) =>
@@ -85,4 +85,13 @@ test("trace describes the actual signal and positions", () => {
   assert.equal(trace.after, "AAB");
   assert.equal(trace.path[0].letter, "A");
   assert.equal(trace.path.at(-1).letter, "B");
+});
+
+test("trace shows both plugboard passes before the separate lamp stage", () => {
+  const trace = machine({ plugs: "AB CD" }).press("A");
+  assert.equal(trace.path[1].label, "Plugboard →");
+  assert.equal(trace.path[1].letter, "B");
+  assert.equal(trace.path.at(-2)?.label, "Plugboard ←");
+  assert.equal(trace.path.at(-1)?.label, "Lamp");
+  assert.equal(trace.path.at(-2)?.letter, trace.output);
 });

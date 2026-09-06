@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { MachineConfig, Trace } from "../engine/enigma.ts";
 import {
   ALPHABET,
   DEFAULT_CONFIG,
@@ -6,10 +7,10 @@ import {
   normalizeText,
   parsePlugboard,
 } from "../engine/enigma.ts";
-import type { MachineConfig, Trace } from "../engine/enigma.ts";
 import { Configuration } from "./Configuration.tsx";
-import { SignalTrace } from "./SignalTrace.tsx";
+import { ConfigurationHelp, Help } from "./Help.tsx";
 import { Icon } from "./Icon.tsx";
+import { SignalTrace } from "./SignalTrace.tsx";
 
 const KEY_ROWS = ["QWERTZUIO", "ASDFGHJK", "PYXCVBNML"];
 export interface Transfer {
@@ -128,6 +129,7 @@ export function EnigmaWorkbench({
             </label>
             <span>Windows show the position after the inspected letter.</span>
           </div>
+          <ConfigurationHelp />
           <div className="keyboard-heading">
             <span>Keyboard & lampboard</span>
             <span>
@@ -184,6 +186,11 @@ export function EnigmaWorkbench({
               {isPlaying ? "Playing example…" : "Play an example"}
             </button>
           </div>
+          <p className="field-hint">
+            Type plain text to encrypt, or ciphertext to decrypt. Spaces,
+            numbers and punctuation are ignored. Edits replay the message from
+            Start.
+          </p>
           <div className="message-columns">
             <label>
               Input <span>A–Z only</span>
@@ -211,6 +218,19 @@ export function EnigmaWorkbench({
                 placeholder="Your enciphered message appears here."
               />
             </div>
+          </div>
+          <div className="help-row">
+            <Help term="Input and output">
+              Encryption and decryption are the same operation. For example,
+              default settings turn AAAAA into BDZGO. Clear the input and enter
+              BDZGO with those same starting settings to recover AAAAA. Output
+              spaces are just groups of five for reading.
+            </Help>
+            <Help term="Inspecting a previous letter">
+              The slider selects one completed keypress. The rotor windows and
+              signal path show that letter’s state. Typing another letter still
+              appends to the full message, not to the inspected position.
+            </Help>
           </div>
           <div className="message-footer">
             <span>Same settings + ciphertext = original message.</span>
@@ -255,6 +275,12 @@ export function EnigmaWorkbench({
               {processed.error}
             </p>
           )}
+          <Help term="Plugboard: two passes">
+            If you connect A to V, A becomes V and V becomes A. The same board
+            is crossed before entering the rotors and again after returning from
+            the reflector. Unconnected letters pass through unchanged. Each
+            letter can belong to only one pair.
+          </Help>
           <div className="plug-sockets" aria-label="Plugboard connections">
             {[...ALPHABET].map((letter, index) => (
               <span

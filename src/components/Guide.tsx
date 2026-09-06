@@ -85,13 +85,37 @@ export function Guide() {
         </p>
       </section>
       <section>
+        <h2>Reading the machine and the paper</h2>
+        <p>
+          Within Bombe, Drums & wiring links each menu connection to a column of
+          three drums. Pause during sensing or carry, probe a wire, and switch
+          the diagonal board on or off. The top drum is the fastest search drum,
+          but represents Enigma’s normally slow left rotor. Its core coordinates
+          are different from the three-letter relative setup marks beside
+          historical menu lines.
+        </p>
+        <p>
+          Historical notation includes your supplied menu example. Each line
+          number names a message position; repeated connections such as G–R at 6
+          and 12 are separate scramblers. The same-letter cable joins their
+          terminals electrically.
+        </p>
+        <p>
+          Paper methods offers a separate Banbury sheet activity: slide two
+          punched ciphertext strips and count coincident holes. Zygalski sheets
+          instead represented candidate settings in grids. The exact exhibit
+          cannot be identified from memory alone.
+        </p>
+      </section>
+      <section>
         <h2>Historical scope & sources</h2>
         <p>
           This release models Enigma I with rotors I–V and B/C reflectors. The
           Bombe workspace is a modern constraint solver inspired by the British
-          machine, with exact Enigma stepping. It does not simulate physical
-          drum mechanics or electrical stop detection. M4 and unknown ring
-          searches are outside this version.
+          machine, with exact Enigma stepping. Drums & wiring is a separate
+          teaching model of drive phases and electrical sensing, with schematic
+          gearing and normalized core coordinates. M4 and unknown ring searches
+          remain outside this version.
         </p>
         <div className="source-links">
           <a

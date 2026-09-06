@@ -134,3 +134,7 @@ All buttons, links, fields, selects, and disclosure summaries share a 3px `#b980
 - **Do** check the dense keyboard and configuration at mobile widths.
 - **Don't** imply that a matching candidate is a uniquely recovered key or that this is a physically faithful British Bombe.
 - **Don't** treat local CSS values as an established global scale or add a claimed user-approved aesthetic to this extracted record.
+
+## Learning extensions
+
+The existing world now includes click/keyboard/touch help disclosures with persistent field hints, Bombe activity controls (Crib & search, Drums & wiring, Paper methods), and historical menu notation. `src/learning.css` owns these extensions. The drum cabinet uses the existing dark instrument surface, rotor-type colors and normalized core letters. The full bank scrolls horizontally on narrow screens; controls and explanations reflow vertically. The paper activity uses ochre sheet stock, two outline colors for covered holes and white for open intersections. Original drum calibration and full Banburismus inference are not implied by the visuals.

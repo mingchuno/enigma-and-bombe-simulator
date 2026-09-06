@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -137,6 +137,95 @@ test("all workspaces fit the viewport without horizontal page scrolling", async 
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  }
+});
+
+test("help is keyboard accessible and both plugboard passes are visible", async ({
+  page,
+}) => {
+  const help = page.getByText("The complete signal route", { exact: true });
+  await help.click();
+  await expect(
+    page.getByText("The lamp only displays the final letter", { exact: false }),
+  ).toBeVisible();
+  await page
+    .getByRole("textbox", { name: "Message input", exact: true })
+    .fill("A");
+  await expect(
+    page.locator(".signal-node").filter({ hasText: "Plugboard →" }),
+  ).toBeVisible();
+  await expect(
+    page.locator(".signal-node").filter({ hasText: "Plugboard ←" }),
+  ).toBeVisible();
+});
+
+test("historical notation links the supplied parallel edge to a drum column", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Historical notation", exact: true })
+    .click();
+  await page
+    .getByRole("checkbox", { name: "Use the supplied museum-menu example" })
+    .check();
+  await page
+    .getByRole("button", {
+      name: "Inspect menu connection 12, G to R",
+      exact: true,
+    })
+    .click();
+  await expect(page.locator(".notation-reading")).toContainText("ZZL");
+  await page
+    .getByRole("button", { name: "Put the supplied menu on the drums" })
+    .click();
+  await expect(
+    page.getByRole("button", {
+      name: /^Select scrambler at position 12, G to R, relative setting ZZL, top core/,
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page
+    .getByRole("button", { name: "Show carry phase", exact: true })
+    .click();
+  await expect(page.locator(".sense-verdict")).toHaveText(
+    "Not sensing during carry.",
+  );
+  await page
+    .getByRole("spinbutton", { name: "Drive point", exact: true })
+    .fill("39");
+  await expect(page.locator(".drive-phase")).toContainText("Sensing point 1");
+  await page
+    .getByRole("checkbox", { name: "Show all 676 diagonal-board terminals" })
+    .check();
+  await expect(page.locator(".diagonal-scroll svg")).toBeVisible();
+});
+
+test("paper strips count actual coincidences under a shift and all modes fit mobile", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Bombe", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Paper methods", exact: true })
+    .click();
+  await page
+    .getByRole("textbox", { name: "First Banbury ciphertext" })
+    .fill("ABCDE");
+  await page
+    .getByRole("textbox", { name: "Second Banbury ciphertext" })
+    .fill("BCD");
+  const shift = page.getByRole("slider", { name: "Shift punched strip" });
+  await shift.focus();
+  await shift.press("ArrowRight");
+  await expect(page.locator(".paper-result strong")).toHaveText(
+    "3 coincidences / 3 overlapping letters",
+  );
+  for (const mode of ["Paper methods", "Drums & wiring", "Crib & search"]) {
+    await page.getByRole("button", { name: mode, exact: true }).click();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
   }
