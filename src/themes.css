@@ -12,6 +12,7 @@
   --theme-machine: #292b25;
   --theme-recess: #191b17;
   --theme-metal: #a7a58e;
+  --theme-inset: #e5ddc7;
   background: var(--paper);
   color: var(--ink);
 }
@@ -294,5 +295,66 @@
   }
   :root[data-theme="intercept"] .page-intro h1 {
     font-size: 32px;
+  }
+}
+
+/* Supporting controls use the same document stock as the workbench. */
+:root {
+  .learning-panel > p,
+  .mechanics-explanation p,
+  .drum-inspector > p,
+  .contact-explainer p,
+  .paper-result p,
+  .paper-alternative p,
+  .operator-table :where(button) span,
+  .strip-row small,
+  .plug-sockets > span,
+  .plug-sockets small,
+  .output-label button {
+    color: var(--muted);
+  }
+  .mechanics-controls button:not(.primary-button),
+  .chain-pages button,
+  .mechanics-controls input,
+  .sense-controls select,
+  .paper-inputs input {
+    background: var(--theme-field);
+    color: var(--ink);
+    border-color: var(--line);
+    border-radius: 2px;
+  }
+  .operator-table th,
+  .core-reading,
+  .candidate-plaintext,
+  .strip-row > span {
+    background: var(--theme-inset);
+  }
+  .core-reading,
+  .candidate-plaintext,
+  .candidate-tabs button {
+    border-radius: 2px;
+  }
+  .inline-checkbox input[type="checkbox"],
+  input[type="range"] {
+    accent-color: var(--green);
+  }
+  .plug-sockets small {
+    border-color: var(--line);
+  }
+  .plug-sockets .connected,
+  .plug-sockets .connected small {
+    color: var(--green);
+  }
+  .plug-sockets .connected small,
+  .chain-pages button[aria-pressed="true"] {
+    background: var(--theme-inset);
+    border-color: var(--green);
+  }
+  .strip-row > span.collision {
+    background: #f2d6c8;
+    color: #853327;
+  }
+  .strip-row > span.collision small {
+    color: #853327;
   }
 }

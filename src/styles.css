@@ -137,6 +137,7 @@ button svg {
   gap: 10px;
 }
 footer button {
+  min-height: 36px;
   margin-left: auto;
   border: 0;
   background: none;
@@ -146,6 +147,7 @@ footer button {
   font-size: 11px;
 }
 .machine-bottom button {
+  min-height: 36px;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -155,13 +157,15 @@ footer button {
   padding: 0;
 }
 .output-label button {
+  min-height: 36px;
+  margin-right: -4px;
   border: 0;
   background: transparent;
   display: flex;
   align-items: center;
   gap: 5px;
   font-size: 10px;
-  padding: 0;
+  padding: 4px;
   color: #5b6e5f;
 }
 .message-footer button {
@@ -535,6 +539,7 @@ label,
   justify-content: center;
   gap: 7px;
   padding: 4px 0;
+  min-height: 36px;
   font-size: 12px;
 }
 .text-button:hover:not(:disabled) {
@@ -549,6 +554,15 @@ label,
   grid-template-columns: 1fr 1fr;
   gap: 18px;
   margin-top: 18px;
+}
+.message-columns > label {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 36px auto;
+  align-items: center;
+}
+.message-columns :where(label) textarea {
+  grid-column: 1 / -1;
 }
 .message-columns textarea {
   width: 100%;
@@ -576,7 +590,7 @@ textarea::placeholder {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 18px;
+  min-height: 36px;
 }
 .output-field textarea {
   background: #eaf0e3;
@@ -1609,10 +1623,12 @@ progress::-moz-progress-bar {
     height: 49px;
   }
   footer button {
+    min-height: 44px;
     font-size: 10px;
     gap: 6px;
   }
   .machine-bottom button {
+    min-height: 44px;
     gap: 4px;
   }
   .message-footer button {
@@ -1624,8 +1640,8 @@ progress::-moz-progress-bar {
     font-size: 13px;
   }
   .site-header nav button:first-child {
-    padding-left: 0;
-    padding-right: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .site-header nav button.active:after {
     left: 10px;
@@ -1637,7 +1653,7 @@ progress::-moz-progress-bar {
   }
   .site-header .guide-nav {
     margin-left: auto;
-    padding-right: 0;
+    padding-right: 16px;
   }
   .page-intro {
     padding: 29px 0 25px;
@@ -1987,4 +2003,16 @@ progress::-moz-progress-bar {
   line-height: 1.6;
   margin: 12px 0 0;
   max-width: 72ch;
+}
+
+@media (max-width: 600px) {
+  .text-button {
+    min-height: 44px;
+  }
+  .message-footer {
+    flex-wrap: wrap;
+  }
+  .message-footer button {
+    margin-left: auto;
+  }
 }
