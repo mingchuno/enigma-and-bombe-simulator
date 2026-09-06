@@ -3,46 +3,43 @@
   margin: 12px 0;
   font-size: 12px;
   min-width: 0;
-}
-.concept-help summary {
   display: flex;
   align-items: center;
   gap: 7px;
   cursor: pointer;
   color: #46613e;
   width: fit-content;
-  list-style: none;
-  min-height: 32px;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  text-align: left;
 }
-.concept-help summary::-webkit-details-marker {
-  display: none;
-}
-.concept-help summary > span:first-child {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-size: 12px;
+.concept-help svg {
   flex-shrink: 0;
 }
-.concept-help summary:hover {
+.concept-help:hover,
+.concept-help[data-popup-open] {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.concept-help:where([open]) summary {
-  font-weight: 600;
+.concept-help-positioner {
+  z-index: 20;
 }
 .concept-help-body {
-  margin-top: 9px;
-  background: #e8eddf;
-  color: #30472e;
+  background: var(--paper);
+  color: var(--ink);
   border-radius: 6px;
   padding: 12px 14px;
+  font-size: 13px;
   line-height: 1.7;
-  max-width: 72ch;
+  width: 320px;
+  max-width: min(320px, calc(100vw - 24px), var(--available-width));
+  max-height: var(--available-height);
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  box-shadow: 0 4px 20px #112c2533;
 }
 .help-row {
   display: flex;
@@ -50,10 +47,7 @@
   gap: 0 20px;
   margin-top: 10px;
 }
-.help-row .concept-help[open] {
-  flex-basis: 100%;
-}
-:where(.machine-panel) .concept-help summary {
+:where(.machine-panel) .concept-help {
   color: #d0dbbf;
 }
 .machine-panel .concept-help {
@@ -718,6 +712,9 @@
   }
 }
 @media (max-width: 600px) {
+  .concept-help {
+    min-height: 44px;
+  }
   .mode-switch {
     gap: 3px;
   }

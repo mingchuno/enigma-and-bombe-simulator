@@ -36,6 +36,10 @@ typography:
     fontFamily: 'IBM Plex Sans, sans-serif'
     fontSize: '12px'
     fontWeight: 500
+  tooltip:
+    fontFamily: 'IBM Plex Sans, sans-serif'
+    fontSize: '13px'
+    lineHeight: 1.7
   rotor:
     fontFamily: 'SFMono-Regular, Consolas, Liberation Mono, monospace'
     fontSize: '46px'
@@ -64,6 +68,13 @@ components:
     height: '112px'
   message-output:
     backgroundColor: '{colors.output}'
+  help-tooltip:
+    backgroundColor: '{colors.paper}'
+    textColor: '{colors.ink}'
+    typography: '{typography.tooltip}'
+    rounded: '{rounded.control}'
+    padding: '12px 14px'
+    width: '320px'
   instrument:
     backgroundColor: '{colors.green}'
     textColor: '{colors.instrument-text}'
@@ -75,7 +86,7 @@ components:
 
 ## Overview
 
-This records the implemented interface, extracted from `src/styles.css`, `src/main.tsx`, and `src/components/`. It is a description of the current system, not a claim of user-approved branding. `PRODUCT.md` owns product scope and principles.
+This records the implemented interface, extracted from `src/styles.css`, `src/learning.css`, `src/main.tsx`, and `src/components/`. It is a description of the current system, not a claim of user-approved branding. `PRODUCT.md` owns product scope and principles.
 
 A cream editorial shell surrounds a pine green Enigma instrument. Newsreader introduces the workbench; compact sans-serif controls and monospaced machine values support inspection. Amber identifies the illuminated output and the returning signal. Bombe analysis uses lighter bordered surfaces within the same shell.
 
@@ -83,13 +94,13 @@ A cream editorial shell surrounds a pine green Enigma instrument. Newsreader int
 
 The frontmatter preserves the implemented color values. `green` anchors the instrument, primary actions, and active navigation. `amber` marks a lit key; related warm tones distinguish reflection and return stages. `paper`, `field`, and `output` distinguish the page, editable message, and generated message. `ink` and `muted` establish text hierarchy; `line` divides sections. Errors use `error` on `error-surface`, with a written explanation.
 
-Additional local colors remain in the stylesheet rather than forming an invented tonal scale. Signal stages use both labels and color. Selection uses amber with green text.
+Additional local colors remain in the stylesheet. The sidecar includes synthesized OKLCH ramps for palette previews; these are not implemented CSS scales. Signal stages use both labels and color. Selection uses amber with green text.
 
 ## Typography
 
 Newsreader regular and italic 400 and IBM Plex Sans 400/500/600 are self-hosted through Fontsource imports. The system monospace stack is used for letters, rotor settings, ciphertext, and search candidates.
 
-The page heading uses the display token; section headings use the title token. Introductory and guide prose is 14px with 1.6 line height. Dense controls and supporting descriptions range from 10–13px. Guide headings use Newsreader 29px/400. Rotor letters are 46px; neighboring letters are smaller and muted. The trace summary uses Newsreader at 59px. These are role-specific values, not a uniform type scale.
+The page heading uses the display token; section headings use the title token. Introductory and guide prose is 14px with 1.6 line height. Dense controls and supporting descriptions range from 10–13px. Guide headings use Newsreader 29px/400. Rotor letters are 46px; neighboring letters are smaller and muted. The trace summary uses Newsreader at 59px. Tooltip explanations use the tooltip role independently of the smaller trigger text. Changing progress, drive-phase, core-reading, and paper-result values use tabular numerals. These are role-specific values, not a uniform type scale.
 
 ## Layout
 
@@ -104,11 +115,13 @@ Spacing is component-specific: common panel padding is 23–30px, message-column
 | ≤850px     | Enigma and Bombe workbench columns stack. Trace moves below a top divider and uses a five-column stage grid. Bombe input sections sit side by side.                                                                                                                                                      |
 | ≤600px     | Page padding 18px; navigation wraps below the brand. Heading is 36px. Instrument padding 18px 16px 14px. Rotor settings stack within each rotor. Keyboard retains its rows with proportional circular keys. Plugboard sockets use 13 columns, and its form stacks. Bombe inputs and guide columns stack. |
 
+On mobile, rotor selectors fill the width below their labels. Historical diagrams retain a 540px minimum width inside a named, keyboard-focusable horizontal overflow region. The drum bank also scrolls horizontally on narrow screens. Learning-panel introductory prose is limited to 72ch.
+
 Alignment strips and candidate tabs scroll horizontally when needed. Long ciphertext wraps inside fields; textareas resize vertically.
 
 ## Elevation & Depth
 
-Most sections are flat, separated by fine borders and changes in surface color. The machine has a restrained `0 12px 30px #24382f12` shadow. Keys have `0 3px 5px #091d2540`; the pressed key uses an inset shadow. Dark rotor windows form recessed compartments. Shadow and motion details live in `.impeccable/design.json`.
+Most sections are flat, separated by fine borders and changes in surface color. The machine has a restrained `0 12px 30px #24382f12` shadow. Keys have `0 3px 5px #091d2540`; the pressed key uses an inset shadow. Dark rotor windows form recessed compartments. Help popups use a soft `0 4px 20px #112c2533` shadow to separate their paper surface from the controls beneath them. Shadow and motion details live in `.impeccable/design.json`.
 
 ## Shapes
 
@@ -124,6 +137,9 @@ The instrument uses 16px corners, reduced to 12px on mobile. Analysis panels use
 - **Trace:** a large input/output pair, letter scrubber, labeled stages, and stepping explanation. Forward stages are green, reflection amber, and return stages warm neutral. The empty state explains how to start.
 - **Bombe analysis:** bordered menu and result panels, labeled validation state, selectable alignment cells, progress, and candidate tabs. Selected graph nodes are dark green; selected edges are warm ochre. Candidates remain described as possible settings.
 
+- **Contextual help:** the shared Base UI tooltip uses a labeled question-mark SVG button. Hover opens it after 350ms; keyboard focus and click/tap also open it. Adjacent tooltips share the provider timing, with a 100ms closing delay. The explanation remains open while hovered and dismisses with Escape, focus departure, or outside press. A visible popup has `role="tooltip"` and is linked to its trigger with `aria-describedby`. The portaled popup floats above the workbench without changing layout, prefers top/start placement with an 8px gap, and adjusts around viewport edges with 12px collision padding. Its width is capped by the tooltip token and available viewport width; constrained height scrolls. Triggers are at least 36px high, increasing to 44px at the mobile breakpoint. The trigger is green on paper and pale on the instrument. Persistent field hints remain beside fields.
+- **Learning activities:** Bombe activity controls switch between Crib & search, Drums & wiring, and Paper methods. Historical menu notation links to the drum view. The drum cabinet uses a dark instrument surface, rotor-type colors, and normalized core letters. The paper activity uses ochre sheet stock, two outline colors for covered holes, and white for open intersections. Selection controls retain generous hit areas. Original drum calibration and full Banburismus inference are not implied by the visuals.
+
 All buttons, links, fields, selects, and disclosure summaries share a 3px `#b9802c` focus outline with 4px offset. Button color transitions last 0.16s. The lit-key glow lasts 0.32s. The reduced-motion media query removes CSS animation and transitions; explicit JavaScript scroll behavior is separate from this CSS rule.
 
 ## Do's and Don'ts
@@ -134,9 +150,3 @@ All buttons, links, fields, selects, and disclosure summaries share a 3px `#b980
 - **Do** check the dense keyboard and configuration at mobile widths.
 - **Don't** imply that a matching candidate is a uniquely recovered key or that this is a physically faithful British Bombe.
 - **Don't** treat local CSS values as an established global scale or add a claimed user-approved aesthetic to this extracted record.
-
-## Learning extensions
-
-The existing world now includes click/keyboard/touch help disclosures with persistent field hints, Bombe activity controls (Crib & search, Drums & wiring, Paper methods), and historical menu notation. `src/learning.css` owns these extensions. The drum cabinet uses the existing dark instrument surface, rotor-type colors and normalized core letters. The full bank scrolls horizontally on narrow screens; controls and explanations reflow vertically. The paper activity uses ochre sheet stock, two outline colors for covered holes and white for open intersections. Original drum calibration and full Banburismus inference are not implied by the visuals.
-
-The review polish makes mobile rotor selectors full-width below their labels, keeps historical notation at a readable minimum diagram width with horizontal scrolling, and uses a shared named/focusable overflow region for diagrams. Help and selection controls have larger hit areas; changing counters use tabular numerals. Learning prose is limited to 72ch. These are refinements of the existing layout and palette.

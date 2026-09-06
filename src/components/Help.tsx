@@ -1,7 +1,7 @@
+import { Tooltip } from "@base-ui/react/tooltip";
 import type { ReactNode } from "react";
-import { useId } from "react";
+import { useId, useState } from "react";
 
-/** Native disclosure: keyboard/touch accessible; explanation stays open while reading. */
 export function Help({
   term,
   children,
@@ -10,16 +10,51 @@ export function Help({
   children: ReactNode;
 }) {
   const id = useId();
+  const [open, setOpen] = useState(false);
   return (
-    <details className="concept-help">
-      <summary aria-label={`Explain ${term}`} aria-controls={id}>
-        <span aria-hidden="true">?</span>
+    <Tooltip.Root open={open} onOpenChange={setOpen} triggerId={id}>
+      <Tooltip.Trigger
+        id={id}
+        className="concept-help"
+        aria-label={`Explain ${term}`}
+        aria-describedby={open ? `${id}-description` : undefined}
+        closeOnClick={false}
+        onClick={() => setOpen(true)}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.5 2-2.5 4M12 16h.01" />
+        </svg>
         <span>{term}</span>
-      </summary>
-      <div id={id} className="concept-help-body">
-        {children}
-      </div>
-    </details>
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Positioner
+          className="concept-help-positioner"
+          side="top"
+          align="start"
+          sideOffset={8}
+          collisionPadding={12}
+        >
+          <Tooltip.Popup
+            id={`${id}-description`}
+            role="tooltip"
+            className="concept-help-body"
+          >
+            {children}
+          </Tooltip.Popup>
+        </Tooltip.Positioner>
+      </Tooltip.Portal>
+    </Tooltip.Root>
   );
 }
 

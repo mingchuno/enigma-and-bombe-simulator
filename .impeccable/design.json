@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-06T08:35:41.345938+00:00",
+  "generatedAt": "2026-09-06T13:36:43.247314+00:00",
   "title": "Design System: Enigma & Bombe",
   "extensions": {
     "shadows": [
@@ -18,6 +18,11 @@
         "name": "pressed-key",
         "value": "inset 0 2px 5px #061c1860",
         "purpose": "Pressed input key."
+      },
+      {
+        "name": "help-tooltip",
+        "value": "0 4px 20px #112c2533",
+        "purpose": "Separates portaled help from the workbench without shifting controls."
       }
     ],
     "motion": [
@@ -30,6 +35,11 @@
         "name": "lamp-on",
         "value": "0.32s cubic-bezier(0.16, 1, 0.3, 1)",
         "purpose": "Output-key glow; disabled by reduced-motion CSS."
+      },
+      {
+        "name": "help-timing",
+        "value": "350ms open delay; 100ms close delay",
+        "purpose": "Shared Base UI tooltip provider timing; no popup animation."
       }
     ],
     "breakpoints": [
@@ -49,7 +59,210 @@
         "name": "mobile-max",
         "value": "600px"
       }
-    ]
+    ],
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.03041 164.84)",
+          "oklch(26.43% 0.03041 164.84)",
+          "oklch(37.86% 0.03041 164.84)",
+          "oklch(49.29% 0.03041 164.84)",
+          "oklch(60.71% 0.03041 164.84)",
+          "oklch(72.14% 0.03041 164.84)",
+          "oklch(83.57% 0.03041 164.84)",
+          "oklch(95.00% 0.03041 164.84)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.02092 155.41)",
+          "oklch(26.43% 0.02092 155.41)",
+          "oklch(37.86% 0.02092 155.41)",
+          "oklch(49.29% 0.02092 155.41)",
+          "oklch(60.71% 0.02092 155.41)",
+          "oklch(72.14% 0.02092 155.41)",
+          "oklch(83.57% 0.02092 155.41)",
+          "oklch(95.00% 0.02092 155.41)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.00824 91.48)",
+          "oklch(26.43% 0.00824 91.48)",
+          "oklch(37.86% 0.00824 91.48)",
+          "oklch(49.29% 0.00824 91.48)",
+          "oklch(60.71% 0.00824 91.48)",
+          "oklch(72.14% 0.00824 91.48)",
+          "oklch(83.57% 0.00824 91.48)",
+          "oklch(95.00% 0.00824 91.48)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "tonalRamp": [
+          "oklch(15.00% 0.01385 120.30)",
+          "oklch(26.43% 0.01385 120.30)",
+          "oklch(37.86% 0.01385 120.30)",
+          "oklch(49.29% 0.01385 120.30)",
+          "oklch(60.71% 0.01385 120.30)",
+          "oklch(72.14% 0.01385 120.30)",
+          "oklch(83.57% 0.01385 120.30)",
+          "oklch(95.00% 0.01385 120.30)"
+        ]
+      },
+      "green": {
+        "role": "primary",
+        "displayName": "Green",
+        "tonalRamp": [
+          "oklch(15.00% 0.04402 174.33)",
+          "oklch(26.43% 0.04402 174.33)",
+          "oklch(37.86% 0.04402 174.33)",
+          "oklch(49.29% 0.04402 174.33)",
+          "oklch(60.71% 0.04402 174.33)",
+          "oklch(72.14% 0.04402 174.33)",
+          "oklch(83.57% 0.04402 174.33)",
+          "oklch(95.00% 0.04402 174.33)"
+        ]
+      },
+      "amber": {
+        "role": "secondary",
+        "displayName": "Amber",
+        "tonalRamp": [
+          "oklch(15.00% 0.11212 80.86)",
+          "oklch(26.43% 0.11212 80.86)",
+          "oklch(37.86% 0.11212 80.86)",
+          "oklch(49.29% 0.11212 80.86)",
+          "oklch(60.71% 0.11212 80.86)",
+          "oklch(72.14% 0.11212 80.86)",
+          "oklch(83.57% 0.11212 80.86)",
+          "oklch(95.00% 0.11212 80.86)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Field",
+        "tonalRamp": [
+          "oklch(15.00% 0.00538 95.10)",
+          "oklch(26.43% 0.00538 95.10)",
+          "oklch(37.86% 0.00538 95.10)",
+          "oklch(49.29% 0.00538 95.10)",
+          "oklch(60.71% 0.00538 95.10)",
+          "oklch(72.14% 0.00538 95.10)",
+          "oklch(83.57% 0.00538 95.10)",
+          "oklch(95.00% 0.00538 95.10)"
+        ]
+      },
+      "output": {
+        "role": "neutral",
+        "displayName": "Output",
+        "tonalRamp": [
+          "oklch(15.00% 0.01837 127.15)",
+          "oklch(26.43% 0.01837 127.15)",
+          "oklch(37.86% 0.01837 127.15)",
+          "oklch(49.29% 0.01837 127.15)",
+          "oklch(60.71% 0.01837 127.15)",
+          "oklch(72.14% 0.01837 127.15)",
+          "oklch(83.57% 0.01837 127.15)",
+          "oklch(95.00% 0.01837 127.15)"
+        ]
+      },
+      "instrument-text": {
+        "role": "neutral",
+        "displayName": "Instrument text",
+        "tonalRamp": [
+          "oklch(15.00% 0.02194 120.98)",
+          "oklch(26.43% 0.02194 120.98)",
+          "oklch(37.86% 0.02194 120.98)",
+          "oklch(49.29% 0.02194 120.98)",
+          "oklch(60.71% 0.02194 120.98)",
+          "oklch(72.14% 0.02194 120.98)",
+          "oklch(83.57% 0.02194 120.98)",
+          "oklch(95.00% 0.02194 120.98)"
+        ]
+      },
+      "rotor-recess": {
+        "role": "primary",
+        "displayName": "Rotor recess",
+        "tonalRamp": [
+          "oklch(15.00% 0.03583 174.36)",
+          "oklch(26.43% 0.03583 174.36)",
+          "oklch(37.86% 0.03583 174.36)",
+          "oklch(49.29% 0.03583 174.36)",
+          "oklch(60.71% 0.03583 174.36)",
+          "oklch(72.14% 0.03583 174.36)",
+          "oklch(83.57% 0.03583 174.36)",
+          "oklch(95.00% 0.03583 174.36)"
+        ]
+      },
+      "action-text": {
+        "role": "neutral",
+        "displayName": "Action text",
+        "tonalRamp": [
+          "oklch(15.00% 0.01459 102.46)",
+          "oklch(26.43% 0.01459 102.46)",
+          "oklch(37.86% 0.01459 102.46)",
+          "oklch(49.29% 0.01459 102.46)",
+          "oklch(60.71% 0.01459 102.46)",
+          "oklch(72.14% 0.01459 102.46)",
+          "oklch(83.57% 0.01459 102.46)",
+          "oklch(95.00% 0.01459 102.46)"
+        ]
+      },
+      "action-hover": {
+        "role": "primary",
+        "displayName": "Action hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.05423 164.56)",
+          "oklch(26.43% 0.05423 164.56)",
+          "oklch(37.86% 0.05423 164.56)",
+          "oklch(49.29% 0.05423 164.56)",
+          "oklch(60.71% 0.05423 164.56)",
+          "oklch(72.14% 0.05423 164.56)",
+          "oklch(83.57% 0.05423 164.56)",
+          "oklch(95.00% 0.05423 164.56)"
+        ]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15.00% 0.13831 29.33)",
+          "oklch(26.43% 0.13831 29.33)",
+          "oklch(37.86% 0.13831 29.33)",
+          "oklch(49.29% 0.13831 29.33)",
+          "oklch(60.71% 0.13831 29.33)",
+          "oklch(72.14% 0.13831 29.33)",
+          "oklch(83.57% 0.13831 29.33)",
+          "oklch(95.00% 0.13831 29.33)"
+        ]
+      },
+      "error-surface": {
+        "role": "neutral",
+        "displayName": "Error surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.02147 46.99)",
+          "oklch(26.43% 0.02147 46.99)",
+          "oklch(37.86% 0.02147 46.99)",
+          "oklch(49.29% 0.02147 46.99)",
+          "oklch(60.71% 0.02147 46.99)",
+          "oklch(72.14% 0.02147 46.99)",
+          "oklch(83.57% 0.02147 46.99)",
+          "oklch(95.00% 0.02147 46.99)"
+        ]
+      }
+    },
+    "focus": {
+      "value": "3px solid #b9802c",
+      "offset": "4px",
+      "purpose": "Visible keyboard focus on interactive controls."
+    }
   },
   "components": [
     {
@@ -72,7 +285,7 @@
       "kind": "input",
       "description": "Extracted from src/styles.css; preview content is illustrative.",
       "html": "<div class=\"ds-message-columns\"><textarea aria-label=\"Message\">HELLOWORLD</textarea></div>",
-      "css": ".ds-message-columns textarea {\n  width: 100%;\n  height: 112px;\n  background: #fcfbf7;\n  border: 1px solid #d5dacf;\n  border-radius: 8px;\n  margin-top: 9px;\n  padding: 13px 15px;\n  resize: vertical;\n  line-height: 1.75;\n  font-family: var(--mono);\n  font-size: 14px;\n  letter-spacing: 0.055em;\n  word-break: break-all;\n  color: var(--ink);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}",
+      "css": ".ds-message-columns textarea {\n  width: 100%;\n  height: 112px;\n  background: #fcfbf7;\n  border: 1px solid #d5dacf;\n  border-radius: 8px;\n  margin-top: 9px;\n  padding: 13px 15px;\n  resize: vertical;\n  line-height: 1.75;\n  font-family: var(--mono);\n  font-size: 14px;\n  letter-spacing: 0.055em;\n  word-break: break-all;\n  color: var(--ink);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}\n.ds-message-columns textarea {font-family: var(--mono);}",
       "refersTo": "message-input"
     },
     {
@@ -101,7 +314,28 @@
       "kind": "button",
       "description": "Extracted from src/styles.css; preview content is illustrative.",
       "html": "<button class=\"ds-machine-key\" aria-label=\"Type A\">A</button><button class=\"ds-machine-key ds-lit\" aria-label=\"Output B\">B</button>",
-      "css": ".ds-machine-key {\n  border: 1px solid #78907b;\n  width: clamp(34px, 3.8vw, 47px);\n  height: clamp(34px, 3.8vw, 47px);\n  border-radius: 50%;\n  background: #214537;\n  color: #e6ecdf;\n  font-family: var(--mono);\n  font-size: 18px;\n  box-shadow: 0 3px 5px #091d2540;\n  flex-shrink: 0;\n}\n.ds-machine-key:hover:not(:disabled) {\n  background: #345e48;\n  border-color: #c6d5bb;\n}\n.ds-machine-key.ds-pressed {\n  border-color: #dfddbd;\n  box-shadow: inset 0 2px 5px #061c1860;\n}\n.ds-machine-key.ds-lit {\n  background: var(--amber);\n  border-color: var(--amber);\n  color: #183b32;\n  animation: lamp-on 0.32s cubic-bezier(0.16, 1, 0.3, 1);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+      "css": ".ds-machine-key {\n  border: 1px solid #78907b;\n  width: clamp(34px, 3.8vw, 47px);\n  height: clamp(34px, 3.8vw, 47px);\n  border-radius: 50%;\n  background: #214537;\n  color: #e6ecdf;\n  font-family: var(--mono);\n  font-size: 18px;\n  box-shadow: 0 3px 5px #091d2540;\n  flex-shrink: 0;\n}\n.ds-machine-key:hover:not(:disabled) {\n  background: #345e48;\n  border-color: #c6d5bb;\n}\n.ds-machine-key.ds-pressed {\n  border-color: #dfddbd;\n  box-shadow: inset 0 2px 5px #061c1860;\n}\n.ds-machine-key.ds-lit {\n  background: var(--amber);\n  border-color: var(--amber);\n  color: #183b32;\n  animation: lamp-on 0.32s cubic-bezier(0.16, 1, 0.3, 1);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}\n.ds-machine-key {font-family: var(--mono);}\n@keyframes lamp-on {from {box-shadow: 0 2px 18px #e9bc6b55;} to {box-shadow: 0 3px 5px #091d2540;}}"
+    },
+    {
+      "name": "Contextual help",
+      "kind": "custom",
+      "refersTo": "help-tooltip",
+      "description": "Open-state visual specimen from Help.tsx and learning.css. The application uses Base UI for hover, focus, tap, dismissal, and collision handling; this standalone preview shows appearance only.",
+      "html": "<div class=\"ds-help-preview\"><div id=\"ds-help-description\" role=\"tooltip\" class=\"ds-help-popup\">A rotor is a wheel containing 26 crossed wires. I\u2013V have different wirings.</div><button type=\"button\" class=\"ds-help-trigger\" aria-label=\"Explain Rotor order\" aria-describedby=\"ds-help-description\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.5 2-2.5 4M12 16h.01\"/></svg><span>Rotor order</span></button></div>",
+      "css": ".ds-help-trigger {\n  margin: 12px 0;\n  font-size: 12px;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  cursor: pointer;\n  color: #46613e;\n  width: fit-content;\n  min-height: 36px;\n  padding: 0;\n  border: 0;\n  border-radius: 6px;\n  background: transparent;\n  text-align: left;\n}\n.ds-help-popup {\n  background: var(--paper);\n  color: var(--ink);\n  border-radius: 6px;\n  padding: 12px 14px;\n  font-size: 13px;\n  line-height: 1.7;\n  width: 320px;\n  max-width: min(320px, calc(100vw - 24px), var(--available-width, 320px));\n  max-height: var(--available-height, none);\n  overflow-y: auto;\n  overflow-wrap: anywhere;\n  box-shadow: 0 4px 20px #112c2533;\n}\n.ds-help-preview {padding: 20px; font-family: \"IBM Plex Sans\", sans-serif;} .ds-help-trigger {font-family: inherit; margin: 8px 0 0;} .ds-help-trigger svg {flex-shrink: 0;} .ds-help-trigger:hover {text-decoration: underline; text-underline-offset: 3px;} .ds-help-trigger:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} @media(max-width: 600px) {.ds-help-trigger {min-height: 44px;}}"
     }
-  ]
+  ],
+  "narrative": {
+    "overview": "This records the implemented interface, extracted from `src/styles.css`, `src/learning.css`, `src/main.tsx`, and `src/components/`. It is a description of the current system, not a claim of user-approved branding. `PRODUCT.md` owns product scope and principles.\n\nA cream editorial shell surrounds a pine green Enigma instrument. Newsreader introduces the workbench; compact sans-serif controls and monospaced machine values support inspection. Amber identifies the illuminated output and the returning signal. Bombe analysis uses lighter bordered surfaces within the same shell.",
+    "dos": [
+      "**Do** retain the paper shell, dark instrument, and distinct signal-state colors when extending these screens.",
+      "**Do** use monospaced type for machine values and readable prose for explanations.",
+      "**Do** preserve visible labels, focus outlines, validation text, and candidate uncertainty.",
+      "**Do** check the dense keyboard and configuration at mobile widths."
+    ],
+    "donts": [
+      "**Don't** imply that a matching candidate is a uniquely recovered key or that this is a physically faithful British Bombe.",
+      "**Don't** treat local CSS values as an established global scale or add a claimed user-approved aesthetic to this extracted record."
+    ]
+  }
 }
