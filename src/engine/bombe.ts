@@ -1,3 +1,5 @@
+import { solveMenu } from "./plugboard-solver.ts";
+import type { Solution } from "./plugboard-solver.ts";
 import { buildMenu } from "./crib-menu.ts";
 import type { MenuEdge, ScramblerEdge } from "./crib-menu.ts";
 import {
@@ -12,31 +14,17 @@ import {
 import type { MachineConfig, RotorName, Triple } from "./enigma.ts";
 
 // Preserve the existing engine entry points for callers.
+export { solveMenu } from "./plugboard-solver.ts";
+export type { Solution } from "./plugboard-solver.ts";
 export { buildMenu } from "./crib-menu.ts";
 export type { MenuEdge, ScramblerEdge } from "./crib-menu.ts";
 
 export const MAX_CIPHERTEXT_LENGTH = 500;
 export const MAX_CRIB_LENGTH = 100;
 export const DEFAULT_RESULT_LIMIT = 50;
-const DEFAULT_BRANCH_LIMIT = 20_000;
 const PROGRESS_UPDATE_INTERVAL = 128;
-const UNASSIGNED_PARTNER = -1;
 const RIGHT_TWO_ROTOR_SETTING_COUNT = ALPHABET_SIZE ** 2;
 
-interface SolverOptions {
-  maxPairs: number;
-  alphabetSize?: number;
-  branchLimit?: number;
-}
-export type Solution =
-  | {
-      status: "match";
-      mapping: number[];
-      pairs: string[];
-      unknown: string[];
-      branches: number;
-    }
-  | { status: "reject" | "unresolved"; branches: number };
 export interface SearchOptions {
   config: MachineConfig;
   ciphertext: string;
@@ -87,85 +75,6 @@ export function scramblerEdges(
   });
 }
 
-/** Partial involution propagation + backtracking, not an electrical stop detector. */
-export function solveMenu(
-  edges: ScramblerEdge[],
-  options: SolverOptions,
-): Solution {
-  const size = options.alphabetSize ?? ALPHABET_SIZE;
-  const branchLimit = options.branchLimit ?? DEFAULT_BRANCH_LIMIT;
-  const adjacency: ScramblerEdge[][] = Array.from({ length: size }, () => []);
-  edges.forEach((edge) => {
-    adjacency[edge.a].push(edge);
-    adjacency[edge.b].push(edge);
-  });
-  const letters = Array.from({ length: size }, (_, i) => i)
-    .filter((i) => adjacency[i].length)
-    .sort((a, b) => adjacency[b].length - adjacency[a].length);
-  let branches = 0;
-  let exhausted = false;
-
-  function propagate(mapping: number[], initial: [number, number]): boolean {
-    const queue = [initial];
-    for (let cursor = 0; cursor < queue.length; cursor++) {
-      const [a, b] = queue[cursor];
-      if (mapping[a] !== UNASSIGNED_PARTNER) {
-        if (mapping[a] !== b) return false;
-        continue;
-      }
-      if (mapping[b] !== UNASSIGNED_PARTNER && mapping[b] !== a) return false;
-      mapping[a] = b;
-      mapping[b] = a;
-      let pairCount = 0;
-      for (let i = 0; i < size; i++) if (mapping[i] > i) pairCount++;
-      if (pairCount > options.maxPairs) return false;
-      for (const letter of new Set([a, b])) {
-        for (const edge of adjacency[letter]) {
-          const other = edge.a === letter ? edge.b : edge.a;
-          queue.push([other, edge.mapping[mapping[letter]]]);
-        }
-      }
-    }
-    return true;
-  }
-
-  function branch(mapping: number[]): number[] | undefined {
-    const letter = letters.find(
-      (value) => mapping[value] === UNASSIGNED_PARTNER,
-    );
-    if (letter === undefined) return mapping;
-    // Try self-steckering first; it is a valid hypothesis, not a known fact.
-    const partners = [
-      letter,
-      ...Array.from({ length: size }, (_, i) => i).filter((i) => i !== letter),
-    ];
-    for (const partner of partners) {
-      if (mapping[partner] !== UNASSIGNED_PARTNER) continue;
-      if (branches >= branchLimit) {
-        exhausted = true;
-        return;
-      }
-      branches++;
-      const next = [...mapping];
-      if (!propagate(next, [letter, partner])) continue;
-      const result = branch(next);
-      if (result) return result;
-      if (exhausted) return;
-    }
-  }
-
-  const mapping = branch(Array(size).fill(UNASSIGNED_PARTNER));
-  if (!mapping)
-    return { status: exhausted ? "unresolved" : "reject", branches };
-  const pairs = mapping.flatMap((partner, letter) =>
-    partner > letter ? [ALPHABET[letter] + ALPHABET[partner]] : [],
-  );
-  const unknown = mapping.flatMap((partner, letter) =>
-    partner === UNASSIGNED_PARTNER ? [ALPHABET[letter]] : [],
-  );
-  return { status: "match", mapping, pairs, unknown, branches };
-}
-
 export function rotorOrders(): Triple<RotorName>[] {
   return ROTOR_NAMES.flatMap((a) =>
     ROTOR_NAMES.filter((b) => b !== a).flatMap((b) =>
@@ -180,7 +89,7 @@ export function searchSize(allOrders: boolean): number {
   return (allOrders ? rotorOrders().length : 1) * WINDOW_SETTING_COUNT;
 }
 
-export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
+function prepareSearchMenu(options: SearchOptions): MenuEdge[] {
   validateConfig(options.config);
   if (
     !Number.isInteger(options.maxPairs) ||
@@ -198,6 +107,43 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
     throw new Error(
       `Use up to ${MAX_CIPHERTEXT_LENGTH} ciphertext letters and ${MAX_CRIB_LENGTH} crib letters.`,
     );
+  return menu;
+}
+
+function windowsAt(index: number): string {
+  return (
+    ALPHABET[Math.floor(index / RIGHT_TWO_ROTOR_SETTING_COUNT)] +
+    ALPHABET[Math.floor(index / ALPHABET_SIZE) % ALPHABET_SIZE] +
+    ALPHABET[index % ALPHABET_SIZE]
+  );
+}
+
+/** Replay the witness plugboard before exposing a candidate to callers. */
+function verifyCandidate(
+  config: MachineConfig,
+  solution: Extract<Solution, { status: "match" }>,
+  options: SearchOptions,
+): Candidate {
+  const plaintext = new Enigma({
+    ...config,
+    plugs: solution.pairs.join(" "),
+  }).process(options.ciphertext);
+  if (
+    plaintext.slice(options.offset, options.offset + options.crib.length) !==
+    options.crib
+  )
+    throw new Error("Candidate verification failed. Search stopped.");
+  return {
+    rotors: [...config.rotors],
+    windows: config.windows,
+    pairs: solution.pairs,
+    unknown: solution.unknown,
+    plaintext,
+  };
+}
+
+export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
+  const menu = prepareSearchMenu(options);
   const orders = options.allOrders ? rotorOrders() : [options.config.rotors];
   const resultLimit = options.resultLimit ?? DEFAULT_RESULT_LIMIT;
   const update: SearchUpdate = {
@@ -211,10 +157,7 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
   for (const rotors of orders) {
     const cache = new Map<string, Uint8Array>();
     for (let index = 0; index < WINDOW_SETTING_COUNT; index++) {
-      const windows =
-        ALPHABET[Math.floor(index / RIGHT_TWO_ROTOR_SETTING_COUNT)] +
-        ALPHABET[Math.floor(index / ALPHABET_SIZE) % ALPHABET_SIZE] +
-        ALPHABET[index % ALPHABET_SIZE];
+      const windows = windowsAt(index);
       const config = { ...options.config, rotors, windows, plugs: "" };
       const result = solveMenu(scramblerEdges(config, menu, cache), {
         maxPairs: options.maxPairs,
@@ -223,24 +166,7 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
       update.current = `${rotors.join("–")} / ${windows}`;
       if (result.status === "unresolved") update.unresolved++;
       if (result.status === "match") {
-        const plaintext = new Enigma({
-          ...config,
-          plugs: result.pairs.join(" "),
-        }).process(options.ciphertext);
-        if (
-          plaintext.slice(
-            options.offset,
-            options.offset + options.crib.length,
-          ) !== options.crib
-        )
-          throw new Error("Candidate verification failed. Search stopped.");
-        update.candidates.push({
-          rotors: [...rotors],
-          windows,
-          pairs: result.pairs,
-          unknown: result.unknown,
-          plaintext,
-        });
+        update.candidates.push(verifyCandidate(config, result, options));
         if (update.candidates.length >= resultLimit) {
           yield {
             ...update,

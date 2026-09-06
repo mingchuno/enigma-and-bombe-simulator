@@ -154,10 +154,14 @@ test("help is keyboard accessible and both plugboard passes are visible", async 
     .getByRole("textbox", { name: "Message input", exact: true })
     .fill("HELLOWORLD");
   await expect(
-    page.locator(".signal-node").filter({ hasText: "Plugboard →" }),
+    page
+      .getByRole("table", { name: "Toward the reflector", exact: true })
+      .getByRole("rowheader", { name: /^Plugboard/ }),
   ).toBeVisible();
   await expect(
-    page.locator(".signal-node").filter({ hasText: "Plugboard ←" }),
+    page
+      .getByRole("table", { name: "Back to the lamp", exact: true })
+      .getByRole("rowheader", { name: /^Plugboard/ }),
   ).toBeVisible();
 });
 

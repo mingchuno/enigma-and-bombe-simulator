@@ -156,3 +156,83 @@ test("one-letter cribs return verified candidates while empty cribs are rejected
     /Enter ciphertext and a crib/,
   );
 });
+
+test("a complete sweep preserves progress snapshots and verifies every candidate", () => {
+  const options = {
+    config: DEFAULT_CONFIG,
+    ciphertext: "B",
+    crib: "A",
+    offset: 0,
+    allOrders: false,
+    maxPairs: 0,
+    resultLimit: Number.POSITIVE_INFINITY,
+  };
+  const search = searchBombe(options);
+  const first = search.next().value;
+  assert.ok(first);
+  const savedFirst = structuredClone(first);
+  const updates = [...search];
+  const final = updates.at(-1)!;
+
+  assert.deepEqual(
+    first,
+    savedFirst,
+    "Later search work must not alter prior progress",
+  );
+  assert.equal(first.tested, 128);
+  assert.equal(first.reason, "running");
+  assert.equal(final.reason, "complete");
+  assert.equal(final.tested, 26 ** 3);
+  assert.equal(final.total, final.tested);
+  assert.equal(final.current, "I–II–III / ZZZ");
+  assert.equal(final.unresolved, 0);
+  assert.ok(final.candidates.length > first.candidates.length);
+  for (const [index, update] of updates.slice(0, -1).entries()) {
+    assert.equal(update.tested, (index + 2) * 128);
+    assert.equal(update.reason, "running");
+  }
+  const windows = final.candidates.map((candidate) => candidate.windows);
+  assert.deepEqual(windows, [...new Set(windows)].sort());
+  for (const candidate of final.candidates) {
+    assert.equal(candidate.plaintext, "A");
+    assert.equal(
+      new Enigma({
+        ...DEFAULT_CONFIG,
+        rotors: candidate.rotors,
+        windows: candidate.windows,
+        plugs: candidate.pairs.join(" "),
+      }).process(candidate.plaintext),
+      options.ciphertext,
+    );
+  }
+});
+
+test("invalid search assumptions fail before yielding progress", () => {
+  const options = {
+    config: DEFAULT_CONFIG,
+    ciphertext: "B",
+    crib: "A",
+    offset: 0,
+    allOrders: false,
+    maxPairs: 0,
+  };
+  for (const maxPairs of [-1, 0.5, 14, NaN]) {
+    assert.throws(
+      () => searchBombe({ ...options, maxPairs }).next(),
+      /Maximum cables/,
+    );
+  }
+  assert.throws(
+    () => searchBombe({ ...options, ciphertext: "B".repeat(501) }).next(),
+    /Use up to 500 ciphertext letters and 100 crib letters/,
+  );
+  assert.throws(
+    () =>
+      searchBombe({
+        ...options,
+        ciphertext: "B".repeat(101),
+        crib: "A".repeat(101),
+      }).next(),
+    /Use up to 500 ciphertext letters and 100 crib letters/,
+  );
+});

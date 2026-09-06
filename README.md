@@ -83,6 +83,9 @@ To connect a domain later, set **Settings → Pages → Custom domain** and conf
 ## Code layout
 
 - `src/engine/`: Enigma, crib/menu rules, the solver, historical calculations, and worker/session adapters.
+  `plugboard-solver.ts` owns constraint propagation and branch budgets; `bombe.ts` owns key enumeration, candidate replay verification, and progress updates, retaining the existing solver exports.
 - `src/workbench/`: demo and transfer preparation, preserving known assumptions while withholding the searched key.
 - `src/components/`: workspaces, controls, and learning views. `useBombeSearch` owns search edits and result invalidation; `BombeResults` renders progress and candidates.
 - `tests/`: engine and workbench tests, plus Playwright browser scenarios.
+
+See [the architecture review](docs/architecture-review.md) for the refactoring scope, preserved contracts, and remaining risks.
