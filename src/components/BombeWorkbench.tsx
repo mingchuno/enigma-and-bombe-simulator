@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { MenuEdge, SearchUpdate } from "../engine/bombe.ts";
-import { buildMenu } from "../engine/bombe.ts";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import type { MenuEdge } from "../engine/bombe.ts";
+import { BombeSearchSession } from "../engine/bombe-session.ts";
+import { buildMenu, searchSize } from "../engine/bombe.ts";
 import type { MachineConfig } from "../engine/enigma.ts";
 import {
   ALPHABET,
@@ -26,15 +27,6 @@ const DEMO_CONFIG: MachineConfig = {
 };
 const DEMO_PLAIN = "WETTERVORHERSAGEFUERDIEBISKAYA";
 const DEMO_CIPHER = new Enigma(DEMO_CONFIG).process(DEMO_PLAIN);
-const emptyProgress: SearchUpdate = {
-  tested: 0,
-  total: 17576,
-  unresolved: 0,
-  candidates: [],
-  current: "",
-  reason: "running",
-};
-
 export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   const [drumExample, setDrumExample] = useState<{
     edges: MenuEdge[];
@@ -50,21 +42,26 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   const [maxPairs, setMaxPairs] = useState(4);
   const [selectedEdge, setSelectedEdge] = useState(0);
   const [selectedCandidate, setSelectedCandidate] = useState(0);
-  const [progress, setProgress] = useState<SearchUpdate>(emptyProgress);
-  const [status, setStatus] = useState<
-    "idle" | "running" | "stopped" | "done" | "error"
-  >("idle");
-  const [error, setError] = useState("");
+  const [session] = useState(
+    () =>
+      new BombeSearchSession(
+        () =>
+          new Worker(new URL("../engine/bombe.worker.ts", import.meta.url), {
+            type: "module",
+          }),
+      ),
+  );
+  const { progress, status, error, elapsed } = useSyncExternalStore(
+    session.subscribe,
+    session.getSnapshot,
+  );
   const [isDemo, setIsDemo] = useState(true);
-  const worker = useRef<Worker | null>(null);
-  const [elapsed, setElapsed] = useState(0);
-  const startTime = useRef(0);
   const running = status === "running";
 
-  useEffect(() => () => worker.current?.terminate(), []);
+  useEffect(() => () => session.dispose(), [session]);
   useEffect(() => {
     if (!transfer) return;
-    worker.current?.terminate();
+    session.reset();
     setMode("search");
     setDrumExample(null);
     setSelectedEdge(0);
@@ -74,21 +71,9 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     setOffset(0);
     setMaxPairs(13);
     setAllOrders(false);
-    setElapsed(0);
     setSelectedCandidate(0);
-    setStatus("idle");
-    setProgress(emptyProgress);
-    setError("");
     setIsDemo(false);
-  }, [transfer]);
-  useEffect(() => {
-    if (!running) return;
-    const timer = window.setInterval(
-      () => setElapsed((performance.now() - startTime.current) / 1000),
-      100,
-    );
-    return () => clearInterval(timer);
-  }, [running]);
+  }, [transfer, session]);
 
   const menu = useMemo(() => {
     try {
@@ -99,11 +84,8 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
   }, [ciphertext, crib, offset]);
 
   function invalidate() {
-    setElapsed(0);
+    session.reset();
     setDrumExample(null);
-    setStatus("idle");
-    setProgress(emptyProgress);
-    setError("");
     setIsDemo(false);
     setSelectedEdge(0);
     setSelectedCandidate(0);
@@ -119,63 +101,15 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
     setIsDemo(true);
   }
   function startSearch() {
-    worker.current?.terminate();
-    setProgress({ ...emptyProgress, total: allOrders ? 1054560 : 17576 });
-    setError("");
     setSelectedCandidate(0);
-    setStatus("running");
-    setElapsed(0);
-    startTime.current = performance.now();
-    try {
-      const nextWorker = new Worker(
-        new URL("../engine/bombe.worker.ts", import.meta.url),
-        {
-          type: "module",
-        },
-      );
-      worker.current = nextWorker;
-      nextWorker.onmessage = (event) => {
-        if (event.data.type === "error") {
-          setError(event.data.message);
-          setStatus("error");
-          nextWorker.terminate();
-          return;
-        }
-        const update = event.data.update as SearchUpdate;
-        setProgress(update);
-        if (update.reason !== "running") {
-          setStatus("done");
-          setElapsed((performance.now() - startTime.current) / 1000);
-          nextWorker.terminate();
-        }
-      };
-      nextWorker.onerror = () => {
-        setError("The search worker failed. Try running the search again.");
-        setStatus("error");
-        nextWorker.terminate();
-      };
-      nextWorker.postMessage({
-        config,
-        ciphertext,
-        crib,
-        offset,
-        allOrders,
-        maxPairs,
-      });
-    } catch (problem) {
-      setError((problem as Error).message);
-      setStatus("error");
-    }
+    session.start({ config, ciphertext, crib, offset, allOrders, maxPairs });
   }
   function cancelSearch() {
-    worker.current?.terminate();
-    setElapsed((performance.now() - startTime.current) / 1000);
-    setStatus("stopped");
+    session.stop();
   }
   const candidate = progress.candidates[selectedCandidate];
   const edge = menu.edges[Math.min(selectedEdge, menu.edges.length - 1)];
-  const total =
-    status === "idle" ? (allOrders ? 1054560 : 17576) : progress.total;
+  const total = status === "idle" ? searchSize(allOrders) : progress.total;
   const percentage = (progress.tested / total) * 100;
 
   return (
@@ -420,9 +354,7 @@ export function BombeWorkbench({ transfer }: { transfer: Transfer | null }) {
                 key.
               </Help>
               <div className="search-space">
-                <strong>
-                  {(allOrders ? 1054560 : 17576).toLocaleString()}
-                </strong>
+                <strong>{searchSize(allOrders).toLocaleString()}</strong>
                 <span>rotor positions to test</span>
               </div>
               <button

@@ -188,6 +188,10 @@ export function rotorOrders(): Triple<RotorName>[] {
   );
 }
 
+export function searchSize(allOrders: boolean): number {
+  return (allOrders ? rotorOrders().length : 1) * 26 ** 3;
+}
+
 export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
   validateConfig(options.config);
   if (
@@ -207,7 +211,7 @@ export function* searchBombe(options: SearchOptions): Generator<SearchUpdate> {
   const resultLimit = options.resultLimit ?? 50;
   const update: SearchUpdate = {
     tested: 0,
-    total: orders.length * 17576,
+    total: searchSize(options.allOrders),
     unresolved: 0,
     candidates: [],
     current: "",
