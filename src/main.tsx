@@ -4,10 +4,13 @@ import { createRoot } from "react-dom/client";
 import "@fontsource/ibm-plex-sans/latin-400.css";
 import "@fontsource/ibm-plex-sans/latin-500.css";
 import "@fontsource/ibm-plex-sans/latin-600.css";
-import "@fontsource/newsreader/latin-400.css";
-import "@fontsource/newsreader/latin-400-italic.css";
+import { applyTheme, readTheme } from "./theme.ts";
+import "@fontsource/special-elite/latin-400.css";
+import "@fontsource/oswald/latin-500.css";
 import { App } from "./App.tsx";
 import "./styles.css";
+
+applyTheme(readTheme());
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -18,3 +21,5 @@ createRoot(document.getElementById("root")!).render(
 );
 
 import "./learning.css";
+import "./themes.css";
+import "./appearance.css";

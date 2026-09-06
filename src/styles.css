@@ -11,7 +11,7 @@
   --line: #d9dcd2;
   --green: #183b32;
   --amber: #e9bc6b;
-  --serif: "Newsreader", Georgia, serif;
+  --serif: "Oswald", sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 * {
@@ -1541,7 +1541,7 @@ progress::-moz-progress-bar {
     font-size: 19px;
   }
   .key-row {
-    gap: 20px;
+    gap: clamp(5px, calc((100% - 414px) / 8), 20px);
   }
   .machine-meta {
     font-size: 11px;

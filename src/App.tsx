@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { EnigmaWorkbench } from "./components/EnigmaWorkbench.tsx";
-import type { Transfer } from "./components/EnigmaWorkbench.tsx";
+import { AppearanceMenu } from "./components/AppearanceMenu.tsx";
 import { BombeWorkbench } from "./components/BombeWorkbench.tsx";
+import type { Transfer } from "./components/EnigmaWorkbench.tsx";
+import { EnigmaWorkbench } from "./components/EnigmaWorkbench.tsx";
 import { Guide } from "./components/Guide.tsx";
 import { Icon } from "./components/Icon.tsx";
 
@@ -58,7 +59,7 @@ export function App() {
             Field guide
           </button>
         </nav>
-        <span className="header-note">The cipher workbench</span>
+        <AppearanceMenu />
       </header>
       <main>
         <div className="page-intro">

@@ -2,32 +2,33 @@
 name: Enigma & Bombe
 description: A browser workbench for inspecting historical cipher mechanisms.
 colors:
-  ink: '#24382f'
-  muted: '#647168'
-  paper: '#f5f3ed'
-  line: '#d9dcd2'
-  green: '#183b32'
-  amber: '#e9bc6b'
-  field: '#fcfbf7'
-  output: '#eaf0e3'
-  instrument-text: '#e5eada'
-  rotor-recess: '#112c25'
-  action-text: '#f3f2e7'
-  action-hover: '#2b5342'
+  ink: '#2d2c25'
+  muted: '#625e50'
+  paper: '#eee7d5'
+  line: '#b6ad96'
+  green: '#484b35'
+  amber: '#dfb664'
+  field: '#f7f1e3'
+  output: '#e7dfc9'
+  instrument-text: '#efe8d6'
+  machine: '#292b25'
+  rotor-recess: '#191b17'
+  action-text: '#f7f1e3'
+  action-hover: '#2d2c25'
   error: '#9b352a'
   error-surface: '#fbeae2'
 typography:
   display:
-    fontFamily: 'Newsreader, Georgia, serif'
-    fontSize: 'clamp(32px, 3.4vw, 48px)'
+    fontFamily: 'Oswald, sans-serif'
+    fontSize: 'clamp(32px, 3.7vw, 52px)'
     fontWeight: 400
     lineHeight: 1.1
-    letterSpacing: '-0.035em'
+    letterSpacing: '-0.02em'
   title:
-    fontFamily: 'IBM Plex Sans, sans-serif'
+    fontFamily: 'Oswald, sans-serif'
     fontSize: '19px'
     fontWeight: 500
-    letterSpacing: '-0.025em'
+    letterSpacing: '0.01em'
   body:
     fontFamily: 'IBM Plex Sans, sans-serif'
     fontSize: '14px'
@@ -41,16 +42,15 @@ typography:
     fontSize: '13px'
     lineHeight: 1.7
   rotor:
-    fontFamily: 'SFMono-Regular, Consolas, Liberation Mono, monospace'
+    fontFamily: 'Special Elite, monospace'
     fontSize: '46px'
     fontWeight: 400
     lineHeight: 1
 rounded:
-  control: '6px'
-  field: '8px'
-  analysis-panel: '12px'
-  instrument: '16px'
-  pill: '30px'
+  control: '2px'
+  field: '1px'
+  analysis-panel: '2px'
+  instrument: '3px'
   circular: '50%'
 components:
   button-primary:
@@ -76,7 +76,7 @@ components:
     padding: '12px 14px'
     width: '320px'
   instrument:
-    backgroundColor: '{colors.green}'
+    backgroundColor: '{colors.machine}'
     textColor: '{colors.instrument-text}'
     rounded: '{rounded.instrument}'
     padding: '23px 30px 15px'
@@ -86,21 +86,23 @@ components:
 
 ## Overview
 
-This records the implemented interface, extracted from `src/styles.css`, `src/learning.css`, `src/main.tsx`, and `src/components/`. It is a description of the current system, not a claim of user-approved branding. `PRODUCT.md` owns product scope and principles.
+The production workbench offers two user-approved document themes: **Service Manual** and **Intercept Form**. Both retain the original responsive layout, control placement, and simulation behavior. `PRODUCT.md` owns product scope; `src/themes.css` and `src/appearance.css` implement this visual system over the shared component styles.
 
-A cream editorial shell surrounds a pine green Enigma instrument. Newsreader introduces the workbench; compact sans-serif controls and monospaced machine values support inspection. Amber identifies the illuminated output and the returning signal. Bombe analysis uses lighter bordered surfaces within the same shell.
+Service Manual is the default: olive accents, aged paper, condensed headings, and a charcoal instrument. Intercept Form uses warmer paper, oxblood accents, and typewriter headings. Compact sans-serif explanations and amber output lamps keep the machine readable in either appearance.
 
 ## Colors
 
-The frontmatter preserves the implemented color values. `green` anchors the instrument, primary actions, and active navigation. `amber` marks a lit key; related warm tones distinguish reflection and return stages. `paper`, `field`, and `output` distinguish the page, editable message, and generated message. `ink` and `muted` establish text hierarchy; `line` divides sections. Errors use `error` on `error-surface`, with a written explanation.
+The frontmatter is normative for **Service Manual**. `green` is the existing CSS name for the theme accent: it colors primary actions, active navigation, and selected controls. `machine` is the independent dark instrument surface. `paper`, `field`, and `output` distinguish the page, editable message, and generated message. `ink`, `muted`, and `line` establish hierarchy. Errors pair color with written explanations.
 
-Additional local colors remain in the stylesheet. The sidecar includes synthesized OKLCH ramps for palette previews; these are not implemented CSS scales. Signal stages use both labels and color. Selection uses amber with green text.
+Intercept Form overrides `paper` to `#f0e4c9`, `field` to `#faf2df`, `green` to `#7c352a`, and `line` to `#b4a084`. Other palette values inherit. Theme-dependent components consume CSS custom properties; retain the shared, labeled signal-stage colors and amber lamp state. Text selection uses the current accent with field-colored text. Local CSS colors are not a named global ramp.
 
 ## Typography
 
-Newsreader regular and italic 400 and IBM Plex Sans 400/500/600 are self-hosted through Fontsource imports. The system monospace stack is used for letters, rotor settings, ciphertext, and search candidates.
+Oswald 500 provides the Service Manual brand, uppercase navigation, and headings. Intercept Form changes the brand, page heading, and h2 headings to Special Elite; its brand and page heading retain normal case. Its page heading is `clamp(32px, 4vw, 54px)` with 1.18 line height. Navigation and h3 headings retain Oswald.
 
-The page heading uses the display token; section headings use the title token. Introductory and guide prose is 14px with 1.6 line height. Dense controls and supporting descriptions range from 10–13px. Guide headings use Newsreader 29px/400. Rotor letters are 46px; neighboring letters are smaller and muted. The trace summary uses Newsreader at 59px. Tooltip explanations use the tooltip role independently of the smaller trigger text. Changing progress, drive-phase, core-reading, and paper-result values use tabular numerals. These are role-specific values, not a uniform type scale.
+IBM Plex Sans 400/500/600 supports controls and prose in both themes. Special Elite 400 supplies rotor letters, message text, and the large trace summary; other machine settings and candidates use the system monospace stack. Fonts are self-hosted through Fontsource imports.
+
+The frontmatter records role-specific sizes, not a uniform type scale. Introductory and guide prose is 14px with 1.6 line height; dense controls and supporting descriptions range from 10–13px. Guide headings are 29px and follow the theme heading family. Rotor letters are 46px; the trace summary is 59px. Message text is 16px. Changing progress and machine values retain tabular numerals.
 
 ## Layout
 
@@ -111,42 +113,47 @@ Spacing is component-specific: common panel padding is 23–30px, message-column
 | Breakpoint | Implemented changes                                                                                                                                                                                                                                                                                      |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ≥1450px    | Trace column 320px, workbench gap 42px; instrument horizontal padding 40px.                                                                                                                                                                                                                              |
-| ≤1100px    | Page/header horizontal padding 28px; trace 255px with 22px gap; auxiliary header note and intro tag hidden; narrower controls. Bombe input column 310px.                                                                                                                                                 |
+| ≤1100px    | Page/header horizontal padding 28px; trace 255px with 22px gap; auxiliary header note, intro tag, and Appearance trigger text hidden; narrower controls. Bombe input column 310px.                                                                                                                                                 |
 | ≤850px     | Enigma and Bombe workbench columns stack. Trace moves below a top divider and uses a five-column stage grid. Bombe input sections sit side by side.                                                                                                                                                      |
-| ≤600px     | Page padding 18px; navigation wraps below the brand. Heading is 36px. Instrument padding 18px 16px 14px. Rotor settings stack within each rotor. Keyboard retains its rows with proportional circular keys. Plugboard sockets use 13 columns, and its form stacks. Bombe inputs and guide columns stack. |
+| ≤600px     | Page padding 18px; Heading is 34px for Service Manual and 32px for Intercept Form; Appearance stays beside the brand. Instrument padding 18px 16px 14px. Rotor settings stack within each rotor. Keyboard retains its rows with proportional circular keys. Plugboard sockets use 13 columns, and its form stacks. Bombe inputs and guide columns stack. |
+
+At ≤700px the header uses two rows, with navigation below the brand and Appearance trigger. At ≤360px the brand reduces to 22px.
 
 On mobile, rotor selectors fill the width below their labels. Historical diagrams retain a 540px minimum width inside a named, keyboard-focusable horizontal overflow region. The drum bank also scrolls horizontally on narrow screens. Learning-panel introductory prose is limited to 72ch.
 
 Alignment strips and candidate tabs scroll horizontally when needed. Long ciphertext wraps inside fields; textareas resize vertically.
 
+At narrow tablet widths, keyboard gaps shrink to keep all nine keys in the longest row inside the instrument.
+
 ## Elevation & Depth
 
-Most sections are flat, separated by fine borders and changes in surface color. The machine has a restrained `0 12px 30px #24382f12` shadow. Keys have `0 3px 5px #091d2540`; the pressed key uses an inset shadow. Dark rotor windows form recessed compartments. Help popups use a soft `0 4px 20px #112c2533` shadow to separate their paper surface from the controls beneath them. Shadow and motion details live in `.impeccable/design.json`.
+Most sections are flat, separated by borders and changes in surface color. The machine uses `0 8px 20px #292b251c`; keys use `0 3px 5px #0005`. Rotor windows are recessed. Help popups retain `0 4px 20px #112c2533`, while the Appearance popup uses `0 6px 24px #292b2533`. Full shadow and motion details live in `.impeccable/design.json`.
 
 ## Shapes
 
-The instrument uses 16px corners, reduced to 12px on mobile. Analysis panels use 12px, reduced to 10px on mobile. Fields use 6–8px corners; primary actions use 6px. Circular keys, trace letters, and the rotor emblem connect the machine controls visually. Pills identify context and validation. Dividers are generally 1px.
+Document surfaces are nearly square: fields and selects use 1px corners, primary actions and analysis panels 2px, and the instrument and Appearance popup 3px. The intro tag has square corners; validation badges use 2px. Circular keys, trace letters, and the rotor emblem retain the instrument's mechanical geometry. Most dividers are 1px; the header rule is 2px.
 
 ## Components
 
-- **Primary actions:** green fill, pale text, 12px type, 12px 18px padding, and a darker/lighter green hover treatment defined by `action-hover`. Search uses a full-width action with 14px padding. Cancel uses a brown fill.
+- **Primary actions:** theme-accent fill, field-colored text, 12px type, 12px 18px padding, and ink-colored hover. Search uses a full-width action with 14px padding. Cancel uses a brown fill.
 - **Text actions:** transparent, compact, with optional inline icons; hover changes text to warm brown. Disabled buttons use opacity 0.45 and a not-allowed cursor.
-- **Navigation:** text buttons with a 3px green underline and heavier text for the current page. Hover adds a pale surface. Mobile retains all three destinations on a second header row.
-- **Message fields:** monospaced text, subtle borders, 8px corners; input is near-white and output pale green. Plugboard and intercept fields use the same restrained form language. Validation appears beside the relevant work area.
+- **Navigation:** uppercase Oswald buttons with an accent-filled active state and field-colored active text. Hover adds a pale paper surface. Mobile retains all three destinations on a second header row.
+- **Message fields:** Special Elite text, theme borders, 1px corners; input uses the theme field surface and output a darker paper tone. Plugboard and intercept fields use the same restrained form language. Validation appears beside the relevant work area.
 - **Instrument:** three recessed rotor windows above circular keyboard rows. The pressed input has an inset treatment; the output key lights amber. Settings use native selects with visible labels.
 - **Trace:** a large input/output pair, letter scrubber, labeled stages, and stepping explanation. Forward stages are green, reflection amber, and return stages warm neutral. The empty state explains how to start.
-- **Bombe analysis:** bordered menu and result panels, labeled validation state, selectable alignment cells, progress, and candidate tabs. Selected graph nodes are dark green; selected edges are warm ochre. Candidates remain described as possible settings.
+- **Bombe analysis:** bordered menu and result panels, labeled validation state, selectable alignment cells, progress, and candidate tabs. Selected graph nodes use the theme accent; selected edges are warm ochre. Candidates remain described as possible settings.
 
-- **Contextual help:** the shared Base UI tooltip uses a labeled question-mark SVG button. Hover opens it after 350ms; keyboard focus and click/tap also open it. Adjacent tooltips share the provider timing, with a 100ms closing delay. The explanation remains open while hovered and dismisses with Escape, focus departure, or outside press. A visible popup has `role="tooltip"` and is linked to its trigger with `aria-describedby`. The portaled popup floats above the workbench without changing layout, prefers top/start placement with an 8px gap, and adjusts around viewport edges with 12px collision padding. Its width is capped by the tooltip token and available viewport width; constrained height scrolls. Triggers are at least 36px high, increasing to 44px at the mobile breakpoint. The trigger is green on paper and pale on the instrument. Persistent field hints remain beside fields.
+- **Appearance:** a header button opens a Base UI Popover with exactly two labeled native radio choices, Service Manual and Intercept Form. Selection updates the whole workbench immediately and saves to `localStorage` under `enigma-bombe-theme`; missing, invalid, or inaccessible storage falls back to Service Manual. The trigger has a 44px minimum target; below 1100px its icon retains the accessible name. The popup aligns to the trigger end with an 8px gap and 12px collision padding, a 310px width capped by the viewport, a title, and a short description. Base UI manages dismissal and focus.
+- **Contextual help:** the shared Base UI tooltip uses a labeled question-mark SVG button. Hover opens it after 350ms; keyboard focus and click/tap also open it. Adjacent tooltips share the provider timing, with a 100ms closing delay. The explanation remains open while hovered and dismisses with Escape, focus departure, or outside press. A visible popup has `role="tooltip"` and is linked to its trigger with `aria-describedby`. The portaled popup floats above the workbench without changing layout, prefers top/start placement with an 8px gap, and adjusts around viewport edges with 12px collision padding. Its width is capped by the tooltip token and available viewport width; constrained height scrolls. Triggers are at least 36px high, increasing to 44px at the mobile breakpoint. The trigger uses the theme accent on paper and pale text on the instrument. Persistent field hints remain beside fields.
 - **Learning activities:** Bombe activity controls switch between Crib & search, Drums & wiring, and Paper methods. Historical menu notation links to the drum view. The drum cabinet uses a dark instrument surface, rotor-type colors, and normalized core letters. The paper activity uses ochre sheet stock, two outline colors for covered holes, and white for open intersections. Selection controls retain generous hit areas. Original drum calibration and full Banburismus inference are not implied by the visuals.
 
 All buttons, links, fields, selects, and disclosure summaries share a 3px `#b9802c` focus outline with 4px offset. Button color transitions last 0.16s. The lit-key glow lasts 0.32s. The reduced-motion media query removes CSS animation and transitions; explicit JavaScript scroll behavior is separate from this CSS rule.
 
 ## Do's and Don'ts
 
-- **Do** retain the paper shell, dark instrument, and distinct signal-state colors when extending these screens.
+- **Do** extend both document themes through their shared tokens and preserve the original workbench layout and distinct signal states.
 - **Do** use monospaced type for machine values and readable prose for explanations.
 - **Do** preserve visible labels, focus outlines, validation text, and candidate uncertainty.
 - **Do** check the dense keyboard and configuration at mobile widths.
 - **Don't** imply that a matching candidate is a uniquely recovered key or that this is a physically faithful British Bombe.
-- **Don't** treat local CSS values as an established global scale or add a claimed user-approved aesthetic to this extracted record.
+- **Don't** reintroduce discarded prototype themes or prototype controls into the production Appearance menu.

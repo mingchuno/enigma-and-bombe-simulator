@@ -1,17 +1,17 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-06T13:36:43.247314+00:00",
+  "generatedAt": "2026-09-06T14:30:33.691127+00:00",
   "title": "Design System: Enigma & Bombe",
   "extensions": {
     "shadows": [
       {
         "name": "instrument",
-        "value": "0 12px 30px #24382f12",
+        "value": "0 8px 20px #292b251c",
         "purpose": "Machine surface."
       },
       {
         "name": "key",
-        "value": "0 3px 5px #091d2540",
+        "value": "0 3px 5px #0005",
         "purpose": "Circular keys at rest."
       },
       {
@@ -23,6 +23,11 @@
         "name": "help-tooltip",
         "value": "0 4px 20px #112c2533",
         "purpose": "Separates portaled help from the workbench without shifting controls."
+      },
+      {
+        "name": "appearance-popup",
+        "value": "0 6px 24px #292b2533",
+        "purpose": "Separates the header Appearance popover from the workbench."
       }
     ],
     "motion": [
@@ -58,204 +63,76 @@
       {
         "name": "mobile-max",
         "value": "600px"
+      },
+      {
+        "name": "header-stack-max",
+        "value": "700px"
+      },
+      {
+        "name": "small-brand-max",
+        "value": "360px"
       }
     ],
     "colorMeta": {
       "ink": {
         "role": "neutral",
-        "displayName": "Ink",
-        "tonalRamp": [
-          "oklch(15.00% 0.03041 164.84)",
-          "oklch(26.43% 0.03041 164.84)",
-          "oklch(37.86% 0.03041 164.84)",
-          "oklch(49.29% 0.03041 164.84)",
-          "oklch(60.71% 0.03041 164.84)",
-          "oklch(72.14% 0.03041 164.84)",
-          "oklch(83.57% 0.03041 164.84)",
-          "oklch(95.00% 0.03041 164.84)"
-        ]
+        "displayName": "Ink"
       },
       "muted": {
         "role": "neutral",
-        "displayName": "Muted",
-        "tonalRamp": [
-          "oklch(15.00% 0.02092 155.41)",
-          "oklch(26.43% 0.02092 155.41)",
-          "oklch(37.86% 0.02092 155.41)",
-          "oklch(49.29% 0.02092 155.41)",
-          "oklch(60.71% 0.02092 155.41)",
-          "oklch(72.14% 0.02092 155.41)",
-          "oklch(83.57% 0.02092 155.41)",
-          "oklch(95.00% 0.02092 155.41)"
-        ]
+        "displayName": "Muted"
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Paper",
-        "tonalRamp": [
-          "oklch(15.00% 0.00824 91.48)",
-          "oklch(26.43% 0.00824 91.48)",
-          "oklch(37.86% 0.00824 91.48)",
-          "oklch(49.29% 0.00824 91.48)",
-          "oklch(60.71% 0.00824 91.48)",
-          "oklch(72.14% 0.00824 91.48)",
-          "oklch(83.57% 0.00824 91.48)",
-          "oklch(95.00% 0.00824 91.48)"
-        ]
+        "displayName": "Paper"
       },
       "line": {
         "role": "neutral",
-        "displayName": "Line",
-        "tonalRamp": [
-          "oklch(15.00% 0.01385 120.30)",
-          "oklch(26.43% 0.01385 120.30)",
-          "oklch(37.86% 0.01385 120.30)",
-          "oklch(49.29% 0.01385 120.30)",
-          "oklch(60.71% 0.01385 120.30)",
-          "oklch(72.14% 0.01385 120.30)",
-          "oklch(83.57% 0.01385 120.30)",
-          "oklch(95.00% 0.01385 120.30)"
-        ]
+        "displayName": "Line"
       },
       "green": {
         "role": "primary",
-        "displayName": "Green",
-        "tonalRamp": [
-          "oklch(15.00% 0.04402 174.33)",
-          "oklch(26.43% 0.04402 174.33)",
-          "oklch(37.86% 0.04402 174.33)",
-          "oklch(49.29% 0.04402 174.33)",
-          "oklch(60.71% 0.04402 174.33)",
-          "oklch(72.14% 0.04402 174.33)",
-          "oklch(83.57% 0.04402 174.33)",
-          "oklch(95.00% 0.04402 174.33)"
-        ]
+        "displayName": "Olive accent (oxblood in Intercept Form)"
       },
       "amber": {
         "role": "secondary",
-        "displayName": "Amber",
-        "tonalRamp": [
-          "oklch(15.00% 0.11212 80.86)",
-          "oklch(26.43% 0.11212 80.86)",
-          "oklch(37.86% 0.11212 80.86)",
-          "oklch(49.29% 0.11212 80.86)",
-          "oklch(60.71% 0.11212 80.86)",
-          "oklch(72.14% 0.11212 80.86)",
-          "oklch(83.57% 0.11212 80.86)",
-          "oklch(95.00% 0.11212 80.86)"
-        ]
+        "displayName": "Amber"
       },
       "field": {
         "role": "neutral",
-        "displayName": "Field",
-        "tonalRamp": [
-          "oklch(15.00% 0.00538 95.10)",
-          "oklch(26.43% 0.00538 95.10)",
-          "oklch(37.86% 0.00538 95.10)",
-          "oklch(49.29% 0.00538 95.10)",
-          "oklch(60.71% 0.00538 95.10)",
-          "oklch(72.14% 0.00538 95.10)",
-          "oklch(83.57% 0.00538 95.10)",
-          "oklch(95.00% 0.00538 95.10)"
-        ]
+        "displayName": "Field"
       },
       "output": {
         "role": "neutral",
-        "displayName": "Output",
-        "tonalRamp": [
-          "oklch(15.00% 0.01837 127.15)",
-          "oklch(26.43% 0.01837 127.15)",
-          "oklch(37.86% 0.01837 127.15)",
-          "oklch(49.29% 0.01837 127.15)",
-          "oklch(60.71% 0.01837 127.15)",
-          "oklch(72.14% 0.01837 127.15)",
-          "oklch(83.57% 0.01837 127.15)",
-          "oklch(95.00% 0.01837 127.15)"
-        ]
+        "displayName": "Output"
       },
       "instrument-text": {
         "role": "neutral",
-        "displayName": "Instrument text",
-        "tonalRamp": [
-          "oklch(15.00% 0.02194 120.98)",
-          "oklch(26.43% 0.02194 120.98)",
-          "oklch(37.86% 0.02194 120.98)",
-          "oklch(49.29% 0.02194 120.98)",
-          "oklch(60.71% 0.02194 120.98)",
-          "oklch(72.14% 0.02194 120.98)",
-          "oklch(83.57% 0.02194 120.98)",
-          "oklch(95.00% 0.02194 120.98)"
-        ]
+        "displayName": "Instrument text"
       },
       "rotor-recess": {
         "role": "primary",
-        "displayName": "Rotor recess",
-        "tonalRamp": [
-          "oklch(15.00% 0.03583 174.36)",
-          "oklch(26.43% 0.03583 174.36)",
-          "oklch(37.86% 0.03583 174.36)",
-          "oklch(49.29% 0.03583 174.36)",
-          "oklch(60.71% 0.03583 174.36)",
-          "oklch(72.14% 0.03583 174.36)",
-          "oklch(83.57% 0.03583 174.36)",
-          "oklch(95.00% 0.03583 174.36)"
-        ]
+        "displayName": "Rotor recess"
       },
       "action-text": {
         "role": "neutral",
-        "displayName": "Action text",
-        "tonalRamp": [
-          "oklch(15.00% 0.01459 102.46)",
-          "oklch(26.43% 0.01459 102.46)",
-          "oklch(37.86% 0.01459 102.46)",
-          "oklch(49.29% 0.01459 102.46)",
-          "oklch(60.71% 0.01459 102.46)",
-          "oklch(72.14% 0.01459 102.46)",
-          "oklch(83.57% 0.01459 102.46)",
-          "oklch(95.00% 0.01459 102.46)"
-        ]
+        "displayName": "Action text"
       },
       "action-hover": {
         "role": "primary",
-        "displayName": "Action hover",
-        "tonalRamp": [
-          "oklch(15.00% 0.05423 164.56)",
-          "oklch(26.43% 0.05423 164.56)",
-          "oklch(37.86% 0.05423 164.56)",
-          "oklch(49.29% 0.05423 164.56)",
-          "oklch(60.71% 0.05423 164.56)",
-          "oklch(72.14% 0.05423 164.56)",
-          "oklch(83.57% 0.05423 164.56)",
-          "oklch(95.00% 0.05423 164.56)"
-        ]
+        "displayName": "Action hover"
       },
       "error": {
         "role": "neutral",
-        "displayName": "Error",
-        "tonalRamp": [
-          "oklch(15.00% 0.13831 29.33)",
-          "oklch(26.43% 0.13831 29.33)",
-          "oklch(37.86% 0.13831 29.33)",
-          "oklch(49.29% 0.13831 29.33)",
-          "oklch(60.71% 0.13831 29.33)",
-          "oklch(72.14% 0.13831 29.33)",
-          "oklch(83.57% 0.13831 29.33)",
-          "oklch(95.00% 0.13831 29.33)"
-        ]
+        "displayName": "Error"
       },
       "error-surface": {
         "role": "neutral",
-        "displayName": "Error surface",
-        "tonalRamp": [
-          "oklch(15.00% 0.02147 46.99)",
-          "oklch(26.43% 0.02147 46.99)",
-          "oklch(37.86% 0.02147 46.99)",
-          "oklch(49.29% 0.02147 46.99)",
-          "oklch(60.71% 0.02147 46.99)",
-          "oklch(72.14% 0.02147 46.99)",
-          "oklch(83.57% 0.02147 46.99)",
-          "oklch(95.00% 0.02147 46.99)"
-        ]
+        "displayName": "Error surface"
+      },
+      "machine": {
+        "role": "neutral",
+        "displayName": "Charcoal instrument"
       }
     },
     "focus": {
@@ -268,53 +145,53 @@
     {
       "name": "Primary action",
       "kind": "button",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
       "html": "<button class=\"ds-primary-button\">Search settings</button>",
-      "css": ".ds-primary-button {\n  background: var(--green);\n  color: #f3f2e7;\n  border: 1px solid transparent;\n  border-radius: 6px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n  padding: 12px 18px;\n  font-size: 12px;\n  white-space: nowrap;\n}\n.ds-primary-button:hover:not(:disabled) {\n  background: #2b5342;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}",
+      "css": ".ds-primary-button {\n  background: var(--green, #484b35);\n  color: var(--theme-field, #f7f1e3);\n  border: 1px solid transparent;\n  border-radius: 2px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n  padding: 12px 18px;\n  font-size: 12px;\n  white-space: nowrap;\n}\n.ds-primary-button:hover:not(:disabled) {\n  background: var(--ink, #2d2c25);\n}\n\n.ds-primary-button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} .ds-primary-button:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} .ds-primary-button:disabled {opacity: .45; cursor: not-allowed;} @media(prefers-reduced-motion: reduce) {.ds-primary-button {animation: none; transition: none;}} .ds-primary-button {font-family: \"IBM Plex Sans\", sans-serif;}",
       "refersTo": "button-primary"
     },
     {
       "name": "Text action",
       "kind": "button",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
       "html": "<button class=\"ds-text-button\">Play example</button>",
-      "css": ".ds-text-button {\n  border: 0;\n  background: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 7px;\n  padding: 4px 0;\n  font-size: 12px;\n}\n.ds-text-button:hover:not(:disabled) {\n  color: #996421;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+      "css": ".ds-text-button {\n  border: 0;\n  background: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 7px;\n  padding: 4px 0;\n  font-size: 12px;\n}\n.ds-text-button:hover:not(:disabled) {\n  color: #996421;\n}\n\n.ds-text-button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} .ds-text-button:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} .ds-text-button:disabled {opacity: .45; cursor: not-allowed;} @media(prefers-reduced-motion: reduce) {.ds-text-button {animation: none; transition: none;}} .ds-text-button {font-family: \"IBM Plex Sans\", sans-serif; color: var(--ink, #2d2c25);} .ds-text-button:hover:not(:disabled) {color: #996421;}"
     },
     {
       "name": "Message field",
       "kind": "input",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
       "html": "<div class=\"ds-message-columns\"><textarea aria-label=\"Message\">HELLOWORLD</textarea></div>",
-      "css": ".ds-message-columns textarea {\n  width: 100%;\n  height: 112px;\n  background: #fcfbf7;\n  border: 1px solid #d5dacf;\n  border-radius: 8px;\n  margin-top: 9px;\n  padding: 13px 15px;\n  resize: vertical;\n  line-height: 1.75;\n  font-family: var(--mono);\n  font-size: 14px;\n  letter-spacing: 0.055em;\n  word-break: break-all;\n  color: var(--ink);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}\n.ds-message-columns textarea {font-family: var(--mono);}",
+      "css": ".ds-message-columns textarea {\n  width: 100%;\n  height: 112px;\n  background: var(--theme-field, #f7f1e3);\n  border: 1px solid var(--line, #b6ad96);\n  border-radius: 1px;\n  margin-top: 9px;\n  padding: 13px 15px;\n  resize: vertical;\n  line-height: 1.75;\n  font-family: \"Special Elite\", monospace;\n  font-size: 16px;\n  letter-spacing: 0.055em;\n  word-break: break-all;\n  color: var(--ink, #2d2c25);\n}\n\n.ds-message-columns textarea {font-family: \"Special Elite\", monospace;} .ds-message-columns textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}",
       "refersTo": "message-input"
     },
     {
       "name": "Navigation",
       "kind": "nav",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
-      "html": "<div class=\"ds-site-header\"><nav aria-label=\"Workbench\"><button class=\"ds-active\" aria-current=\"page\">Enigma</button><button>Bombe</button></nav></div>",
-      "css": ".ds-site-header nav {\n  display: flex;\n  align-self: stretch;\n  align-items: stretch;\n  margin-left: auto;\n  gap: 10px;\n}\n.ds-site-header nav button {\n  position: relative;\n  border: 0;\n  background: none;\n  padding: 0 21px;\n  color: #667166;\n  font-size: 14px;\n}\n.ds-site-header nav button.ds-active {\n  color: var(--green);\n  font-weight: 600;\n}\n.ds-site-header nav button.ds-active:after {\n  content: '';\n  position: absolute;\n  bottom: -1px;\n  height: 3px;\n  background: var(--green);\n  left: 20px;\n  right: 20px;\n}\n.ds-site-header nav button:hover {\n  background: #eaece3;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Workbench\"><button aria-current=\"page\">Enigma</button><button>Bombe</button><button>How it works</button></nav>",
+      "css": ".ds-nav {display:flex; gap:10px;} .ds-nav button {border:0; background:transparent; padding:16px 21px; color:var(--ink, #2d2c25); font:14px \"Oswald\", sans-serif; text-transform:uppercase; letter-spacing:.03em; cursor:pointer; transition:background .16s;} .ds-nav button:hover {background:#ded5bf;} .ds-nav button[aria-current=\"page\"] {background:var(--green, #484b35); color:var(--theme-field, #f7f1e3); font-weight:600;} .ds-nav button:focus-visible {outline:3px solid #b9802c; outline-offset:4px;} @media(prefers-reduced-motion:reduce) {.ds-nav button {transition:none;}}"
     },
     {
       "name": "Validation badge",
       "kind": "chip",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
       "html": "<span class=\"ds-validation-badge\">Crib aligned</span>",
-      "css": ".ds-validation-badge {\n  background: #e9efdf;\n  color: #496044;\n  border-radius: 30px;\n  padding: 5px 9px;\n  font-size: 10px;\n  white-space: nowrap;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+      "css": ".ds-validation-badge {\n  background: #e0dfc6;\n  color: #484b35;\n  border-radius: 2px;\n  padding: 5px 9px;\n  font-size: 10px;\n  white-space: nowrap;\n}\n .ds-validation-badge {font-family:\"IBM Plex Sans\", sans-serif;}"
     },
     {
       "name": "Analysis panel",
       "kind": "card",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
       "html": "<section class=\"ds-menu-panel\"><h2>Crib connections</h2><p class=\"ds-muted\">Inspect the selected constraint.</p></section>",
-      "css": ".ds-menu-panel {\n  border: 1px solid var(--line);\n  background: #fcfbf7;\n  border-radius: 12px;\n  padding: 23px 25px;\n}\n.ds-muted {\n  color: var(--muted);\n  font-size: 13px;\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}"
+      "css": ".ds-menu-panel {\n  border: 1px solid var(--line, #b6ad96);\n  background: var(--theme-field, #f7f1e3);\n  border-radius: 2px;\n  padding: 23px 25px;\n}\n.ds-muted {\n  color: var(--muted, #625e50);\n  font-size: 13px;\n}\n .ds-menu-panel {color:var(--ink, #2d2c25); font-family:\"IBM Plex Sans\", sans-serif;} .ds-menu-panel h2 {margin:0; font:500 19px var(--serif, \"Oswald\", sans-serif); letter-spacing:.01em;}"
     },
     {
       "name": "Machine key",
       "kind": "button",
-      "description": "Extracted from src/styles.css; preview content is illustrative.",
+      "description": "Extracted from shared component styles and src/themes.css; preview content is illustrative.",
       "html": "<button class=\"ds-machine-key\" aria-label=\"Type A\">A</button><button class=\"ds-machine-key ds-lit\" aria-label=\"Output B\">B</button>",
-      "css": ".ds-machine-key {\n  border: 1px solid #78907b;\n  width: clamp(34px, 3.8vw, 47px);\n  height: clamp(34px, 3.8vw, 47px);\n  border-radius: 50%;\n  background: #214537;\n  color: #e6ecdf;\n  font-family: var(--mono);\n  font-size: 18px;\n  box-shadow: 0 3px 5px #091d2540;\n  flex-shrink: 0;\n}\n.ds-machine-key:hover:not(:disabled) {\n  background: #345e48;\n  border-color: #c6d5bb;\n}\n.ds-machine-key.ds-pressed {\n  border-color: #dfddbd;\n  box-shadow: inset 0 2px 5px #061c1860;\n}\n.ds-machine-key.ds-lit {\n  background: var(--amber);\n  border-color: var(--amber);\n  color: #183b32;\n  animation: lamp-on 0.32s cubic-bezier(0.16, 1, 0.3, 1);\n}\nbutton, textarea {font-family: \"IBM Plex Sans\", sans-serif;} button {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} button:disabled {opacity: .45; cursor: not-allowed;} button:focus-visible,textarea:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;}\n@media (prefers-reduced-motion: reduce) {button {animation: none; transition: none;}}\n.ds-machine-key {font-family: var(--mono);}\n@keyframes lamp-on {from {box-shadow: 0 2px 18px #e9bc6b55;} to {box-shadow: 0 3px 5px #091d2540;}}"
+      "css": ".ds-machine-key {\n  border: 1px solid #a7a58e;\n  width: clamp(34px, 3.8vw, 47px);\n  height: clamp(34px, 3.8vw, 47px);\n  border-radius: 50%;\n  background: #161914;\n  color: #f3eddc;\n  font-family: \"Special Elite\", monospace;\n  font-size: 18px;\n  box-shadow: 0 3px 5px #0005;\n  flex-shrink: 0;\n}\n.ds-machine-key:hover:not(:disabled) {\n  background: #464b3a;\n  border-color: #e6dfcc;\n}\n.ds-machine-key.ds-pressed {\n  border-color: #dfddbd;\n  box-shadow: inset 0 2px 5px #061c1860;\n}\n.ds-machine-key.ds-lit {\n  background: var(--amber, #dfb664);\n  border-color: var(--amber, #dfb664);\n  color: #28271e;\n  animation: lamp-on 0.32s cubic-bezier(0.16, 1, 0.3, 1);\n}\n\n.ds-machine-key {font-family: \"Special Elite\", monospace;}\n@keyframes lamp-on {from {box-shadow: 0 2px 18px #e9bc6b55;} to {box-shadow: 0 3px 5px #0005;}}\n.ds-machine-key {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} .ds-machine-key:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} .ds-machine-key:disabled {opacity: .45; cursor: not-allowed;} @media(prefers-reduced-motion: reduce) {.ds-machine-key {animation: none; transition: none;}}"
     },
     {
       "name": "Contextual help",
@@ -322,20 +199,27 @@
       "refersTo": "help-tooltip",
       "description": "Open-state visual specimen from Help.tsx and learning.css. The application uses Base UI for hover, focus, tap, dismissal, and collision handling; this standalone preview shows appearance only.",
       "html": "<div class=\"ds-help-preview\"><div id=\"ds-help-description\" role=\"tooltip\" class=\"ds-help-popup\">A rotor is a wheel containing 26 crossed wires. I\u2013V have different wirings.</div><button type=\"button\" class=\"ds-help-trigger\" aria-label=\"Explain Rotor order\" aria-describedby=\"ds-help-description\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.5 2-2.5 4M12 16h.01\"/></svg><span>Rotor order</span></button></div>",
-      "css": ".ds-help-trigger {\n  margin: 12px 0;\n  font-size: 12px;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  cursor: pointer;\n  color: #46613e;\n  width: fit-content;\n  min-height: 36px;\n  padding: 0;\n  border: 0;\n  border-radius: 6px;\n  background: transparent;\n  text-align: left;\n}\n.ds-help-popup {\n  background: var(--paper);\n  color: var(--ink);\n  border-radius: 6px;\n  padding: 12px 14px;\n  font-size: 13px;\n  line-height: 1.7;\n  width: 320px;\n  max-width: min(320px, calc(100vw - 24px), var(--available-width, 320px));\n  max-height: var(--available-height, none);\n  overflow-y: auto;\n  overflow-wrap: anywhere;\n  box-shadow: 0 4px 20px #112c2533;\n}\n.ds-help-preview {padding: 20px; font-family: \"IBM Plex Sans\", sans-serif;} .ds-help-trigger {font-family: inherit; margin: 8px 0 0;} .ds-help-trigger svg {flex-shrink: 0;} .ds-help-trigger:hover {text-decoration: underline; text-underline-offset: 3px;} .ds-help-trigger:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} @media(max-width: 600px) {.ds-help-trigger {min-height: 44px;}}"
+      "css": ".ds-help-trigger {\n  margin: 12px 0;\n  font-size: 12px;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  cursor: pointer;\n  color: var(--green, #484b35);\n  width: fit-content;\n  min-height: 36px;\n  padding: 0;\n  border: 0;\n  border-radius: 6px;\n  background: transparent;\n  text-align: left;\n}\n .ds-help-popup {\n  background: var(--paper, #eee7d5);\n  color: var(--ink, #2d2c25);\n  border-radius: 2px;\n  padding: 12px 14px;\n  font-size: 13px;\n  line-height: 1.7;\n  width: 320px;\n  max-width: min(320px, calc(100vw - 24px), var(--available-width, 320px));\n  max-height: var(--available-height, none);\n  overflow-y: auto;\n  overflow-wrap: anywhere;\n  box-shadow: 0 4px 20px #112c2533;\n}\n.ds-help-preview {padding: 20px; font-family: \"IBM Plex Sans\", sans-serif;} .ds-help-trigger {font-family: inherit; margin: 8px 0 0;} .ds-help-trigger svg {flex-shrink: 0;} .ds-help-trigger:hover {text-decoration: underline; text-underline-offset: 3px;} .ds-help-trigger:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} @media(max-width: 600px) {.ds-help-trigger {min-height: 44px;}}\n.ds-help-trigger {cursor: pointer; transition: background .16s, color .16s, border-color .16s;} .ds-help-trigger:focus-visible {outline: 3px solid #b9802c; outline-offset: 4px;} .ds-help-trigger:disabled {opacity: .45; cursor: not-allowed;} @media(prefers-reduced-motion: reduce) {.ds-help-trigger {animation: none; transition: none;}}"
+    },
+    {
+      "name": "Appearance menu",
+      "kind": "custom",
+      "description": "Static open-state specimen of AppearanceMenu.tsx. The production Base UI Popover manages focus and dismissal; its two radio choices apply and persist the theme. This preview has no theme-switching script.",
+      "html": "<div class=\"ds-appearance\"><button class=\"ds-appearance-trigger\" aria-label=\"Appearance\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 4a8 8 0 0 0 0 16Z\" fill=\"currentColor\"/></svg>Appearance</button><section class=\"ds-appearance-popup\" aria-label=\"Appearance preview\"><h2>Appearance</h2><p>Choose the look of your workbench.</p><fieldset><legend>Theme</legend><label><input type=\"radio\" name=\"ds-theme\" checked><span><strong>Service Manual</strong><small>Olive tones \u00b7 condensed lettering</small></span></label><label><input type=\"radio\" name=\"ds-theme\"><span><strong>Intercept Form</strong><small>Oxblood accents \u00b7 typewriter lettering</small></span></label></fieldset></section></div>",
+      "css": ".ds-appearance {padding:12px; font-family:\"IBM Plex Sans\",sans-serif; color:var(--ink, #2d2c25);} .ds-appearance-trigger {display:inline-flex; align-items:center; gap:8px; padding:10px; min-height:44px; min-width:44px; border:1px solid var(--line, #b6ad96); border-radius:2px; background:transparent; color:inherit; font:12px \"IBM Plex Sans\",sans-serif; cursor:pointer;} .ds-appearance-trigger:hover {background:var(--theme-field, #f7f1e3);} .ds-appearance-popup {width:310px; max-width:calc(100vw - 48px); padding:20px; margin-top:8px; background:var(--theme-field, #f7f1e3); border-radius:3px; box-shadow:0 6px 24px #292b2533;} .ds-appearance-popup h2 {margin:0; font:500 18px \"IBM Plex Sans\",sans-serif;} .ds-appearance-popup p {font-size:13px; color:var(--muted, #625e50); margin:6px 0 18px; line-height:1.5;} .ds-appearance-popup fieldset {border:0; padding:0; margin:0;} .ds-appearance-popup legend {font-size:12px; color:var(--muted, #625e50); margin-bottom:6px;} .ds-appearance-popup label {display:flex; align-items:center; gap:12px; min-height:62px; padding:10px 0; cursor:pointer;} .ds-appearance-popup label + label {border-top:1px solid var(--line, #b6ad96);} .ds-appearance-popup input {width:18px; height:18px; margin:0; accent-color:var(--green, #484b35);} .ds-appearance-popup strong {display:block; font-size:13px; font-weight:500;} .ds-appearance-popup small {display:block; font-size:11px; margin-top:4px; color:var(--muted, #625e50);} .ds-appearance-trigger:focus-visible, .ds-appearance-popup input:focus-visible {outline:3px solid #b9802c; outline-offset:4px;}"
     }
   ],
   "narrative": {
-    "overview": "This records the implemented interface, extracted from `src/styles.css`, `src/learning.css`, `src/main.tsx`, and `src/components/`. It is a description of the current system, not a claim of user-approved branding. `PRODUCT.md` owns product scope and principles.\n\nA cream editorial shell surrounds a pine green Enigma instrument. Newsreader introduces the workbench; compact sans-serif controls and monospaced machine values support inspection. Amber identifies the illuminated output and the returning signal. Bombe analysis uses lighter bordered surfaces within the same shell.",
+    "overview": "The production workbench offers two user-approved document themes: **Service Manual** and **Intercept Form**. Both retain the original responsive layout, control placement, and simulation behavior. `PRODUCT.md` owns product scope; `src/themes.css` and `src/appearance.css` implement this visual system over the shared component styles.\n\nService Manual is the default: olive accents, aged paper, condensed headings, and a charcoal instrument. Intercept Form uses warmer paper, oxblood accents, and typewriter headings. Compact sans-serif explanations and amber output lamps keep the machine readable in either appearance.",
     "dos": [
-      "**Do** retain the paper shell, dark instrument, and distinct signal-state colors when extending these screens.",
+      "**Do** extend both document themes through their shared tokens and preserve the original workbench layout and distinct signal states.",
       "**Do** use monospaced type for machine values and readable prose for explanations.",
       "**Do** preserve visible labels, focus outlines, validation text, and candidate uncertainty.",
       "**Do** check the dense keyboard and configuration at mobile widths."
     ],
     "donts": [
       "**Don't** imply that a matching candidate is a uniquely recovered key or that this is a physically faithful British Bombe.",
-      "**Don't** treat local CSS values as an established global scale or add a claimed user-approved aesthetic to this extracted record."
+      "**Don't** reintroduce discarded prototype themes or prototype controls into the production Appearance menu."
     ]
   }
 }
