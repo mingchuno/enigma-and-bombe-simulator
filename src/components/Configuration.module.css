@@ -243,4 +243,12 @@
     color: #f2ecd9;
     border-color: #8e907b;
   }
+  :global([data-configuration="search"]) .rotorHeading,
+  :global([data-configuration="search"]) .rotorSettings label {
+    color: var(--color-muted);
+  }
+  :global([data-configuration="search"]) .rotorSettings select {
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
 }
