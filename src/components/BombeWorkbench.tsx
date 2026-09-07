@@ -262,8 +262,9 @@ export function BombeWorkbench({
             >
               <h2>Set the search</h2>
               <p className={styles.muted}>
-                Ring settings and reflector are known. Starting windows and
-                plugboard are unknown.
+                This search assumes the selected ring settings and reflector. It
+                searches starting windows and plugboard connections, using the
+                rotor orders chosen below.
               </p>
               <Configuration
                 config={config}

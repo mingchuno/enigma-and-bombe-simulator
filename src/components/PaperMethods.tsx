@@ -1,9 +1,9 @@
-import { cn } from "../lib/cn.ts";
-import styles from "./PaperMethods.module.css";
-import { ScrollRegion } from "./ScrollRegion.tsx";
 import { type CSSProperties, useState } from "react";
 import { ALPHABET, normalizeText } from "../engine/enigma.ts";
 import { compareStrips } from "../engine/historical.ts";
+import { cn } from "../lib/cn.ts";
+import styles from "./PaperMethods.module.css";
+import { ScrollRegion } from "./ScrollRegion.tsx";
 
 const MAX_STRIP_LENGTH = 60;
 const SHEET_LAYOUT = {
@@ -44,11 +44,20 @@ export function PaperMethods() {
         </span>
       </div>
       <p>
-        Sliding punched strips most plausibly recalls{" "}
-        <strong>Banbury sheets</strong>. Each column encodes one ciphertext
-        letter with a hole in that letter’s row. Superimpose two strips:
-        coincident letters let light through both holes.
+        <strong>Banbury sheets</strong> are punched paper sheets used to compare
+        ciphertext messages. Each column encodes one ciphertext letter with a
+        hole in that letter’s row. Superimpose two strips: coincident letters
+        let light through both holes.
       </p>
+      <div className={styles.activityPurpose}>
+        <h3>What this activity demonstrates</h3>
+        <p>
+          This activity demonstrates alignment and intersection only. Historical
+          Banburismus used statistical evidence across messages to investigate
+          their relative rotor settings. A raw coincidence count is not that
+          statistical test and does not decrypt a message.
+        </p>
+      </div>
       <div className={styles.paperInputs}>
         <label>
           First ciphertext
@@ -94,15 +103,34 @@ export function PaperMethods() {
             onChange={(e) => setShift(Number(e.target.value))}
           />
         </label>
-        <label className={styles.inlineCheckbox}>
-          <input
-            type="checkbox"
-            checked={overlay}
-            onChange={(e) => setOverlay(e.target.checked)}
-          />
-          Overlay both sheets
-        </label>
-        <button className={styles.textButton} onClick={() => setShift(0)}>
+        <fieldset className={styles.sheetView}>
+          <legend>Sheet view</legend>
+          <div className={styles.sheetViewOptions}>
+            <label>
+              <input
+                type="radio"
+                name="sheet-view"
+                checked={overlay}
+                onChange={() => setOverlay(true)}
+              />
+              Overlaid
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="sheet-view"
+                checked={!overlay}
+                onChange={() => setOverlay(false)}
+              />
+              Separate
+            </label>
+          </div>
+        </fieldset>
+        <button
+          type="button"
+          className={styles.resetButton}
+          onClick={() => setShift(0)}
+        >
           Reset shift
         </button>
       </div>
@@ -221,12 +249,6 @@ export function PaperMethods() {
             : "The upper strip is the first ciphertext; the lower strip is the second. White openings show every hole in each separate sheet."}
         </p>
       </div>
-      <p className={styles.scopeNote}>
-        Historical Banburismus used statistical evidence across messages to
-        investigate their relative rotor settings. A raw coincidence count is
-        not that statistical test and does not decrypt a message. This activity
-        demonstrates alignment and intersection only.
-      </p>
       <p className={styles.sourceLine}>
         Sources:{" "}
         <a

@@ -309,7 +309,10 @@ test("wide paper diagrams can be scrolled with the keyboard", async ({
       .poll(() => diagram.evaluate((element) => element.scrollLeft))
       .toBeGreaterThan(0);
   }
-  await page.getByRole("checkbox", { name: "Overlay both sheets" }).uncheck();
+  await expect(
+    page.getByRole("radio", { name: "Overlaid", exact: true }),
+  ).toBeChecked();
+  await page.getByRole("radio", { name: "Separate", exact: true }).check();
   await expect(page.locator("[data-testid='paper-result']")).toContainText(
     "each separate sheet",
   );
