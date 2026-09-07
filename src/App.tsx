@@ -1,3 +1,4 @@
+import { cn } from "./lib/cn.ts";
 import styles from "./App.module.css";
 import { useState } from "react";
 import { AppearanceMenu } from "./components/AppearanceMenu.tsx";
@@ -38,21 +39,23 @@ export function App() {
         </a>
         <nav aria-label="Workbench navigation">
           <button
-            className={tab === "enigma" ? styles.active : ""}
+            className={cn({ [styles.active]: tab === "enigma" })}
             aria-current={tab === "enigma" ? "page" : undefined}
             onClick={() => setTab("enigma")}
           >
             Enigma
           </button>
           <button
-            className={tab === "bombe" ? styles.active : ""}
+            className={cn({ [styles.active]: tab === "bombe" })}
             aria-current={tab === "bombe" ? "page" : undefined}
             onClick={() => setTab("bombe")}
           >
             Bombe
           </button>
           <button
-            className={`${styles.guideNav} ${tab === "guide" ? styles.active : ""}`}
+            className={cn(styles.guideNav, {
+              [styles.active]: tab === "guide",
+            })}
             aria-current={tab === "guide" ? "page" : undefined}
             onClick={() => setTab("guide")}
           >

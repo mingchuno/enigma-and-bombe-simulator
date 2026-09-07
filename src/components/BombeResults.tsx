@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./BombeResults.module.css";
 import type { SearchSnapshot } from "../engine/bombe-session.ts";
 import { Help } from "./Help.tsx";
@@ -31,7 +32,7 @@ export function BombeResults({
       <div className={styles.sectionHeading}>
         <h2>Search log</h2>
         <span
-          className={`${styles.searchStatus} ${running ? styles.running : ""}`}
+          className={cn(styles.searchStatus, { [styles.running]: running })}
           role="status"
         >
           {status === "idle"
@@ -122,9 +123,9 @@ export function BombeResults({
                     key={index}
                     onClick={() => onSelect(index)}
                     aria-pressed={index === selectedCandidate}
-                    className={
-                      index === selectedCandidate ? styles.selected : ""
-                    }
+                    className={cn({
+                      [styles.selected]: index === selectedCandidate,
+                    })}
                   >
                     {result.windows}
                     <small>{result.rotors.join("–")}</small>

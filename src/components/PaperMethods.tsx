@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./PaperMethods.module.css";
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import { type CSSProperties, useState } from "react";
@@ -178,7 +179,10 @@ export function PaperMethods() {
                   ALPHABET.indexOf(letter) * SHEET_LAYOUT.rowSpacing
                 }
                 r={SHEET_LAYOUT.holeRadius}
-                className={overlay ? styles.holeFirst : styles.holeOpen}
+                className={cn({
+                  [styles.holeFirst]: overlay,
+                  [styles.holeOpen]: !overlay,
+                })}
               />
             </g>
           ))}
@@ -195,13 +199,11 @@ export function PaperMethods() {
                 ALPHABET.indexOf(letter) * SHEET_LAYOUT.rowSpacing
               }
               r={SHEET_LAYOUT.holeRadius}
-              className={
-                overlay
-                  ? matches.includes(col + shift)
-                    ? styles.holeMatch
-                    : styles.holeSecond
-                  : styles.holeOpen
-              }
+              className={cn({
+                [styles.holeMatch]: overlay && matches.includes(col + shift),
+                [styles.holeSecond]: overlay && !matches.includes(col + shift),
+                [styles.holeOpen]: !overlay,
+              })}
             />
           ))}
         </svg>

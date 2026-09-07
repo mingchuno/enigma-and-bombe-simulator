@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./MenuGraph.module.css";
 import { ALPHABET } from "../engine/enigma.ts";
 import type { MenuEdge } from "../engine/crib-menu.ts";
@@ -55,11 +56,9 @@ export function MenuGraph({
             <path
               key={index}
               d={`M${a.x} ${a.y} Q${GRAPH_CENTER_X} ${EDGE_CURVE_BASE_Y + (index % EDGE_CURVE_LANES) * EDGE_CURVE_SPACING} ${b.x} ${b.y}`}
-              className={
-                selected === index
-                  ? `${styles.menuEdge} ${styles.selected}`
-                  : styles.menuEdge
-              }
+              className={cn(styles.menuEdge, {
+                [styles.selected]: selected === index,
+              })}
             />
           );
         })}
@@ -69,12 +68,11 @@ export function MenuGraph({
             <g
               key={letter}
               transform={`translate(${point.x} ${point.y})`}
-              className={
-                selectedEdge &&
-                [selectedEdge.a, selectedEdge.b].includes(letter)
-                  ? `${styles.menuNode} ${styles.selected}`
-                  : styles.menuNode
-              }
+              className={cn(styles.menuNode, {
+                [styles.selected]:
+                  selectedEdge &&
+                  [selectedEdge.a, selectedEdge.b].includes(letter),
+              })}
             >
               <circle r={NODE_RADIUS} />
               <text textAnchor="middle" dominantBaseline="central">
@@ -95,7 +93,7 @@ export function MenuGraph({
         {edges.map((edge, index) => (
           <button
             key={index}
-            className={selected === index ? styles.selected : ""}
+            className={cn({ [styles.selected]: selected === index })}
             aria-label={`Position ${edge.position + 1}: ${ALPHABET[edge.a]} to ${ALPHABET[edge.b]}`}
             aria-pressed={selected === index}
             onClick={() => onSelect(index)}

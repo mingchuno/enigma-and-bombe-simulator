@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./CribAlignment.module.css";
 import { inspectCribAlignment } from "../engine/crib-menu.ts";
 
@@ -64,9 +65,9 @@ export function CribAlignment({
               const letter = crib[index - offset];
               return (
                 <span
-                  className={
-                    letter === ciphertext[index] ? styles.collision : ""
-                  }
+                  className={cn({
+                    [styles.collision]: letter === ciphertext[index],
+                  })}
                   key={index}
                 >
                   {letter ?? "·"}

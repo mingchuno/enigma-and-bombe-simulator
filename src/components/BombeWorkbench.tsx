@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./BombeWorkbench.module.css";
 import { useEffect, useState } from "react";
 import type { MenuEdge } from "../engine/crib-menu.ts";
@@ -337,7 +338,9 @@ export function BombeWorkbench({
                 <span>rotor positions to test</span>
               </div>
               <button
-                className={`${styles.primaryButton} ${styles.searchButton} ${running ? styles.cancelButton : ""}`}
+                className={cn(styles.primaryButton, styles.searchButton, {
+                  [styles.cancelButton]: running,
+                })}
                 disabled={!running && Boolean(menu.error)}
                 onClick={running ? search.stop : search.start}
               >
@@ -361,7 +364,9 @@ export function BombeWorkbench({
               <div className={styles.sectionHeading}>
                 <h2>The crib menu</h2>
                 <span
-                  className={`${styles.validationBadge} ${menu.error ? styles.invalid : ""}`}
+                  className={cn(styles.validationBadge, {
+                    [styles.invalid]: menu.error,
+                  })}
                 >
                   {menu.error ? "Check alignment" : "Alignment possible"}
                 </span>
@@ -372,7 +377,7 @@ export function BombeWorkbench({
                 connects them through the rotor state at that message position.
               </p>
               <div
-                className={`${styles.modeSwitch} ${styles.compact}`}
+                className={cn(styles.modeSwitch, styles.compact)}
                 aria-label="Menu view"
               >
                 <button

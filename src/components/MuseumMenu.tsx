@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./MuseumMenu.module.css";
 import { useState } from "react";
 import type { MenuEdge } from "../engine/crib-menu.ts";
@@ -80,11 +81,9 @@ export function MuseumMenu({
             return (
               <g
                 key={item.position}
-                className={
-                  index === selected
-                    ? `${styles.operatorEdge} ${styles.selected}`
-                    : styles.operatorEdge
-                }
+                className={cn(styles.operatorEdge, {
+                  [styles.selected]: index === selected,
+                })}
               >
                 <path
                   d={`M${a[0] + parallel} ${a[1]} L${b[0] + parallel} ${b[1]}`}

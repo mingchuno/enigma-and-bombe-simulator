@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./DrumMechanics.module.css";
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useEffect, useMemo, useState } from "react";
@@ -247,7 +248,7 @@ export function DrumMechanics({
           <i
             key={i}
             data-phase={i < SENSING_POINTS ? "sensing" : "carrying"}
-            className={drive.phase === i ? styles.active : ""}
+            className={cn({ [styles.active]: drive.phase === i })}
           />
         ))}
       </div>
@@ -283,7 +284,9 @@ export function DrumMechanics({
             {scramblers.map((scrambler, index) => (
               <button
                 key={scrambler.position}
-                className={`${styles.drumColumn} ${selected === pageStart + index ? styles.selected : ""}`}
+                className={cn(styles.drumColumn, {
+                  [styles.selected]: selected === pageStart + index,
+                })}
                 onClick={() => onSelect(pageStart + index)}
                 aria-pressed={selected === pageStart + index}
                 aria-label={`Select scrambler at position ${scrambler.position + 1}, ${ALPHABET[scrambler.a]} to ${ALPHABET[scrambler.b]}, relative setting ${relativeLabel(scrambler.position)}, top core ${scrambler.windows[ROTOR_SLOT.LEFT]}, middle core ${scrambler.windows[ROTOR_SLOT.MIDDLE]}, bottom core ${scrambler.windows[ROTOR_SLOT.RIGHT]}`}
@@ -515,17 +518,18 @@ export function DrumMechanics({
           separate local example.
         </p>
         <div
-          className={`${styles.senseLamps} ${drive.sensing ? "" : styles.inactive}`}
+          className={cn(styles.senseLamps, {
+            [styles.inactive]: !drive.sensing,
+          })}
           aria-label="Indicator register wires"
         >
           {[...ALPHABET].map((letter, index) => (
             <span
               key={letter}
-              className={
-                drive.sensing && circuit.live[input * ALPHABET_SIZE + index]
-                  ? styles.energized
-                  : ""
-              }
+              className={cn({
+                [styles.energized]:
+                  drive.sensing && circuit.live[input * ALPHABET_SIZE + index],
+              })}
             >
               {letter}
               <small>

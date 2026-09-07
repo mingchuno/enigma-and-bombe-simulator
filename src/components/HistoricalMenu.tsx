@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./HistoricalMenu.module.css";
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import type { MenuEdge } from "../engine/crib-menu.ts";
@@ -36,7 +37,7 @@ export function HistoricalMenu({
             {edges.map((item, index) => (
               <tr
                 key={item.position}
-                className={selected === index ? styles.selected : ""}
+                className={cn({ [styles.selected]: selected === index })}
               >
                 <td>
                   <button

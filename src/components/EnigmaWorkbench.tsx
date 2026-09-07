@@ -1,3 +1,4 @@
+import { cn } from "../lib/cn.ts";
 import styles from "./EnigmaWorkbench.module.css";
 import type { SearchExercise } from "../workbench/search-exercise.ts";
 import { useEffect, useMemo, useState } from "react";
@@ -163,7 +164,10 @@ export function EnigmaWorkbench({
                 {[...row].map((letter) => (
                   <button
                     key={letter}
-                    className={`${styles.machineKey} ${trace?.output === letter ? styles.lit : ""} ${trace?.input === letter ? styles.pressed : ""}`}
+                    className={cn(styles.machineKey, {
+                      [styles.lit]: trace?.output === letter,
+                      [styles.pressed]: trace?.input === letter,
+                    })}
                     onClick={() => changeMessage(message + letter)}
                     aria-label={`Type ${letter}`}
                     disabled={
@@ -320,11 +324,10 @@ export function EnigmaWorkbench({
             {[...ALPHABET].map((letter, index) => (
               <span
                 key={letter}
-                className={
-                  pairs[index] !== undefined && pairs[index] !== index
-                    ? styles.connected
-                    : ""
-                }
+                className={cn({
+                  [styles.connected]:
+                    pairs[index] !== undefined && pairs[index] !== index,
+                })}
                 title={
                   pairs[index] === index
                     ? `${letter}: unplugged`
