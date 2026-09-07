@@ -1,3 +1,4 @@
+import styles from "./CribAlignment.module.css";
 import { inspectCribAlignment } from "../engine/crib-menu.ts";
 
 export function CribAlignment({
@@ -19,9 +20,12 @@ export function CribAlignment({
     offset,
   );
   return (
-    <details className="alignment-explorer">
+    <details
+      data-testid="alignment-explorer"
+      className={styles.alignmentExplorer}
+    >
       <summary>Slide the crib against the intercept</summary>
-      <p className="field-hint">
+      <p className={styles.fieldHint}>
         A letter cannot encrypt to itself. An × rules out this alignment; no ×
         only means it passes this test when the entire crib fits.
       </p>
@@ -44,10 +48,10 @@ export function CribAlignment({
       </label>
       {fits && (
         <div
-          className="crib-strip"
+          className={styles.cribStrip}
           aria-label="Aligned ciphertext and plaintext"
         >
-          <div className="strip-row">
+          <div className={styles.stripRow}>
             {[...ciphertext].map((letter, index) => (
               <span key={index}>
                 <small>{index + 1}</small>
@@ -55,12 +59,14 @@ export function CribAlignment({
               </span>
             ))}
           </div>
-          <div className="strip-row">
+          <div className={styles.stripRow}>
             {[...ciphertext].map((_, index) => {
               const letter = crib[index - offset];
               return (
                 <span
-                  className={letter === ciphertext[index] ? "collision" : ""}
+                  className={
+                    letter === ciphertext[index] ? styles.collision : ""
+                  }
                   key={index}
                 >
                   {letter ?? "·"}
@@ -71,7 +77,7 @@ export function CribAlignment({
           </div>
         </div>
       )}
-      <p className="field-hint" role="status">
+      <p className={styles.fieldHint} role="status">
         {!fits
           ? `Choose a whole-number offset from 0 to ${maximum} and a nonempty crib that fits inside the ciphertext.`
           : collisions.length

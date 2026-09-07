@@ -1,3 +1,4 @@
+import styles from "./Configuration.module.css";
 import { ALPHABET, ROTOR_NAMES, mod26 } from "../engine/enigma.ts";
 import type { MachineConfig, RotorName, Triple } from "../engine/enigma.ts";
 
@@ -34,10 +35,10 @@ export function Configuration({
     onChange({ ...config, [field]: next.join("") });
   }
   return (
-    <div className="rotor-controls">
+    <div className={styles.rotorControls}>
       {config.rotors.map((name, slot) => (
-        <div className="rotor-control" key={slot}>
-          <div className="rotor-heading">
+        <div key={slot}>
+          <div className={styles.rotorHeading}>
             <span>{["Left · slow", "Middle", "Right · fast"][slot]}</span>
             <select
               aria-label={`${["Left", "Middle", "Right"][slot]} rotor`}
@@ -51,7 +52,7 @@ export function Configuration({
             </select>
           </div>
           {current && (
-            <div className="rotor-window">
+            <div className={styles.rotorWindow}>
               <span aria-hidden="true">
                 {ALPHABET[mod26(ALPHABET.indexOf(current[slot]) - 1)]}
               </span>
@@ -61,7 +62,7 @@ export function Configuration({
               </span>
             </div>
           )}
-          <div className="rotor-settings">
+          <div className={styles.rotorSettings}>
             {showWindows && (
               <label>
                 Start

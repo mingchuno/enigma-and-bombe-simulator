@@ -1,0 +1,246 @@
+@layer components {
+  .rotorControls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 21px;
+    margin-top: var(--space-6);
+  }
+  .rotorHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #b4c3b5;
+    gap: 7px;
+  }
+  .rotorHeading select {
+    width: 55px;
+    padding: 5px 6px;
+    background: #24473b;
+    color: #eef1e7;
+    border: 1px solid #637c67;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .rotorWindow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 19px;
+    padding: 14px 0 13px;
+    margin: 11px 0;
+    background: #112c25;
+    border: 1px solid #365447;
+    border-radius: 8px;
+    position: relative;
+    min-height: 91px;
+  }
+  .rotorWindow:before,
+  .rotorWindow:after {
+    content: "";
+    width: 7px;
+    height: 1px;
+    background: #72917a;
+    position: absolute;
+    top: 50%;
+    left: 7px;
+  }
+  .rotorWindow:after {
+    left: auto;
+    right: 7px;
+  }
+  .rotorWindow strong {
+    font-family: var(--font-mono);
+    font-size: 46px;
+    font-weight: 400;
+    color: #f3eedc;
+    line-height: 1;
+  }
+  .rotorWindow > span {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: #68826d;
+  }
+  .rotorSettings {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+  .rotorSettings label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #b4c3b5;
+  }
+  .rotorSettings select {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #637c67;
+    border-radius: 0;
+    color: #e5eada;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 5px 1px;
+  }
+  :global([data-configuration="search"]) .rotorControls {
+    gap: var(--space-3);
+    margin-bottom: 22px;
+  }
+  :global([data-configuration="search"]) .rotorHeading {
+    display: block;
+    color: var(--color-muted);
+    font-size: 10px;
+  }
+  :global([data-configuration="search"]) .rotorHeading select {
+    display: block;
+    margin-top: 6px;
+    width: 100%;
+    background: #fcfbf7;
+    color: var(--color-accent);
+    border-color: #cdd5c6;
+    padding: var(--space-2);
+  }
+  :global([data-configuration="search"]) .rotorSettings {
+    margin-top: 10px;
+  }
+  :global([data-configuration="search"]) .rotorSettings label {
+    color: var(--color-muted);
+    font-size: 10px;
+  }
+  :global([data-configuration="search"]) .rotorSettings select {
+    color: var(--color-text);
+    border-color: #cdd5c6;
+  }
+  @media (min-width: 1450px) {
+    .rotorWindow {
+      min-height: 102px;
+    }
+  }
+  @media (max-width: 1100px) {
+    .rotorControls {
+      gap: var(--space-3);
+    }
+    .rotorSettings {
+      gap: 7px;
+    }
+    .rotorWindow {
+      gap: 13px;
+    }
+  }
+  @media (max-width: 850px) {
+    .rotorWindow {
+      min-height: 100px;
+      gap: 25px;
+    }
+    .rotorSettings {
+      gap: 22px;
+    }
+  }
+  @media (max-width: 600px) {
+    .rotorControls {
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .rotorHeading {
+      flex-direction: column;
+      align-items: stretch;
+      font-size: 11px;
+      gap: 6px;
+    }
+    .rotorHeading select {
+      font-size: 14px;
+      width: 100%;
+      min-height: 36px;
+      padding: 6px;
+    }
+    .rotorWindow {
+      gap: var(--space-2);
+      min-height: 80px;
+      padding: 12px 0;
+      margin: 9px 0;
+    }
+    .rotorWindow strong {
+      font-size: 35px;
+    }
+    .rotorWindow > span {
+      font-size: 12px;
+    }
+    .rotorWindow:before,
+    .rotorWindow:after {
+      width: 4px;
+      left: 3px;
+    }
+    .rotorWindow:after {
+      left: auto;
+      right: 3px;
+    }
+    .rotorSettings {
+      flex-direction: column;
+      gap: 3px;
+      align-items: stretch;
+    }
+    .rotorSettings label {
+      justify-content: space-between;
+      font-size: 10px;
+    }
+    .rotorSettings select {
+      font-size: 11px;
+      min-height: 32px;
+      width: 64px;
+    }
+    :global([data-configuration="search"]) .rotorSettings {
+      flex-direction: row;
+    }
+    :global([data-configuration="search"]) .rotorControls {
+      gap: 18px;
+    }
+    :global([data-configuration="search"]) .rotorHeading {
+      font-size: 11px;
+    }
+    :global([data-configuration="search"]) .rotorHeading select {
+      font-size: 13px;
+    }
+    :global([data-configuration="search"]) .rotorSettings label {
+      font-size: 11px;
+    }
+    :global([data-configuration="search"]) .rotorSettings select {
+      font-size: 11px;
+      width: auto;
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) .rotorHeading,
+  :global(:root) .rotorSettings label {
+    color: var(--machine-muted);
+  }
+  :global(:root) .rotorWindow {
+    background: var(--machine-recess);
+    border-color: #686b5d;
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .rotorWindow strong {
+    color: #f2ecd9;
+    font-family: var(--font-typewriter);
+  }
+  :global(:root) .rotorWindow > span {
+    color: #aaa994;
+  }
+  :global(:root) .rotorWindow:before,
+  :global(:root) .rotorWindow:after {
+    background: var(--machine-metal);
+  }
+  :global(:root) .rotorHeading select {
+    background: #3b3e33;
+    border-color: #8e907b;
+    border-radius: var(--radius-field);
+    color: #f2ecd9;
+  }
+  :global(:root) .rotorSettings select {
+    color: #f2ecd9;
+    border-color: #8e907b;
+  }
+}

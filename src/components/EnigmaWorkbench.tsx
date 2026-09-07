@@ -1,3 +1,4 @@
+import styles from "./EnigmaWorkbench.module.css";
 import type { SearchExercise } from "../workbench/search-exercise.ts";
 import { useEffect, useMemo, useState } from "react";
 import type { MachineConfig, Trace } from "../engine/enigma.ts";
@@ -105,12 +106,16 @@ export function EnigmaWorkbench({
   }
 
   return (
-    <div className="workbench-grid">
-      <div className="enigma-main">
-        <section className="machine-panel" aria-label="Enigma machine">
-          <div className="machine-top">
-            <span className="machine-name">ENIGMA I</span>
-            <span className="machine-meta">
+    <div className={styles.workbenchGrid}>
+      <div className={styles.enigmaMain}>
+        <section
+          className={styles.machinePanel}
+          data-surface="machine"
+          aria-label="Enigma machine"
+        >
+          <div className={styles.machineTop}>
+            <span className={styles.machineName}>ENIGMA I</span>
+            <span className={styles.machineMeta}>
               3 rotors <b>·</b> 26 letters <b>·</b> One reversible cipher
             </span>
           </div>
@@ -119,7 +124,7 @@ export function EnigmaWorkbench({
             onChange={changeConfiguration}
             current={trace?.after ?? processed.windows}
           />
-          <div className="machine-options">
+          <div className={styles.machineOptions}>
             <label>
               Reflector
               <select
@@ -139,12 +144,12 @@ export function EnigmaWorkbench({
             <span>Windows show the position after the inspected letter.</span>
           </div>
           <ConfigurationHelp />
-          <div className="keyboard-heading">
+          <div className={styles.keyboardHeading}>
             <span>Keyboard & lampboard</span>
             <span>
               {trace ? (
                 <>
-                  {trace.input} <span className="tiny-arrow">→</span>{" "}
+                  {trace.input} <span className={styles.tinyArrow}>→</span>{" "}
                   <b>{trace.output}</b>
                 </>
               ) : (
@@ -152,13 +157,13 @@ export function EnigmaWorkbench({
               )}
             </span>
           </div>
-          <div className="keyboard">
+          <div className={styles.keyboard}>
             {KEY_ROWS.map((row) => (
-              <div className="key-row" key={row}>
+              <div className={styles.keyRow} key={row}>
                 {[...row].map((letter) => (
                   <button
                     key={letter}
-                    className={`machine-key ${trace?.output === letter ? "lit" : ""} ${trace?.input === letter ? "pressed" : ""}`}
+                    className={`${styles.machineKey} ${trace?.output === letter ? styles.lit : ""} ${trace?.input === letter ? styles.pressed : ""}`}
                     onClick={() => changeMessage(message + letter)}
                     aria-label={`Type ${letter}`}
                     disabled={
@@ -172,9 +177,9 @@ export function EnigmaWorkbench({
               </div>
             ))}
           </div>
-          <div className="machine-bottom">
+          <div className={styles.machineBottom}>
             <span>
-              <i className="status-dot" />
+              <i className={styles.statusDot} />
               {message.length} letters processed
             </span>
             <button
@@ -186,11 +191,11 @@ export function EnigmaWorkbench({
             </button>
           </div>
         </section>
-        <section className="message-panel">
-          <div className="section-heading">
+        <section className={styles.messagePanel}>
+          <div className={styles.sectionHeading}>
             <h2>Your message</h2>
             <button
-              className="text-button"
+              className={styles.textButton}
               onClick={playExample}
               disabled={isPlaying}
             >
@@ -198,12 +203,12 @@ export function EnigmaWorkbench({
               {isPlaying ? "Playing example…" : "Play an example"}
             </button>
           </div>
-          <p className="field-hint">
+          <p className={styles.fieldHint}>
             Type plain text to encrypt, or ciphertext to decrypt. Spaces,
             numbers and punctuation are ignored. Up to {MAX_CIPHERTEXT_LENGTH}{" "}
             letters; edits replay the message from Start.
           </p>
-          <div className="message-columns">
+          <div className={styles.messageColumns}>
             <label>
               Input <span>A–Z only</span>
               <textarea
@@ -215,8 +220,8 @@ export function EnigmaWorkbench({
                 maxLength={RAW_MESSAGE_INPUT_LIMIT}
               />
             </label>
-            <div className="output-field">
-              <div className="output-label">
+            <div className={styles.outputField}>
+              <div className={styles.outputLabel}>
                 Output{" "}
                 <button onClick={copy} disabled={!processed.output}>
                   <Icon name="copy" size={14} />
@@ -234,7 +239,7 @@ export function EnigmaWorkbench({
               />
             </div>
           </div>
-          <div className="help-row">
+          <div className={styles.helpRow}>
             <Help term="Input and output">
               Encryption and decryption are the same operation. For example,
               default settings turn AAAAA into BDZGO. Clear the input and enter
@@ -247,10 +252,10 @@ export function EnigmaWorkbench({
               appends to the full message, not to the inspected position.
             </Help>
           </div>
-          <div className="message-footer">
+          <div className={styles.messageFooter}>
             <span>Same settings + ciphertext = original message.</span>
             <button
-              className="text-button"
+              className={styles.textButton}
               onClick={() => changeMessage("")}
               disabled={!message}
             >
@@ -259,15 +264,15 @@ export function EnigmaWorkbench({
             </button>
           </div>
         </section>
-        <section className="plugboard-panel">
-          <div className="section-heading">
+        <section className={styles.plugboardPanel}>
+          <div className={styles.sectionHeading}>
             <h2>Plugboard</h2>
-            <span className="muted">
+            <span className={styles.muted}>
               {pairs.filter((partner, letter) => partner > letter).length} /{" "}
               {MAX_PLUGBOARD_PAIRS} cables
             </span>
           </div>
-          <div className="plugboard-form">
+          <div className={styles.plugboardForm}>
             <label>
               Swap pairs of letters
               <input
@@ -293,7 +298,11 @@ export function EnigmaWorkbench({
             </p>
           </div>
           {processed.error && (
-            <p id="plugboard-error" className="error-message" role="alert">
+            <p
+              id="plugboard-error"
+              className={styles.errorMessage}
+              role="alert"
+            >
               {processed.error}
             </p>
           )}
@@ -304,13 +313,16 @@ export function EnigmaWorkbench({
             letter can belong to only one pair. The board can accept 13 cables;
             ten was usual wartime practice.
           </Help>
-          <div className="plug-sockets" aria-label="Plugboard connections">
+          <div
+            className={styles.plugSockets}
+            aria-label="Plugboard connections"
+          >
             {[...ALPHABET].map((letter, index) => (
               <span
                 key={letter}
                 className={
                   pairs[index] !== undefined && pairs[index] !== index
-                    ? "connected"
+                    ? styles.connected
                     : ""
                 }
                 title={
@@ -331,13 +343,13 @@ export function EnigmaWorkbench({
             ))}
           </div>
         </section>
-        <div className="transfer-strip">
+        <div className={styles.transferStrip}>
           <div>
             <strong>Now try the other side.</strong>
             <p>Use your message as a codebreaking exercise.</p>
           </div>
           <button
-            className="primary-button"
+            className={styles.primaryButton}
             disabled={message.length === 0 || Boolean(processed.error)}
             onClick={() =>
               onTransfer({

@@ -1,3 +1,4 @@
+import styles from "./BombeWorkbench.module.css";
 import { useEffect, useState } from "react";
 import type { MenuEdge } from "../engine/crib-menu.ts";
 import {
@@ -70,7 +71,7 @@ export function BombeWorkbench({
 
   return (
     <>
-      <div className="mode-switch" aria-label="Bombe activity">
+      <div className={styles.modeSwitch} aria-label="Bombe activity">
         <button
           aria-pressed={mode === "search"}
           onClick={() => setMode("search")}
@@ -107,13 +108,13 @@ export function BombeWorkbench({
       {mode === "drums" &&
         ((drumExample?.edges.length ?? menu.edges.length) ? (
           <>
-            <p className="field-hint">
+            <p className={styles.fieldHint}>
               {drumExample
                 ? "Illustrating the supplied museum menu; this does not change the search."
                 : "Illustrating the current crib menu with the selected rotor types and reflector."}{" "}
               {drumExample && (
                 <button
-                  className="text-button"
+                  className={styles.textButton}
                   onClick={() => setDrumExample(null)}
                 >
                   Use current crib instead
@@ -132,20 +133,20 @@ export function BombeWorkbench({
             />
           </>
         ) : (
-          <p className="error-message">
+          <p className={styles.errorMessage}>
             Set a valid crib alignment in Crib & search before exploring the
             drum connections.
           </p>
         ))}
       {mode === "paper" && <PaperMethods />}
       <div hidden={mode !== "search"}>
-        <div className="bombe-grid">
-          <div className="bombe-inputs">
-            <section className="intercept-panel">
-              <div className="section-heading">
+        <div className={styles.bombeGrid}>
+          <div className={styles.bombeInputs}>
+            <section className={styles.interceptPanel}>
+              <div className={styles.sectionHeading}>
                 <h2>The intercept</h2>
                 <button
-                  className="text-button"
+                  className={styles.textButton}
                   onClick={loadDemo}
                   disabled={running}
                 >
@@ -153,7 +154,7 @@ export function BombeWorkbench({
                   Load example
                 </button>
               </div>
-              <p className="muted">
+              <p className={styles.muted}>
                 Start with ciphertext and a fragment of suspected plaintext.
               </p>
               <label>
@@ -186,13 +187,13 @@ export function BombeWorkbench({
                 />
               </label>
               {crib.length > 0 && crib.length < MIN_RECOMMENDED_CRIB_LENGTH && (
-                <p className="field-hint" id="short-crib-hint">
+                <p className={styles.fieldHint} id="short-crib-hint">
                   Short cribs usually produce many possible settings. Try a
                   longer crib to narrow the results. Searches stop after{" "}
                   {DEFAULT_RESULT_LIMIT} candidates.
                 </p>
               )}
-              <div className="offset-control">
+              <div className={styles.offsetControl}>
                 <label>
                   Crib offset
                   <input
@@ -224,7 +225,7 @@ export function BombeWorkbench({
                   changeSearch({ offset: value });
                 }}
               />
-              <div className="help-row">
+              <div className={styles.helpRow}>
                 <Help term="Ciphertext and crib">
                   Ciphertext is the intercepted encrypted message. A crib is a
                   guess about some original words, such as a weather-report
@@ -239,12 +240,12 @@ export function BombeWorkbench({
                 </Help>
               </div>
               {menu.error && (
-                <p id="crib-error" className="error-message" role="alert">
+                <p id="crib-error" className={styles.errorMessage} role="alert">
                   {menu.error}
                 </p>
               )}
               {isDemo && (
-                <details className="demo-note">
+                <details className={styles.demoNote}>
                   <summary>About this generated example</summary>
                   <p>
                     Weather forecast crib, generated with I–II–III, rings AAA,
@@ -254,9 +255,12 @@ export function BombeWorkbench({
                 </details>
               )}
             </section>
-            <section className="search-settings">
+            <section
+              className={styles.searchSettings}
+              data-configuration="search"
+            >
               <h2>Set the search</h2>
-              <p className="muted">
+              <p className={styles.muted}>
                 Ring settings and reflector are known. Starting windows and
                 plugboard are unknown.
               </p>
@@ -269,7 +273,7 @@ export function BombeWorkbench({
                 showWindows={false}
               />
               <ConfigurationHelp />
-              <div className="search-fields">
+              <div className={styles.searchFields}>
                 <label>
                   Rotor orders
                   <select
@@ -328,46 +332,49 @@ export function BombeWorkbench({
                 only satisfies the supplied crib and may not be the original
                 key.
               </Help>
-              <div className="search-space">
+              <div className={styles.searchSpace}>
                 <strong>{searchSize(allOrders).toLocaleString()}</strong>
                 <span>rotor positions to test</span>
               </div>
               <button
-                className={`primary-button search-button ${running ? "cancel-button" : ""}`}
+                className={`${styles.primaryButton} ${styles.searchButton} ${running ? styles.cancelButton : ""}`}
                 disabled={!running && Boolean(menu.error)}
                 onClick={running ? search.stop : search.start}
               >
                 <Icon name={running ? "close" : "play"} />
                 {running ? "Stop search" : "Run Bombe search"}
               </button>
-              <p className="search-limit">
+              <p className={styles.searchLimit}>
                 Shows one compatible plugboard per setting. Stops after{" "}
                 {DEFAULT_RESULT_LIMIT} candidates. Use a longer crib to narrow
                 the results.
               </p>
               {error && (
-                <p className="error-message" role="alert">
+                <p className={styles.errorMessage} role="alert">
                   {error}
                 </p>
               )}
             </section>
           </div>
-          <div className="bombe-analysis">
-            <section className="menu-panel">
-              <div className="section-heading">
+          <div className={styles.bombeAnalysis}>
+            <section className={styles.menuPanel}>
+              <div className={styles.sectionHeading}>
                 <h2>The crib menu</h2>
                 <span
-                  className={`validation-badge ${menu.error ? "invalid" : ""}`}
+                  className={`${styles.validationBadge} ${menu.error ? styles.invalid : ""}`}
                 >
                   {menu.error ? "Check alignment" : "Alignment possible"}
                 </span>
               </div>
-              <p className="muted">
+              <p className={styles.muted}>
                 The connection graph updates with your crib, ciphertext, and
                 alignment. Letters are nodes; each plaintext–ciphertext pair
                 connects them through the rotor state at that message position.
               </p>
-              <div className="mode-switch compact" aria-label="Menu view">
+              <div
+                className={`${styles.modeSwitch} ${styles.compact}`}
+                aria-label="Menu view"
+              >
                 <button
                   aria-pressed={menuView === "graph"}
                   onClick={() => setMenuView("graph")}
@@ -397,7 +404,7 @@ export function BombeWorkbench({
                     />
                   )}
                   <button
-                    className="text-button"
+                    className={styles.textButton}
                     onClick={() => {
                       setDrumExample(null);
                       setMode("drums");
@@ -407,7 +414,7 @@ export function BombeWorkbench({
                     <Icon name="arrow" size={15} />
                   </button>
                   {edge && (
-                    <div className="constraint-equation">
+                    <div className={styles.constraintEquation}>
                       <code>
                         P({ALPHABET[edge.b]}) = S<sub>{edge.position + 1}</sub>
                         (P(
@@ -422,7 +429,7 @@ export function BombeWorkbench({
                   )}
                 </>
               ) : (
-                <div className="menu-empty">
+                <div className={styles.menuEmpty}>
                   A valid crib alignment will reveal the connection graph here.
                 </div>
               )}
@@ -433,7 +440,7 @@ export function BombeWorkbench({
               selectedCandidate={search.selectedCandidate}
               onSelect={search.selectCandidate}
             />
-            <p className="historical-note">
+            <p className={styles.historicalNote}>
               <Icon name="book" />
               <span>
                 This is a Bombe-inspired constraint search with exact Enigma

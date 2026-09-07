@@ -1,0 +1,102 @@
+@layer components {
+  .alignment button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 26px;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 5px 3px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .alignment button small {
+    font-size: 8px;
+    color: var(--color-muted);
+    margin-bottom: 3px;
+  }
+  .menuVisual svg {
+    width: 100%;
+    max-height: 330px;
+    display: block;
+  }
+  .menuEdge {
+    fill: none;
+    stroke: #83927b;
+    stroke-width: 1;
+  }
+  .menuEdge.selected {
+    stroke: #b5823e;
+    stroke-width: 2;
+  }
+  .menuNode circle {
+    fill: #fcfbf7;
+    stroke: #afc0a4;
+    stroke-width: 1;
+  }
+  .menuNode text {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    fill: #58704c;
+  }
+  .menuNode.selected circle {
+    fill: #234733;
+    stroke: #234733;
+  }
+  .menuNode.selected text {
+    fill: #fff5da;
+  }
+  .menuCaption {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-muted);
+    font-size: 10px;
+    margin: 5px 0 18px;
+    gap: 10px;
+  }
+  .menuCaption i {
+    width: 13px;
+    height: 2px;
+    background: #b5823e;
+    display: inline-block;
+    margin: 0 4px 3px 0;
+  }
+  .alignment {
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+    padding: 0 0 8px;
+  }
+  .alignment button b {
+    font-weight: 400;
+    color: #577248;
+  }
+  .alignment button span {
+    color: #8c5b24;
+  }
+  .alignment button.selected {
+    background: #eaeedf;
+    border-color: #c8d4b9;
+  }
+  @media (max-width: 1100px) {
+    .menuCaption {
+      font-size: 9px;
+    }
+  }
+  @media (max-width: 850px) {
+    .menuVisual svg {
+      max-height: 360px;
+    }
+  }
+  @media (max-width: 600px) {
+    .menuCaption {
+      font-size: 8px;
+      gap: 6px;
+    }
+    .menuVisual svg {
+      margin-top: 15px;
+    }
+  }
+}

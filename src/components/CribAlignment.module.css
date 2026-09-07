@@ -1,0 +1,68 @@
+@value fieldHint from "./Workbench.module.css";
+@layer components {
+  .alignmentExplorer {
+    margin: 20px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: 15px 0;
+  }
+  .alignmentExplorer summary {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .alignmentExplorer label {
+    margin-top: var(--space-3);
+  }
+  .alignmentExplorer input[type="range"] {
+    padding: 0;
+    border: none;
+  }
+  .cribStrip {
+    overflow-x: auto;
+    padding: 4px 0 9px;
+  }
+  .stripRow {
+    display: flex;
+    width: max-content;
+  }
+  .stripRow > span {
+    display: flex;
+    flex-direction: column;
+    width: 25px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #cbd4c0;
+    background: #ebeedf;
+  }
+  .stripRow small {
+    min-height: 12px;
+    font-size: 8px;
+    color: #5c6b55;
+  }
+  .stripRow > span.collision {
+    background: #f2d6c8;
+    color: #853327;
+  }
+  .stripRow > :where(span.collision) small {
+    color: #853327;
+    font-size: 12px;
+  }
+}
+@layer theme {
+  :global(:root) .stripRow small {
+    color: var(--color-muted);
+  }
+  :global(:root) .stripRow > span {
+    background: var(--color-inset);
+  }
+  :global(:root) .stripRow > span.collision {
+    background: #f2d6c8;
+    color: #853327;
+  }
+  :global(:root) .stripRow > span.collision small {
+    color: #853327;
+  }
+}

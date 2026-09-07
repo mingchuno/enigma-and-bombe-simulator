@@ -1,3 +1,4 @@
+import styles from "./SignalTrace.module.css";
 import type { Trace } from "../engine/enigma.ts";
 import { REFLECTOR_TRACE_INDEX, ROTOR_SLOT } from "../engine/enigma.ts";
 import { Help } from "./Help.tsx";
@@ -8,26 +9,30 @@ function SignalStages({ trace }: { trace: Trace }) {
       title: "Toward the reflector",
       start: 1,
       end: REFLECTOR_TRACE_INDEX,
-      className: "",
+      stage: "forward",
     },
     {
       title: "Reflection",
       start: REFLECTOR_TRACE_INDEX,
       end: REFLECTOR_TRACE_INDEX + 1,
-      className: "reflection",
+      stage: "reflection",
     },
     {
       title: "Back to the lamp",
       start: REFLECTOR_TRACE_INDEX + 1,
       end: trace.path.length - 1,
-      className: "return-path",
+      stage: "return",
     },
   ];
 
   return (
-    <div className="signal-path">
+    <div className={styles.signalPath}>
       {groups.map((group) => (
-        <table className={`signal-stage ${group.className}`} key={group.title}>
+        <table
+          className={styles.signalStage}
+          data-stage={group.stage}
+          key={group.title}
+        >
           <caption>{group.title}</caption>
           <thead>
             <tr>
@@ -48,22 +53,24 @@ function SignalStages({ trace }: { trace: Trace }) {
                   <th scope="row">
                     {component}
                     {unchangedPlug && (
-                      <small className="signal-note">
+                      <small className={styles.signalNote}>
                         {input} has no plugboard connection; unchanged.
                       </small>
                     )}
-                    {group.className === "reflection" && (
-                      <small className="signal-note">
+                    {group.stage === "reflection" && (
+                      <small className={styles.signalNote}>
                         Signal returns through the rotors.
                       </small>
                     )}
                   </th>
-                  <td className="signal-input">{input}</td>
-                  <td className="signal-direction" aria-hidden="true">
+                  <td className={styles.signalInput}>{input}</td>
+                  <td className={styles.signalDirection} aria-hidden="true">
                     →
                   </td>
                   <td>
-                    <strong className="signal-letter">{step.letter}</strong>
+                    <strong className={styles.signalLetter}>
+                      {step.letter}
+                    </strong>
                   </td>
                 </tr>
               );
@@ -87,11 +94,13 @@ export function SignalTrace({
   onSelect: (value: number) => void;
 }) {
   return (
-    <aside className="signal-panel">
-      <div className="section-heading">
+    <aside className={styles.signalPanel}>
+      <div className={styles.sectionHeading}>
         <h2>Follow the signal</h2>
       </div>
-      <p className="muted">One keypress. A journey through the machine.</p>
+      <p className={styles.muted}>
+        One keypress. A journey through the machine.
+      </p>
       <Help term="The complete signal route">
         Key → plugboard → right, middle, left rotors → reflector → left, middle,
         right rotors in reverse → plugboard again → lamp. The lamp only displays
@@ -99,18 +108,18 @@ export function SignalTrace({
       </Help>
       {trace ? (
         <>
-          <div className="trace-summary">
+          <div className={styles.traceSummary}>
             <div>
-              <small className="trace-endpoint-label">Key pressed</small>
+              <small className={styles.traceEndpointLabel}>Key pressed</small>
               <span>{trace.input}</span>
             </div>
-            <span className="trace-arrow">→</span>
+            <span className={styles.traceArrow}>→</span>
             <div>
-              <small className="trace-endpoint-label">Lamp lit</small>
+              <small className={styles.traceEndpointLabel}>Lamp lit</small>
               <span>{trace.output}</span>
             </div>
           </div>
-          <label className="trace-scrubber">
+          <label className={styles.traceScrubber}>
             Inspect letter{" "}
             <strong>
               {selected + 1} / {count}
@@ -125,7 +134,10 @@ export function SignalTrace({
             />
           </label>
           <SignalStages trace={trace} />
-          <div className="step-explanation">
+          <div
+            data-testid="step-explanation"
+            className={styles.stepExplanation}
+          >
             <strong>
               {trace.before} <span>→</span> {trace.after}
             </strong>
@@ -139,8 +151,8 @@ export function SignalTrace({
           </div>
         </>
       ) : (
-        <div className="trace-empty">
-          <div className="empty-circuit" aria-hidden="true">
+        <div className={styles.traceEmpty}>
+          <div className={styles.emptyCircuit} aria-hidden="true">
             <span>A</span>
             <i />
             <span>?</span>

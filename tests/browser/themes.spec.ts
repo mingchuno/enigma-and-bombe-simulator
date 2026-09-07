@@ -60,11 +60,45 @@ test("keyboard keys remain inside the machine above the phone breakpoint", async
   const machine = await page
     .getByRole("region", { name: "Enigma machine" })
     .boundingBox();
-  for (const key of await page.locator(".machine-key").all()) {
+  for (const key of await page
+    .getByRole("button", { name: /^Type [A-Z]$/, exact: true })
+    .all()) {
     const bounds = await key.boundingBox();
     expect(bounds!.x).toBeGreaterThanOrEqual(machine!.x);
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(
       machine!.x + machine!.width,
+    );
+  }
+});
+
+test("document themes retain heading typography and search action sizing", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 393, height: 1000 });
+  await page.goto("/");
+  const brand = page.getByRole("link", { name: "Enigma and Bombe home" });
+  await expect(brand).toHaveCSS("font-size", "24px");
+  for (const [theme, accent] of [
+    ["Intercept Form", "rgb(124, 53, 42)"],
+    ["Service Manual", "rgb(72, 75, 53)"],
+  ]) {
+    await page.getByRole("button", { name: "Appearance", exact: true }).click();
+    await page.getByRole("radio", { name: new RegExp(theme) }).check();
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: "Bombe", exact: true }).click();
+    const search = page.getByRole("button", {
+      name: "Run Bombe search",
+      exact: true,
+    });
+    await expect(search).toHaveCSS("background-color", accent);
+    await expect(search).toHaveCSS("font-size", "13px");
+    await expect(search).toHaveCSS("padding", "14px");
+    await expect(
+      page.getByRole("heading", { name: "Find what the settings allow." }),
+    ).toHaveCSS("font-family", /Oswald/);
+    await expect(brand).toHaveCSS(
+      "font-size",
+      theme === "Intercept Form" ? "26px" : "24px",
     );
   }
 });

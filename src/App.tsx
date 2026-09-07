@@ -1,3 +1,4 @@
+import styles from "./App.module.css";
 import { useState } from "react";
 import { AppearanceMenu } from "./components/AppearanceMenu.tsx";
 import { BombeWorkbench } from "./components/BombeWorkbench.tsx";
@@ -16,9 +17,9 @@ export function App() {
   }
   return (
     <>
-      <header className="site-header">
+      <header className={styles.siteHeader}>
         <a
-          className="brand"
+          className={styles.brand}
           href="#"
           onClick={(event) => {
             event.preventDefault();
@@ -37,21 +38,21 @@ export function App() {
         </a>
         <nav aria-label="Workbench navigation">
           <button
-            className={tab === "enigma" ? "active" : ""}
+            className={tab === "enigma" ? styles.active : ""}
             aria-current={tab === "enigma" ? "page" : undefined}
             onClick={() => setTab("enigma")}
           >
             Enigma
           </button>
           <button
-            className={tab === "bombe" ? "active" : ""}
+            className={tab === "bombe" ? styles.active : ""}
             aria-current={tab === "bombe" ? "page" : undefined}
             onClick={() => setTab("bombe")}
           >
             Bombe
           </button>
           <button
-            className={`guide-nav ${tab === "guide" ? "active" : ""}`}
+            className={`${styles.guideNav} ${tab === "guide" ? styles.active : ""}`}
             aria-current={tab === "guide" ? "page" : undefined}
             onClick={() => setTab("guide")}
           >
@@ -61,8 +62,8 @@ export function App() {
         </nav>
         <AppearanceMenu />
       </header>
-      <main>
-        <div className="simulator-intro">
+      <main className={styles.main}>
+        <div className={styles.simulatorIntro}>
           <h1>
             {tab === "enigma"
               ? "Enigma I"
@@ -70,7 +71,7 @@ export function App() {
                 ? "Bombe"
                 : "Field guide"}
           </h1>
-          <p className="intro-description">
+          <p className={styles.introDescription}>
             {tab === "enigma"
               ? "Set the rotors, type a message, and follow each letter through the machine."
               : tab === "bombe"
@@ -86,7 +87,7 @@ export function App() {
         </div>
         {tab === "guide" && <Guide />}
       </main>
-      <footer>
+      <footer className={styles.footer}>
         <span>Enigma & Bombe</span>
         <button
           onClick={() => {

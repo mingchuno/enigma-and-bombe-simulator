@@ -1,6 +1,7 @@
+import styles from "./Guide.module.css";
 export function Guide() {
   return (
-    <div className="guide-content">
+    <div className={styles.guideContent}>
       <section>
         <h2>Two machines. Opposite jobs.</h2>
         <p>
@@ -9,7 +10,7 @@ export function Guide() {
           and a guessed fragment of the original message.
         </p>
       </section>
-      <div className="guide-columns">
+      <div className={styles.guideColumns}>
         <section>
           <h2>Operate the Enigma</h2>
           <ol>
@@ -61,14 +62,14 @@ export function Guide() {
           </p>
         </section>
       </div>
-      <section className="guide-feature">
+      <section className={styles.guideFeature}>
         <h2>The middle rotor’s extra step</h2>
         <p>
           The rotors are not a simple odometer. With III–II–I installed, these
           consecutive window positions show the middle rotor advancing twice in
           succession:
         </p>
-        <div className="stepping-example">
+        <div className={styles.steppingExample}>
           <span>KDQ</span>
           <b>→</b>
           <span>
@@ -117,7 +118,7 @@ export function Guide() {
           gearing and normalized core coordinates. M4 and unknown ring searches
           remain outside this version.
         </p>
-        <div className="source-links">
+        <div className={styles.sourceLinks}>
           <a
             href="https://enigmamuseum.com/rotwirg.htm"
             target="_blank"

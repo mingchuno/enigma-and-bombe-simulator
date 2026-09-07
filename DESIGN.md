@@ -91,13 +91,13 @@ components:
 
 ## Overview
 
-The production workbench offers two user-approved document themes: **Service Manual** and **Intercept Form**. Both retain the original responsive layout, control placement, and simulation behavior. `PRODUCT.md` owns product scope; `src/themes.css` and `src/appearance.css` implement this visual system over the shared component styles.
+The production workbench offers two user-approved document themes: **Service Manual** and **Intercept Form**. Both retain the original responsive layout, control placement, and simulation behavior. `PRODUCT.md` owns product scope; `src/themes.css` defines its semantic tokens, and colocated CSS Modules implement the shared and component styles. See `docs/css-modules-migration.md` for ownership and cascade order.
 
 Service Manual is the default: olive accents, aged paper, condensed headings, and a charcoal instrument. Intercept Form uses warmer paper, oxblood accents, and typewriter headings. Compact sans-serif explanations and amber output lamps keep the machine readable in either appearance.
 
 ## Colors
 
-The frontmatter is normative for **Service Manual**. `green` is the existing CSS name for the theme accent: it colors primary actions, active navigation, and selected controls. `machine` is the independent dark instrument surface. `paper`, `field`, and `output` distinguish the page, editable message, and generated message. `ink`, `muted`, and `line` establish hierarchy. Errors pair color with written explanations.
+The frontmatter is normative for **Service Manual**. `green` is the design metadata name for the theme accent (`--color-accent` in CSS): it colors primary actions, active navigation, and selected controls. `machine` is the independent dark instrument surface. `paper`, `field`, and `output` distinguish the page, editable message, and generated message. `ink`, `muted`, and `line` establish hierarchy. Errors pair color with written explanations.
 
 Intercept Form overrides `paper` to `#f0e4c9`, `field` to `#faf2df`, `green` to `#7c352a`, and `line` to `#b4a084`. Other palette values inherit. Theme-dependent components consume CSS custom properties; retain the shared, labeled signal-stage colors and amber lamp state. Text selection uses the current accent with field-colored text. Local CSS colors are not a named global ramp.
 
@@ -115,7 +115,7 @@ The page intro uses exactly two typographic roles: Enigma I, Bombe, or Field gui
 
 The main container and footer have a 1440px maximum width and 48px horizontal padding. The header has a 1600px maximum width. Desktop Enigma uses a flexible machine column plus a 306px trace column with a 30px gap. The trace has a left divider. Message fields remain two equal columns, including mobile. Bombe uses a 355px input column and flexible analysis column, separated by 36px. Configuration keeps three equal rotor columns.
 
-Spacing is component-specific: common panel padding is 23–30px, message-column spacing is 18px, and major sections use divider rules with roughly 22–28px vertical padding. The implementation has no named spacing scale.
+Spacing is component-specific: common panel padding is 23–30px, message-column spacing is 18px, and major sections use divider rules with roughly 22–28px vertical padding. Common spacing values now use `--space-1` through `--space-6`; component-specific measurements retain their existing values.
 
 | Breakpoint | Implemented changes                                                                                                                                                                                                                                                                                      |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

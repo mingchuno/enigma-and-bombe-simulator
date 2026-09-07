@@ -1,0 +1,119 @@
+@value sectionHeading, fieldHint, validationBadge, textButton, learningPanel, inlineCheckbox, scopeNote, sourceLine from "./Workbench.module.css";
+@layer components {
+  .paperInputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-top: 26px;
+  }
+  .paperInputs input {
+    display: block;
+    width: 100%;
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    border: 1px solid #bac8ae;
+    border-radius: 5px;
+    background: #f5f3ed;
+    color: #24382f;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .paperControls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+    margin: 28px 0 18px;
+  }
+  .paperControls > label:first-child {
+    flex: 1;
+    min-width: 160px;
+  }
+  .paperControls input[type="range"] {
+    margin-bottom: 0;
+  }
+  .punchedScroll {
+    overflow: auto;
+    max-height: 610px;
+    background: #1c352c;
+    border-radius: 8px;
+    padding: var(--space-5);
+  }
+  .punchedScroll svg {
+    min-inline-size: var(--sheet-width);
+    max-height: none;
+    display: block;
+    width: 100%;
+  }
+  .paperRowLabel {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    fill: #564b31;
+  }
+  .paperPosition {
+    font-size: 7px;
+    text-anchor: middle;
+    font-family: var(--font-mono);
+    fill: #564b31;
+  }
+  .holeFirst {
+    fill: #bfa678;
+    stroke: #9c6c2e;
+    stroke-width: 1.5;
+  }
+  .holeSecond {
+    fill: #bfa678;
+    stroke: #324b39;
+    stroke-width: 1.5;
+  }
+  .holeMatch,
+  .holeOpen {
+    fill: #fcfbf7;
+    stroke: #fdfaf1;
+    stroke-width: 1.5;
+  }
+  .paperResult {
+    margin-top: var(--space-5);
+  }
+  .paperResult strong {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .paperResult p {
+    font-size: 12px;
+    color: #53644a;
+    margin-top: 10px;
+    max-width: 78ch;
+  }
+  @media (max-width: 600px) {
+    .paperInputs {
+      grid-template-columns: 1fr;
+      gap: 17px;
+    }
+    .paperControls {
+      gap: 17px;
+    }
+    .punchedScroll {
+      padding: var(--space-3);
+    }
+  }
+  .paperResult {
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 600px) {
+    .paperControls button {
+      min-height: 40px;
+    }
+  }
+}
+@layer theme {
+  :global(:root) .paperResult p {
+    color: var(--color-muted);
+  }
+  :global(:root) .paperInputs input {
+    background: var(--color-field);
+    color: var(--color-text);
+    border-color: var(--color-border);
+    border-radius: var(--radius-control);
+  }
+}

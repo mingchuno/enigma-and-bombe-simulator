@@ -1,3 +1,4 @@
+import styles from "./MuseumMenu.module.css";
 import { useState } from "react";
 import type { MenuEdge } from "../engine/crib-menu.ts";
 import { ALPHABET } from "../engine/enigma.ts";
@@ -40,15 +41,15 @@ export function MuseumMenu({
 }) {
   const [selected, setSelected] = useState(0);
   return (
-    <section className="learning-panel">
+    <section className={styles.learningPanel}>
       <h2>Museum example</h2>
-      <p className="field-hint">
+      <p className={styles.fieldHint}>
         A fixed teaching menu, independent of your ciphertext, crib, and search.
         Select a row below to highlight its connection, then explore the wiring
         on the drums. Your live graph and table remain in Crib &amp; search.
       </p>
       <ScrollRegion
-        className="operator-diagram-scroll"
+        className={styles.operatorDiagramScroll}
         label="Historical menu diagram"
       >
         <svg
@@ -81,8 +82,8 @@ export function MuseumMenu({
                 key={item.position}
                 className={
                   index === selected
-                    ? "operator-edge selected"
-                    : "operator-edge"
+                    ? `${styles.operatorEdge} ${styles.selected}`
+                    : styles.operatorEdge
                 }
               >
                 <path
@@ -92,7 +93,7 @@ export function MuseumMenu({
                   {item.position + 1}
                 </text>
                 <text
-                  className="operator-offset"
+                  className={styles.operatorOffset}
                   x={x}
                   y={y + EXHIBIT_LAYOUT.relativeLabelSpacing}
                   textAnchor={vertical ? "start" : "middle"}
@@ -116,7 +117,7 @@ export function MuseumMenu({
                 y={y}
                 dominantBaseline="central"
                 textAnchor="middle"
-                className="operator-letter"
+                className={styles.operatorLetter}
               >
                 {letter}
               </text>
@@ -124,7 +125,7 @@ export function MuseumMenu({
           ))}
         </svg>
       </ScrollRegion>
-      <p className="field-hint">
+      <p className={styles.fieldHint}>
         Read each letter as a cable junction and each numbered line as a
         connection through the scrambler at that message position. The two G–R
         lines represent positions 6 and 12. The original indicator unit connects
@@ -140,7 +141,7 @@ export function MuseumMenu({
         caption="Museum example wiring schedule"
       />
       <button
-        className="text-button"
+        className={styles.textButton}
         onClick={() => onIllustrate(EXHIBIT_MENU, selected)}
       >
         Put the supplied menu on the drums

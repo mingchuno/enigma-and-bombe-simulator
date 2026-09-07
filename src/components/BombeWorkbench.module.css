@@ -1,0 +1,325 @@
+@value sectionHeading, fieldHint, errorMessage, textButton, helpRow, primaryButton, muted, validationBadge from "./Workbench.module.css";
+
+@layer components {
+  .searchSpace span {
+    font-size: 11px;
+    color: var(--color-muted);
+  }
+  .constraintEquation > span {
+    color: var(--color-muted);
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: var(--space-1);
+  }
+  .bombeGrid {
+    display: grid;
+    grid-template-columns: 355px minmax(0, 1fr);
+    gap: 36px;
+    align-items: start;
+  }
+  .interceptPanel {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 25px;
+  }
+  .interceptPanel > .muted,
+  .searchSettings > .muted,
+  .menuPanel > .muted {
+    margin: 10px 0 22px;
+    font-size: 12px;
+  }
+  .interceptPanel > label {
+    margin-top: 18px;
+  }
+  .interceptPanel textarea,
+  .interceptPanel input,
+  .offsetControl input {
+    width: 100%;
+    padding: var(--space-3);
+    border: 1px solid #cdd5c6;
+    border-radius: 6px;
+    background: #fcfbf7;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text);
+  }
+  .interceptPanel textarea {
+    height: 103px;
+    resize: vertical;
+    word-break: break-all;
+  }
+  .offsetControl {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+  }
+  .offsetControl label {
+    width: 78px;
+    flex-shrink: 0;
+  }
+  .offsetControl p {
+    font-size: 11px;
+    color: var(--color-muted);
+    padding-top: 18px;
+  }
+  .demoNote {
+    margin-top: var(--space-5);
+    color: var(--color-muted);
+    font-size: 11px;
+  }
+  .demoNote summary {
+    cursor: pointer;
+    color: #4f6c46;
+  }
+  .demoNote p {
+    margin-top: var(--space-2);
+  }
+  .searchSettings {
+    padding-top: var(--space-6);
+  }
+  .searchFields select {
+    display: block;
+    width: 100%;
+    margin-top: var(--space-2);
+    padding: 10px 8px;
+    background: #fcfbf7;
+    border: 1px solid #cdd5c6;
+    border-radius: 5px;
+    color: var(--color-text);
+    font-size: 12px;
+  }
+  .searchFields label {
+    font-size: 11px;
+  }
+  .searchFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  .searchFields label:first-child {
+    grid-column: 1 / -1;
+  }
+  .searchSpace {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-top: 27px;
+  }
+  .searchSpace strong {
+    font-size: 23px;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+  }
+  .searchButton {
+    width: 100%;
+    margin-top: 17px;
+    font-size: 13px;
+    padding: 14px;
+  }
+  .cancelButton {
+    background: #7c442e;
+  }
+  .searchLimit {
+    margin-top: var(--space-3);
+    font-size: 10px;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+  .bombeAnalysis {
+    min-width: 0;
+  }
+  .menuPanel {
+    border: 1px solid var(--color-border);
+    background: #fcfbf7;
+    border-radius: 12px;
+    padding: 23px 25px;
+  }
+  .validationBadge.invalid {
+    background: var(--color-error-surface);
+    color: var(--color-error);
+  }
+  .menuPanel > .muted {
+    max-width: 65ch;
+    margin-bottom: var(--space-1);
+  }
+  .constraintEquation {
+    margin-top: var(--space-4);
+    padding: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .constraintEquation code {
+    font-size: 18px;
+    font-family: var(--font-mono);
+    line-height: 1.5;
+  }
+  .constraintEquation p {
+    font-size: 13px;
+    color: var(--color-muted);
+    width: 100%;
+    max-width: 65ch;
+    line-height: 1.6;
+    margin: 12px 0 0;
+  }
+  .menuEmpty {
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    color: #7d8a74;
+    padding: 35px;
+  }
+  .historicalNote {
+    display: flex;
+    gap: var(--space-3);
+    align-items: start;
+    font-size: 11px;
+    color: var(--color-muted);
+    margin: 22px 0;
+  }
+  .historicalNote svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  @media (max-width: 1100px) {
+    .bombeGrid {
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: var(--space-6);
+    }
+    .menuPanel {
+      padding: var(--space-5);
+    }
+  }
+  @media (max-width: 850px) {
+    .bombeGrid {
+      grid-template-columns: 1fr;
+    }
+    .bombeInputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .searchSettings {
+      padding-top: 0;
+    }
+    .interceptPanel {
+      border-bottom: 0;
+    }
+    .bombeAnalysis {
+      border-top: 1px solid var(--color-border);
+      padding-top: 25px;
+    }
+    .searchFields {
+      gap: var(--space-3);
+    }
+  }
+  @media (max-width: 600px) {
+    .bombeInputs {
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+    .searchSettings {
+      padding-top: 25px;
+      border-top: 1px solid var(--color-border);
+    }
+    .interceptPanel {
+      padding-bottom: 0;
+    }
+    .searchButton {
+      padding: 14px;
+      font-size: 13px;
+    }
+    .menuPanel {
+      padding: 19px 15px;
+      border-radius: 10px;
+    }
+    .menuPanel > .muted {
+      font-size: 11px;
+    }
+  }
+  .modeSwitch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-3);
+    margin-bottom: 25px;
+  }
+  .modeSwitch button {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #53644a;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+  .modeSwitch button[aria-pressed="true"] {
+    background: #183b32;
+    color: #f5f3ed;
+  }
+  .modeSwitch button:hover:not([aria-pressed="true"]) {
+    background: #e6eadf;
+  }
+  .modeSwitch.compact {
+    margin: 18px 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+    gap: var(--space-1);
+  }
+  .modeSwitch:where(.compact) button {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+  @media (max-width: 600px) {
+    .modeSwitch {
+      gap: 3px;
+    }
+    .modeSwitch button {
+      padding: 10px 11px;
+      font-size: 12px;
+    }
+    .modeSwitch button {
+      min-height: 40px;
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) .bombeInputs textarea,
+  :global(:root) .bombeInputs input {
+    border-color: var(--color-border);
+    border-radius: var(--radius-field);
+    background: var(--color-field);
+    color: var(--color-text);
+  }
+  :global(:root) .menuPanel {
+    background: var(--color-field);
+    border-color: var(--color-border);
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .modeSwitch button,
+  :global(:root) .modeSwitch.compact button {
+    color: var(--color-text);
+    border-radius: var(--radius-field);
+  }
+  :global(:root) .modeSwitch button[aria-pressed="true"] {
+    color: var(--color-field);
+    background: var(--color-accent);
+  }
+  :global(:root) .modeSwitch button:hover:not([aria-pressed="true"]) {
+    background: #ded5bf;
+  }
+  :global(:root) .constraintEquation {
+    background: var(--color-inset);
+    border-radius: var(--radius-control);
+  }
+}

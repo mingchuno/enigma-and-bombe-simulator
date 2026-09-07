@@ -1,0 +1,280 @@
+@value sectionHeading, muted from "./Workbench.module.css";
+
+@layer components {
+  .signalPanel {
+    padding: 23px 0 25px 24px;
+    border-left: 1px solid var(--color-border);
+    min-height: 615px;
+  }
+  .signalPanel h2 {
+    font-size: 19px;
+  }
+  .signalPanel > .muted {
+    font-size: 12px;
+    margin-top: 9px;
+    max-width: 30ch;
+  }
+  .traceSummary {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 28px 0 24px;
+    font-family: var(--font-heading);
+    font-size: 59px;
+    color: var(--color-accent);
+  }
+  .traceSummary > div:last-child {
+    color: #aa7429;
+  }
+  .traceArrow {
+    font-family: var(--font-body);
+    font-size: 29px;
+    color: #9da991;
+  }
+  .traceScrubber {
+    font-size: 11px;
+    color: #627260;
+    font-weight: 400;
+  }
+  .traceScrubber strong {
+    float: right;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    color: var(--color-text);
+  }
+  .traceSummary > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .traceEndpointLabel {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .signalPath {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .signalStage {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+  }
+  .signalStage caption {
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: var(--space-2);
+  }
+  .signalStage th {
+    text-align: left;
+    font-weight: 400;
+  }
+  .signalStage thead {
+    color: var(--color-muted);
+    font-size: 11px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .signalStage th,
+  .signalStage td {
+    padding: 7px 0;
+    vertical-align: top;
+    line-height: 28px;
+  }
+  .signalStage th:first-child {
+    width: auto;
+  }
+  .signalStage th:not(:first-child),
+  .signalStage thead td {
+    width: 34px;
+    text-align: center;
+  }
+  .signalStage thead td {
+    width: 24px;
+  }
+  .signalStage tbody th {
+    padding-inline-end: 12px;
+  }
+  .signalNote {
+    display: block;
+    max-width: 32ch;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-muted);
+  }
+  .signalInput,
+  .signalDirection {
+    text-align: center;
+    font-family: var(--font-mono);
+  }
+  .signalDirection {
+    color: var(--color-muted);
+  }
+  .signalLetter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    width: 28px;
+    margin: 0 auto;
+    background: #e5ebdd;
+    color: #345439;
+    border: 1px solid #bdcdb5;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .signalStage[data-stage="reflection"] .signalLetter {
+    background: #dfb974;
+    border-color: #ca9d51;
+    color: #473d27;
+  }
+  .signalStage[data-stage="return"] .signalLetter {
+    background: #eee6d7;
+    border-color: #dac5a2;
+    color: #786038;
+  }
+  .stepExplanation {
+    border-top: 1px solid var(--color-border);
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+  .stepExplanation strong {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+  .emptyCircuit span {
+    border: 1px solid #c8d1bd;
+    border-radius: 50%;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 30px;
+    color: #6d8067;
+  }
+  .stepExplanation strong span {
+    color: #85947b;
+    margin: 0 8px;
+  }
+  .stepExplanation p {
+    font-size: 11px;
+    color: var(--color-muted);
+    margin-top: 9px;
+  }
+  .traceEmpty {
+    padding-top: 85px;
+    color: var(--color-muted);
+  }
+  .emptyCircuit {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .emptyCircuit i {
+    height: 1px;
+    width: 70px;
+    background: #c8d1bd;
+  }
+  .traceEmpty h3 {
+    font-family: var(--font-heading);
+    font-size: 25px;
+    font-weight: 400;
+    color: var(--color-text);
+  }
+  .traceEmpty p {
+    font-size: 12px;
+    margin-top: var(--space-3);
+    max-width: 29ch;
+  }
+  @media (min-width: 1450px) {
+    .signalPanel {
+      padding-inline-start: 30px;
+    }
+  }
+  @media (max-width: 1100px) {
+    .signalPanel {
+      padding-inline-start: 20px;
+    }
+  }
+  @media (max-width: 850px) {
+    .signalPanel {
+      border-left: 0;
+      border-top: 1px solid var(--color-border);
+      padding: 24px 0;
+      min-height: 0;
+    }
+    .traceSummary {
+      margin: 20px 0;
+      font-size: 44px;
+    }
+    .traceEmpty {
+      padding-top: 25px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 8px 20px;
+      align-items: center;
+    }
+    .emptyCircuit {
+      grid-row: 1 / 3;
+      margin: 0;
+    }
+    .traceEmpty p {
+      margin: 0;
+      max-width: none;
+    }
+    .stepExplanation {
+      margin-top: var(--space-6);
+    }
+    .signalPanel > .muted {
+      max-width: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .signalPanel {
+      padding-top: 22px;
+    }
+    .traceEmpty {
+      grid-template-columns: 1fr;
+    }
+    .emptyCircuit {
+      grid-row: auto;
+      margin: 10px 0 15px;
+    }
+    .traceEmpty p {
+      max-width: 40ch;
+    }
+    .signalPanel .traceScrubber {
+      margin-bottom: var(--space-6);
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) .signalPanel {
+    border-color: var(--color-border);
+  }
+  :global(:root) .signalPanel > .muted,
+  :global(:root) .traceScrubber {
+    color: var(--color-muted);
+  }
+  :global(:root) .traceSummary {
+    font-family: var(--font-typewriter);
+  }
+}
+
+@layer components {
+  @media (max-width: 600px) {
+    .signalPanel h2 {
+      font-size: 18px;
+    }
+  }
+}

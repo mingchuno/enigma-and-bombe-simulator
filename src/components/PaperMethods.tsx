@@ -1,5 +1,6 @@
+import styles from "./PaperMethods.module.css";
 import { ScrollRegion } from "./ScrollRegion.tsx";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { ALPHABET, normalizeText } from "../engine/enigma.ts";
 import { compareStrips } from "../engine/historical.ts";
 
@@ -34,10 +35,10 @@ export function PaperMethods() {
     SHEET_LAYOUT.horizontalPadding +
     (end - origin) * SHEET_LAYOUT.columnSpacing;
   return (
-    <section className="paper-methods learning-panel">
-      <div className="section-heading">
+    <section className={styles.learningPanel}>
+      <div className={styles.sectionHeading}>
         <h2>The paper before the machine</h2>
-        <span className="validation-badge">
+        <span className={styles.validationBadge}>
           Banbury coincidence demonstration
         </span>
       </div>
@@ -47,7 +48,7 @@ export function PaperMethods() {
         letter with a hole in that letter’s row. Superimpose two strips:
         coincident letters let light through both holes.
       </p>
-      <div className="paper-inputs">
+      <div className={styles.paperInputs}>
         <label>
           First ciphertext
           <input
@@ -75,11 +76,11 @@ export function PaperMethods() {
           />
         </label>
       </div>
-      <p className="field-hint">
+      <p className={styles.fieldHint}>
         Editable synthetic strips, up to {MAX_STRIP_LENGTH} letters each. These
         are two ciphertexts, not ciphertext and a plaintext crib.
       </p>
-      <div className="paper-controls">
+      <div className={styles.paperControls}>
         <label>
           Shift second strip: {shift}
           <input
@@ -92,7 +93,7 @@ export function PaperMethods() {
             onChange={(e) => setShift(Number(e.target.value))}
           />
         </label>
-        <label className="inline-checkbox">
+        <label className={styles.inlineCheckbox}>
           <input
             type="checkbox"
             checked={overlay}
@@ -100,23 +101,30 @@ export function PaperMethods() {
           />
           Overlay both sheets
         </label>
-        <button className="text-button" onClick={() => setShift(0)}>
+        <button className={styles.textButton} onClick={() => setShift(0)}>
           Reset shift
         </button>
       </div>
       {(!first.length || !second.length) && (
-        <p className="field-hint" role="status">
+        <p className={styles.fieldHint} role="status">
           Enter both ciphertexts to compare the sheets.
         </p>
       )}
-      <p className="field-hint">
+      <p className={styles.fieldHint}>
         Scroll sideways to inspect the full strips. The diagram is a schematic
         of the holes.
       </p>
-      <ScrollRegion className="punched-scroll" label="Punched sheet diagram">
+      <ScrollRegion
+        className={styles.punchedScroll}
+        label="Punched sheet diagram"
+      >
         <svg
           viewBox={`0 0 ${Math.max(width, SHEET_LAYOUT.minimumWidth)} ${SHEET_LAYOUT.overlayHeight + (overlay ? 0 : SHEET_LAYOUT.layerSpacing)}`}
-          style={{ minWidth: Math.max(width, SHEET_LAYOUT.minimumWidth) }}
+          style={
+            {
+              "--sheet-width": `${Math.max(width, SHEET_LAYOUT.minimumWidth)}px`,
+            } as CSSProperties
+          }
           role="img"
           aria-label={`${matches.length} coincident holes in ${overlap} overlapping columns at shift ${shift}`}
         >
@@ -141,7 +149,7 @@ export function PaperMethods() {
                     SHEET_LAYOUT.rowLabelBaseline +
                     row * SHEET_LAYOUT.rowSpacing
                   }
-                  className="paper-row-label"
+                  className={styles.paperRowLabel}
                 >
                   {letter}
                 </text>
@@ -156,7 +164,7 @@ export function PaperMethods() {
                   (col - origin) * SHEET_LAYOUT.columnSpacing
                 }
                 y={SHEET_LAYOUT.columnLabelY}
-                className="paper-position"
+                className={styles.paperPosition}
               >
                 {col + 1}
               </text>
@@ -170,7 +178,7 @@ export function PaperMethods() {
                   ALPHABET.indexOf(letter) * SHEET_LAYOUT.rowSpacing
                 }
                 r={SHEET_LAYOUT.holeRadius}
-                className={overlay ? "hole-first" : "hole-open"}
+                className={overlay ? styles.holeFirst : styles.holeOpen}
               />
             </g>
           ))}
@@ -190,15 +198,15 @@ export function PaperMethods() {
               className={
                 overlay
                   ? matches.includes(col + shift)
-                    ? "hole-match"
-                    : "hole-second"
-                  : "hole-open"
+                    ? styles.holeMatch
+                    : styles.holeSecond
+                  : styles.holeOpen
               }
             />
           ))}
         </svg>
       </ScrollRegion>
-      <div className="paper-result">
+      <div data-testid="paper-result" className={styles.paperResult}>
         <strong>
           {matches.length} coincidences / {overlap} overlapping letters
         </strong>
@@ -211,13 +219,13 @@ export function PaperMethods() {
             : "The upper strip is the first ciphertext; the lower strip is the second. White openings show every hole in each separate sheet."}
         </p>
       </div>
-      <p className="scope-note">
+      <p className={styles.scopeNote}>
         Historical Banburismus used statistical evidence across messages to
         investigate their relative rotor settings. A raw coincidence count is
         not that statistical test and does not decrypt a message. This activity
         demonstrates alignment and intersection only.
       </p>
-      <p className="source-line">
+      <p className={styles.sourceLine}>
         Sources:{" "}
         <a
           href="https://www.codesandciphers.org.uk/documents/cryptdict/page05.htm"

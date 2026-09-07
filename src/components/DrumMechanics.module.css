@@ -1,0 +1,487 @@
+@value fieldHint, validationBadge, learningPanel, inlineCheckbox, scopeNote, sourceLine, primaryButton, sectionHeading from "./Workbench.module.css";
+
+@layer components {
+  .mechanicsControls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 24px 0;
+    align-items: center;
+  }
+  .mechanicsControls button:not(.primaryButton),
+  .chainPages button {
+    border: 1px solid #bac8ae;
+    border-radius: 5px;
+    padding: 10px 12px;
+    background: #f5f3ed;
+    font-size: 12px;
+  }
+  .mechanicsControls label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-inline-start: auto;
+  }
+  .mechanicsControls input {
+    width: 85px;
+    padding: 10px;
+    border: 1px solid #bac8ae;
+    border-radius: 5px;
+    background: #f5f3ed;
+    color: #24382f;
+  }
+  .drivePhase {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 22px;
+    padding: 15px;
+    border-radius: 6px;
+    background: #e6eddc;
+    font-size: 12px;
+  }
+  .drivePhase[data-phase="carrying"] {
+    background: #f0dfbd;
+  }
+  .drivePhase span {
+    line-height: 1.5;
+  }
+  .phaseRuler {
+    display: flex;
+    gap: 3px;
+    margin: 12px 0 22px;
+  }
+  .phaseRuler i {
+    flex: 1;
+    height: 8px;
+    background: #aebd9d;
+  }
+  .phaseRuler i[data-phase="carrying"] {
+    background: #dac298;
+  }
+  .phaseRuler i.active {
+    background: #263e28;
+    transform: scaleY(1.7);
+  }
+  .drumCabinet {
+    background: #172e27;
+    color: #e7e9dc;
+    border-radius: 10px;
+    padding: 20px 18px;
+  }
+  .cabinetHeading,
+  .cabinetFooter {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    align-items: center;
+    font-size: 11px;
+    color: #c5d1b8;
+  }
+  .cabinetHeading {
+    padding-bottom: 18px;
+    border-bottom: 1px solid #4d6652;
+  }
+  .cabinetHeading strong {
+    font-size: 13px;
+    font-weight: 500;
+    color: #eeefdf;
+  }
+  .drumBankScroll {
+    overflow: auto;
+    padding: 20px 0 15px;
+  }
+  .drumBank {
+    display: grid;
+    grid-template-columns: 130px repeat(12, minmax(48px, 1fr));
+    gap: var(--space-1);
+    min-width: 830px;
+  }
+  .drumRowLabels {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    padding-top: 35px;
+    padding-bottom: 23px;
+    gap: 10px;
+  }
+  .drumRowLabels span {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .drumRowLabels strong {
+    font-size: 10px;
+    font-weight: 400;
+    color: #c5d1b8;
+  }
+  .drumColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 5px 2px;
+    color: inherit;
+  }
+  .drumColumn.selected {
+    border-color: #dfbb70;
+    background: #314333;
+  }
+  .drumColumn:hover {
+    background: #314333;
+  }
+  .drumConnection {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .drumConnection small {
+    display: block;
+    font-size: 9px;
+    color: #c5d1b8;
+    margin-top: 3px;
+  }
+  .drumDisc {
+    width: 100%;
+    max-width: 78px;
+    overflow: visible;
+  }
+  .drumDisc text {
+    font-family: var(--font-mono);
+    font-size: 19px;
+    fill: #24382f;
+  }
+  .drumRelative {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: #c5d1b8;
+  }
+  .cabinetFooter {
+    border-top: 1px solid #4d6652;
+    padding-top: var(--space-4);
+    font-size: 10px;
+    flex-wrap: wrap;
+  }
+  .chainPages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 17px 0;
+  }
+  .chainPages button[aria-pressed="true"] {
+    background: #e1e9d5;
+  }
+  .chainPages p {
+    flex-basis: 100%;
+  }
+  .mechanicsExplanation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mechanicsExplanation h3 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+  }
+  .mechanicsExplanation p,
+  .drumInspector > p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #53644a;
+    margin-top: var(--space-3);
+    max-width: 75ch;
+  }
+  .drumInspector {
+    padding: 27px 0;
+  }
+  .contactExplainer {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin: 22px 0;
+  }
+  .contactExplainer svg {
+    width: 150px;
+    flex-shrink: 0;
+  }
+  .contactExplainer p {
+    font-size: 12px;
+    line-height: 1.8;
+    color: #53644a;
+    margin-top: 10px;
+    max-width: 54ch;
+  }
+  .contactExplainer strong {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .drumPath {
+    display: flex;
+    gap: var(--space-3);
+    padding: 15px 0;
+    margin: 12px 0 0;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  .drumPath li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 75px;
+    padding: 9px;
+  }
+  .drumPath b {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: #e1e9d5;
+    border: 1px solid #bdcdb5;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 400;
+  }
+  .drumPath li:nth-child(4) b {
+    background: #e4c894;
+  }
+  .drumPath span {
+    font-size: 11px;
+  }
+  .sensePanel {
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+  .senseControls {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 15px 0;
+  }
+  .senseControls select {
+    margin-inline-start: 10px;
+    background: #f5f3ed;
+    color: #24382f;
+    border: 1px solid #aab89f;
+    border-radius: 5px;
+    padding: var(--space-2);
+  }
+  .senseLamps {
+    display: grid;
+    grid-template-columns: repeat(26, 1fr);
+    gap: 5px;
+    margin-top: 22px;
+  }
+  .senseLamps > span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 0;
+    border-radius: 5px;
+    background: #e8ebdf;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .senseLamps > span.energized {
+    background: #e4be77;
+    color: #24382f;
+  }
+  .senseLamps small {
+    font-size: 9px;
+  }
+  .senseLamps.inactive {
+    opacity: 0.55;
+  }
+  .senseVerdict {
+    font-size: 14px;
+    margin: 15px 0 22px;
+  }
+  .diagonalScroll {
+    margin-top: 18px;
+  }
+  .diagonalScroll svg {
+    display: block;
+    max-width: 440px;
+    width: 100%;
+  }
+  .boardLabel {
+    font-size: 9px;
+    fill: #384d30;
+    font-family: var(--font-mono);
+  }
+  @media (max-width: 850px) {
+    .drumBank {
+      min-width: 850px;
+    }
+    .senseLamps {
+      grid-template-columns: repeat(13, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .mechanicsControls {
+      gap: 7px;
+    }
+    .mechanicsControls button:not(.primaryButton) {
+      padding: 9px;
+      font-size: 11px;
+    }
+    .mechanicsControls label {
+      margin-inline-start: 0;
+      margin-top: var(--space-2);
+    }
+    .phaseRuler {
+      gap: 2px;
+    }
+    .cabinetHeading {
+      align-items: start;
+      flex-direction: column;
+    }
+    .drumCabinet {
+      margin-inline-start: -5px;
+      margin-inline-end: -5px;
+      padding: 15px 10px;
+    }
+    .mechanicsExplanation {
+      grid-template-columns: 1fr;
+      gap: 23px;
+    }
+    .mechanicsExplanation p,
+    .drumInspector > p {
+      font-size: 12px;
+    }
+    .contactExplainer {
+      gap: 15px;
+    }
+    .contactExplainer svg {
+      width: 100px;
+    }
+    .contactExplainer p {
+      font-size: 11px;
+    }
+    .contactExplainer strong {
+      font-size: 12px;
+    }
+    .drumPath {
+      gap: 6px;
+    }
+    .drumPath li {
+      min-width: 57px;
+      padding: var(--space-1);
+    }
+    .drumPath span {
+      font-size: 9px;
+    }
+    .senseControls {
+      gap: 13px;
+    }
+    .senseLamps {
+      gap: 3px;
+    }
+    .senseLamps > span {
+      font-size: 11px;
+      padding: 8px 0;
+    }
+    .senseLamps small {
+      font-size: 8px;
+    }
+    .sensePanel > .sectionHeading {
+      align-items: start;
+      flex-wrap: wrap;
+    }
+  }
+
+  .cabinetScrollHint {
+    color: #c5d1b8;
+    font-size: 11px;
+    margin-top: 14px;
+  }
+  .coreReading {
+    background: #e8eddf;
+    padding: var(--space-3);
+    border-radius: 5px;
+  }
+  .drivePhase,
+  .coreReading {
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 600px) {
+    .mechanicsControls button,
+    .chainPages button {
+      min-height: 40px;
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) .drumCabinet {
+    background: var(--machine-surface);
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .mechanicsExplanation p,
+  :global(:root) .drumInspector > p,
+  :global(:root) .contactExplainer p {
+    color: var(--color-muted);
+  }
+  :global(:root) .mechanicsControls button:not(.primaryButton),
+  :global(:root) .chainPages button,
+  :global(:root) .mechanicsControls input,
+  :global(:root) .senseControls select {
+    background: var(--color-field);
+    color: var(--color-text);
+    border-color: var(--color-border);
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .coreReading {
+    background: var(--color-inset);
+  }
+  :global(:root) .coreReading {
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .chainPages button[aria-pressed="true"] {
+    background: var(--color-inset);
+    border-color: var(--color-accent);
+  }
+}
+
+@layer components {
+  .drumShell {
+    fill: var(--drum-color);
+  }
+  .drumDisc {
+    &[data-rotor="I"] {
+      --drum-color: #a94332;
+    }
+    &[data-rotor="II"] {
+      --drum-color: #783b49;
+    }
+    &[data-rotor="III"] {
+      --drum-color: #426d49;
+    }
+    &[data-rotor="IV"] {
+      --drum-color: #bc952f;
+    }
+    &[data-rotor="V"] {
+      --drum-color: #765137;
+    }
+  }
+  .boardTerminal {
+    fill: #dce4d4;
+    &[data-energized="true"] {
+      fill: #986420;
+    }
+  }
+  .contact {
+    fill: #916027;
+    &[data-direction="outward"] {
+      fill: #305640;
+    }
+  }
+}

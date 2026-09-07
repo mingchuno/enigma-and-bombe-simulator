@@ -1,0 +1,80 @@
+@layer components {
+  .historicalMenu {
+    margin-top: var(--space-4);
+  }
+  .operatorTableScroll {
+    max-height: 300px;
+    overflow: auto;
+    margin-top: 18px;
+  }
+  .operatorTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .operatorTable caption {
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .operatorTable th {
+    font-weight: 500;
+    text-align: left;
+    background: #e7ecdd;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .operatorTable td,
+  .operatorTable th {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .operatorTable td {
+    font-family: var(--font-mono);
+  }
+  .operatorTable tr.selected td {
+    background: #f1e1c3;
+  }
+  .operatorTable button {
+    background: transparent;
+    border: 0;
+    padding: 2px;
+    min-height: 32px;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font-mono);
+  }
+  .operatorTable :where(button) span {
+    color: #62735a;
+  }
+  .notationReading {
+    margin-top: var(--space-4);
+    background: #edf0e5;
+    padding: var(--space-3);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  @media (max-width: 600px) {
+    .operatorTable {
+      font-size: 10px;
+    }
+    .operatorTable td,
+    .operatorTable th {
+      padding: 8px 6px;
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) .notationReading {
+    background: var(--color-inset);
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .operatorTable :where(button) span {
+    color: var(--color-muted);
+  }
+  :global(:root) .operatorTable th {
+    background: var(--color-inset);
+  }
+}

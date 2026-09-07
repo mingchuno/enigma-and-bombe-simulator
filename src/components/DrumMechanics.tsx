@@ -1,3 +1,4 @@
+import styles from "./DrumMechanics.module.css";
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import { useEffect, useMemo, useState } from "react";
 import type { MenuEdge } from "../engine/crib-menu.ts";
@@ -41,13 +42,6 @@ const BOARD_COLUMN_LABEL_CENTER = 28;
 const ENTRY_PLUGBOARD_STEPS = 1;
 const EXIT_PLUGBOARD_AND_LAMP_STEPS = 2;
 
-const drumColors = {
-  I: "#a94332",
-  II: "#783b49",
-  III: "#426d49",
-  IV: "#bc952f",
-  V: "#765137",
-};
 const tickPath = Array.from({ length: ALPHABET_SIZE }, (_, i) => {
   const a = (i / ALPHABET_SIZE) * FULL_TURN_RADIANS;
   return `M${DRUM_CENTER + DRUM_TICK_INNER_RADIUS * Math.sin(a)} ${DRUM_CENTER - DRUM_TICK_INNER_RADIUS * Math.cos(a)}L${DRUM_CENTER + DRUM_TICK_OUTER_RADIUS * Math.sin(a)} ${DRUM_CENTER - DRUM_TICK_OUTER_RADIUS * Math.cos(a)}`;
@@ -55,15 +49,25 @@ const tickPath = Array.from({ length: ALPHABET_SIZE }, (_, i) => {
 function Drum({
   letter,
   orientation,
-  color,
+  rotor,
 }: {
   letter: string;
   orientation: number;
-  color: string;
+  rotor: MachineConfig["rotors"][number];
 }) {
   return (
-    <svg viewBox="0 0 80 80" aria-hidden="true" className="drum-disc">
-      <circle cx={DRUM_CENTER} cy={DRUM_CENTER} r="37" fill={color} />
+    <svg
+      viewBox="0 0 80 80"
+      aria-hidden="true"
+      className={styles.drumDisc}
+      data-rotor={rotor}
+    >
+      <circle
+        cx={DRUM_CENTER}
+        cy={DRUM_CENTER}
+        r="37"
+        className={styles.drumShell}
+      />
       <g
         transform={`rotate(${(orientation * FULL_TURN_DEGREES) / ALPHABET_SIZE} ${DRUM_CENTER} ${DRUM_CENTER})`}
       >
@@ -157,10 +161,10 @@ export function DrumMechanics({
     setPoint((value) => (value + 1) % DRIVE_POINT_COUNT);
   }
   return (
-    <section className="mechanics learning-panel">
-      <div className="section-heading">
+    <section className={styles.learningPanel}>
+      <div className={styles.sectionHeading}>
         <h2>What does a rotating drum change?</h2>
-        <span className="validation-badge">
+        <span className={styles.validationBadge}>
           {DRIVE_POINTS_PER_CYCLE}-point drive · slowed down
         </span>
       </div>
@@ -170,8 +174,11 @@ export function DrumMechanics({
         motion tries another wiring permutation—it does not type another message
         letter.
       </p>
-      <div className="mechanics-controls">
-        <button className="primary-button" onClick={() => setPlaying(!playing)}>
+      <div className={styles.mechanicsControls}>
+        <button
+          className={styles.primaryButton}
+          onClick={() => setPlaying(!playing)}
+        >
           <Icon name={playing ? "close" : "play"} />
           {playing ? "Pause drums" : "Run drums"}
         </button>
@@ -219,7 +226,11 @@ export function DrumMechanics({
           />
         </label>
       </div>
-      <div className={`drive-phase ${drive.sensing ? "sensing" : "carrying"}`}>
+      <div
+        data-testid="drive-phase"
+        className={styles.drivePhase}
+        data-phase={drive.sensing ? "sensing" : "carrying"}
+      >
         <strong>
           {drive.sensing
             ? `Sensing point ${drive.phase + 1} of ${SENSING_POINTS}`
@@ -231,33 +242,34 @@ export function DrumMechanics({
             : "The top row keeps rotating while the next row is advanced. Do not interpret the lamps as a stop."}
         </span>
       </div>
-      <div className="phase-ruler" aria-hidden="true">
+      <div className={styles.phaseRuler} aria-hidden="true">
         {Array.from({ length: DRIVE_POINTS_PER_CYCLE }, (_, i) => (
           <i
             key={i}
-            className={`${i < SENSING_POINTS ? "sense" : "carry"} ${drive.phase === i ? "active" : ""}`}
+            data-phase={i < SENSING_POINTS ? "sensing" : "carrying"}
+            className={drive.phase === i ? styles.active : ""}
           />
         ))}
       </div>
-      <p className="field-hint">
+      <p className={styles.fieldHint}>
         The drum letters below are normalized wiring-core coordinates (ring A),
         not the markings engraved on a historical drum. Search ring settings are
         not reused as physical drum settings.
       </p>
-      <div className="drum-cabinet">
-        <div className="cabinet-heading">
+      <div className={styles.drumCabinet}>
+        <div className={styles.cabinetHeading}>
           <strong>One chain · up to {SCRAMBLERS_PER_CHAIN} scramblers</strong>
           <span>
             Menu connections {pageStart + 1}–{pageStart + bankEdges.length}
           </span>
         </div>
-        <p className="cabinet-scroll-hint">
+        <p className={styles.cabinetScrollHint}>
           Select a column to trace its wiring. On a narrow screen, scroll the
           drum bank sideways.
         </p>
-        <ScrollRegion className="drum-bank-scroll" label="Drum bank">
-          <div className="drum-bank">
-            <div className="drum-row-labels">
+        <ScrollRegion className={styles.drumBankScroll} label="Drum bank">
+          <div className={styles.drumBank}>
+            <div className={styles.drumRowLabels}>
               <span>
                 Top / Enigma left<strong>Fast search drum</strong>
               </span>
@@ -271,12 +283,12 @@ export function DrumMechanics({
             {scramblers.map((scrambler, index) => (
               <button
                 key={scrambler.position}
-                className={`drum-column ${selected === pageStart + index ? "selected" : ""}`}
+                className={`${styles.drumColumn} ${selected === pageStart + index ? styles.selected : ""}`}
                 onClick={() => onSelect(pageStart + index)}
                 aria-pressed={selected === pageStart + index}
                 aria-label={`Select scrambler at position ${scrambler.position + 1}, ${ALPHABET[scrambler.a]} to ${ALPHABET[scrambler.b]}, relative setting ${relativeLabel(scrambler.position)}, top core ${scrambler.windows[ROTOR_SLOT.LEFT]}, middle core ${scrambler.windows[ROTOR_SLOT.MIDDLE]}, bottom core ${scrambler.windows[ROTOR_SLOT.RIGHT]}`}
               >
-                <span className="drum-connection">
+                <span className={styles.drumConnection}>
                   {ALPHABET[scrambler.a]}–{ALPHABET[scrambler.b]}
                   <small>#{scrambler.position + 1}</small>
                 </span>
@@ -285,17 +297,17 @@ export function DrumMechanics({
                     key={row}
                     letter={scrambler.windows[row]}
                     orientation={ALPHABET.indexOf(scrambler.windows[row])}
-                    color={drumColors[config.rotors[row]]}
+                    rotor={config.rotors[row]}
                   />
                 ))}
-                <span className="drum-relative">
+                <span className={styles.drumRelative}>
                   {relativeLabel(scrambler.position)}
                 </span>
               </button>
             ))}
           </div>
         </ScrollRegion>
-        <div className="cabinet-footer">
+        <div className={styles.cabinetFooter}>
           <span>
             Rotor types top → bottom: {config.rotors.join(" · ")} · reflector{" "}
             {config.reflector}
@@ -305,7 +317,7 @@ export function DrumMechanics({
       </div>
       {edges.length > SCRAMBLERS_PER_CHAIN && (
         <div
-          className="chain-pages"
+          className={styles.chainPages}
           aria-label="Choose connections to illustrate"
         >
           {Array.from(
@@ -327,14 +339,14 @@ export function DrumMechanics({
               </button>
             ),
           )}
-          <p className="field-hint">
+          <p className={styles.fieldHint}>
             Pages are teaching subsets, not extra historical banks. Circuit
             sensing below uses only the displayed connections; fewer constraints
             may give extra potential stops.
           </p>
         </div>
       )}
-      <div className="mechanics-explanation">
+      <div className={styles.mechanicsExplanation}>
         <div>
           <h3>Why the apparent reversal?</h3>
           <p>
@@ -353,12 +365,12 @@ export function DrumMechanics({
         </div>
       </div>
       {chosen && (
-        <div className="drum-inspector">
+        <div className={styles.drumInspector}>
           <h3>
             Inside column {selected - pageStart + 1}: {ALPHABET[chosen.a]} →{" "}
             {ALPHABET[chosen.b]}, position {chosen.position + 1}
           </h3>
-          <p className="core-reading">
+          <p className={styles.coreReading}>
             Normalized base{" "}
             {drive.cores.map((value) => ALPHABET[value]).join("")} + bottom-drum
             offset {chosen.position + 1} → {chosen.windows}. The menu mark{" "}
@@ -371,7 +383,7 @@ export function DrumMechanics({
             this double-ended arrangement. The reflector joins the two paths;
             the Bombe scrambler has no Enigma plugboard.
           </p>
-          <div className="contact-explainer">
+          <div className={styles.contactExplainer}>
             <svg
               viewBox="0 0 190 190"
               role="img"
@@ -395,8 +407,9 @@ export function DrumMechanics({
                         cx={CONTACT_DIAGRAM_CENTER + radius * Math.sin(a)}
                         cy={CONTACT_DIAGRAM_CENTER - radius * Math.cos(a)}
                         r="2.5"
-                        fill={
-                          row < OUTWARD_CONTACT_CIRCLES ? "#305640" : "#916027"
+                        className={styles.contact}
+                        data-direction={
+                          row < OUTWARD_CONTACT_CIRCLES ? "outward" : "return"
                         }
                       />
                     );
@@ -431,13 +444,13 @@ export function DrumMechanics({
               </p>
             </div>
           </div>
-          <p className="probe-reading">
+          <p>
             Probe wire <b>{ALPHABET[wire]}</b> at cable{" "}
             <b>{ALPHABET[chosen.a]}</b> → emerges on wire{" "}
             <b>{ALPHABET[chosen.mapping[wire]]}</b> at cable{" "}
             <b>{ALPHABET[chosen.b]}</b>.
           </p>
-          <ol className="drum-path">
+          <ol className={styles.drumPath}>
             {rotorPath.map((step, index) => (
               <li key={index}>
                 <b>{step.letter}</b>
@@ -447,8 +460,8 @@ export function DrumMechanics({
           </ol>
         </div>
       )}
-      <section className="sense-panel">
-        <div className="section-heading">
+      <section className={styles.sensePanel}>
+        <div className={styles.sectionHeading}>
           <h3>From rotation to a possible stop</h3>
           <Help term="A stop is not a solved message">
             Voltage spreads through connected scramblers and the diagonal board.
@@ -457,7 +470,7 @@ export function DrumMechanics({
             stop for checking. A weak menu can produce many such stops.
           </Help>
         </div>
-        <div className="sense-controls">
+        <div className={styles.senseControls}>
           <label>
             Indicator register
             <select
@@ -486,7 +499,7 @@ export function DrumMechanics({
               ))}
             </select>
           </label>
-          <label className="inline-checkbox">
+          <label className={styles.inlineCheckbox}>
             <input
               type="checkbox"
               checked={diagonal}
@@ -495,14 +508,14 @@ export function DrumMechanics({
             Connect diagonal board
           </label>
         </div>
-        <p className="field-hint">
+        <p className={styles.fieldHint}>
           Injecting wire {ALPHABET[wire]} at register {ALPHABET[input]} tests
           the hypothesis that the plugboard pairs {ALPHABET[input]} with{" "}
           {ALPHABET[wire]}. The column probe above uses that same wire as a
           separate local example.
         </p>
         <div
-          className={`sense-lamps ${drive.sensing ? "" : "inactive"}`}
+          className={`${styles.senseLamps} ${drive.sensing ? "" : styles.inactive}`}
           aria-label="Indicator register wires"
         >
           {[...ALPHABET].map((letter, index) => (
@@ -510,7 +523,7 @@ export function DrumMechanics({
               key={letter}
               className={
                 drive.sensing && circuit.live[input * ALPHABET_SIZE + index]
-                  ? "energized"
+                  ? styles.energized
                   : ""
               }
             >
@@ -525,12 +538,16 @@ export function DrumMechanics({
             </span>
           ))}
         </div>
-        <p className="sense-verdict" aria-live={playing ? "off" : "polite"}>
+        <p
+          data-testid="sense-verdict"
+          className={styles.senseVerdict}
+          aria-live={playing ? "off" : "polite"}
+        >
           {!drive.sensing
             ? "Not sensing during carry."
             : `${circuit.registerCount} of ${ALPHABET_SIZE} register wires energized — ${circuit.registerCount === ALPHABET_SIZE ? "reject this orientation." : "potential stop; further checking required."}`}
         </p>
-        <label className="inline-checkbox">
+        <label className={styles.inlineCheckbox}>
           <input
             type="checkbox"
             checked={showBoard}
@@ -539,7 +556,7 @@ export function DrumMechanics({
           Show all {DIAGONAL_BOARD_TERMINAL_COUNT} diagonal-board terminals
         </label>
         {showBoard && (
-          <div className="diagonal-scroll">
+          <div data-testid="diagonal-scroll" className={styles.diagonalScroll}>
             <svg
               viewBox="0 0 365 365"
               role="img"
@@ -550,14 +567,14 @@ export function DrumMechanics({
                   <text
                     x="8"
                     y={BOARD_ROW_LABEL_BASELINE + index * BOARD_CELL_SPACING}
-                    className="board-label"
+                    className={styles.boardLabel}
                   >
                     {letter}
                   </text>
                   <text
                     x={BOARD_COLUMN_LABEL_CENTER + index * BOARD_CELL_SPACING}
                     y="12"
-                    className="board-label"
+                    className={styles.boardLabel}
                   >
                     {letter}
                   </text>
@@ -576,11 +593,12 @@ export function DrumMechanics({
                   }
                   width="10"
                   height="10"
-                  fill={drive.sensing && live ? "#986420" : "#dce4d4"}
+                  className={styles.boardTerminal}
+                  data-energized={Boolean(drive.sensing && live)}
                 />
               ))}
             </svg>
-            <p className="field-hint">
+            <p className={styles.fieldHint}>
               Rows name cables; columns name possible partners. With the board
               connected, the reciprocal link joins (A, B) to (B, A). This square
               layout explains the wiring; the actual rear-board sockets were not
@@ -589,7 +607,7 @@ export function DrumMechanics({
           </div>
         )}
       </section>
-      <p className="scope-note">
+      <p className={styles.scopeNote}>
         This mode models drive phases, relative drum offsets, and electrical
         reachability. Display letters are normalized core coordinates (ring A),
         not calibrated letters engraved on historical drums or the search’s
@@ -600,7 +618,7 @@ export function DrumMechanics({
         automatic stop-and-cancel relay timing is not simulated. The exact
         search retains its own Enigma stepping and results.
       </p>
-      <p className="source-line">
+      <p className={styles.sourceLine}>
         <a
           href="https://bombe.virtualcolossus.co.uk/technical.html"
           target="_blank"

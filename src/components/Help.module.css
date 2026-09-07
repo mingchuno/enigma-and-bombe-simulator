@@ -1,0 +1,96 @@
+@layer components {
+  .conceptHelp {
+    margin: 12px 0;
+    font-size: 12px;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    color: #46613e;
+    width: fit-content;
+    min-height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    text-align: left;
+  }
+  .conceptHelp svg {
+    flex-shrink: 0;
+  }
+  .conceptHelp:hover,
+  .conceptHelp[data-popup-open] {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .conceptHelpPositioner {
+    z-index: 20;
+  }
+  .conceptHelpBody {
+    background: var(--color-paper);
+    color: var(--color-text);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    width: 320px;
+    max-width: min(320px, calc(100vw - 24px), var(--available-width));
+    max-height: var(--available-height);
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    box-shadow: 0 4px 20px #112c2533;
+  }
+  :where(:global([data-surface="machine"])) .conceptHelp {
+    color: #d0dbbf;
+  }
+  :global([data-surface="machine"]) .conceptHelp {
+    font-size: 11px;
+    margin-top: var(--space-2);
+    margin-bottom: 3px;
+  }
+  @media (max-width: 600px) {
+    .conceptHelp {
+      min-height: 44px;
+    }
+    .conceptHelp {
+      font-size: 11px;
+    }
+  }
+
+  .configurationHelp {
+    container: configuration-help / inline-size;
+    margin-top: var(--space-3);
+  }
+  .configurationHelpItems {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 24px;
+  }
+  @container configuration-help (min-width: 600px) {
+    .configurationHelpItems {
+      grid-template-columns: repeat(4, max-content);
+      justify-content: start;
+    }
+  }
+  /* biome-ignore lint/style/noDescendingSpecificity: :global adds no specificity; this intentionally follows the machine context. */
+  .configurationHelp .conceptHelp {
+    margin: 0;
+    min-height: 44px;
+    font-size: 12px;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+@layer theme {
+  :global(:root) .conceptHelp {
+    color: var(--color-accent);
+  }
+  :global(:root) :global([data-surface="machine"]) .conceptHelp {
+    color: #ddd5bd;
+  }
+  :global(:root) .conceptHelpBody {
+    border-radius: var(--radius-control);
+  }
+}

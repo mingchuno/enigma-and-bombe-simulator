@@ -1,3 +1,4 @@
+import styles from "./BombeResults.module.css";
 import type { SearchSnapshot } from "../engine/bombe-session.ts";
 import { Help } from "./Help.tsx";
 
@@ -20,17 +21,17 @@ export function BombeResults({
   const percentage = (progress.tested / total) * PERCENT_SCALE;
   const candidate = progress.candidates[selectedCandidate];
   return (
-    <section className="results-panel">
+    <section data-testid="results-panel" className={styles.resultsPanel}>
       <Help term="Reading search results">
         Tested counts rotor orientations checked. A candidate is one plugboard
         assignment that passes the crib check, not a confirmed decryption.
         Unknown letters are left unplugged only for the preview. A stopped
         search or candidate limit leaves untested settings.
       </Help>
-      <div className="section-heading">
+      <div className={styles.sectionHeading}>
         <h2>Search log</h2>
         <span
-          className={`search-status ${running ? "running" : ""}`}
+          className={`${styles.searchStatus} ${running ? styles.running : ""}`}
           role="status"
         >
           {status === "idle"
@@ -49,11 +50,12 @@ export function BombeResults({
         </span>
       </div>
       <progress
+        className={styles.progress}
         max={total}
         value={progress.tested}
         aria-label="Search progress"
       />
-      <div className="progress-details">
+      <div data-testid="progress-details" className={styles.progressDetails}>
         <span>
           {progress.tested.toLocaleString()} / {total.toLocaleString()} tested
         </span>
@@ -63,7 +65,7 @@ export function BombeResults({
         </span>
       </div>
       {progress.reason === "limit" && !running && (
-        <p className="field-hint">
+        <p className={styles.fieldHint}>
           Stopped after finding {progress.candidates.length} crib-compatible
           candidates. {(total - progress.tested).toLocaleString()} settings
           remain untested. The percentage measures search coverage, not
@@ -73,8 +75,8 @@ export function BombeResults({
         </p>
       )}
       {status === "idle" ? (
-        <div className="results-empty">
-          <span className="search-glyph" aria-hidden="true">
+        <div className={styles.resultsEmpty}>
+          <span className={styles.searchGlyph} aria-hidden="true">
             ?
           </span>
           <div>
@@ -87,7 +89,7 @@ export function BombeResults({
         </div>
       ) : (
         <>
-          <div className="run-summary">
+          <div className={styles.runSummary}>
             <span>
               Last checked <code>{progress.current || "Preparing…"}</code>
             </span>
@@ -97,26 +99,32 @@ export function BombeResults({
             </strong>
           </div>
           {progress.unresolved > 0 && (
-            <p className="error-message">
+            <p className={styles.errorMessage}>
               {progress.unresolved} settings exceeded the per-setting work
               budget. They are unresolved, not rejected.
             </p>
           )}
           {!progress.candidates.length && !running && (
-            <p className="muted">
+            <p className={styles.muted}>
               No candidates found in the settings tested. Check the crib,
               offset, rings, reflector, and cable limit.
             </p>
           )}
           {progress.candidates.length > 0 && (
             <>
-              <div className="candidate-tabs" aria-label="Candidate settings">
+              <div
+                data-testid="candidate-tabs"
+                className={styles.candidateTabs}
+                aria-label="Candidate settings"
+              >
                 {progress.candidates.map((result, index) => (
                   <button
                     key={index}
                     onClick={() => onSelect(index)}
                     aria-pressed={index === selectedCandidate}
-                    className={index === selectedCandidate ? "selected" : ""}
+                    className={
+                      index === selectedCandidate ? styles.selected : ""
+                    }
                   >
                     {result.windows}
                     <small>{result.rotors.join("–")}</small>
@@ -124,10 +132,15 @@ export function BombeResults({
                 ))}
               </div>
               {candidate && (
-                <div className="candidate-detail">
-                  <div className="section-heading">
+                <div
+                  data-testid="candidate-detail"
+                  className={styles.candidateDetail}
+                >
+                  <div className={styles.sectionHeading}>
                     <h3>Crib-compatible candidate</h3>
-                    <span className="validation-badge">Replay checked</span>
+                    <span className={styles.validationBadge}>
+                      Replay checked
+                    </span>
                   </div>
                   <dl>
                     <div>
@@ -146,8 +159,13 @@ export function BombeResults({
                       </dd>
                     </div>
                   </dl>
-                  <p className="candidate-plaintext">{candidate.plaintext}</p>
-                  <p className="muted">
+                  <p
+                    data-testid="candidate-plaintext"
+                    className={styles.candidatePlaintext}
+                  >
+                    {candidate.plaintext}
+                  </p>
+                  <p className={styles.muted}>
                     {candidate.unknown.length
                       ? `Unresolved letters: ${candidate.unknown.join(" ")}. They are treated as unplugged in this preview; other completions may exist.`
                       : "This candidate assigns all 26 letters; other compatible assignments may exist."}{" "}

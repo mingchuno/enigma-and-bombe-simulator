@@ -1,3 +1,4 @@
+import styles from "./AppearanceMenu.module.css";
 import { Popover } from "@base-ui/react/popover";
 import { useEffect, useState } from "react";
 import {
@@ -28,7 +29,10 @@ export function AppearanceMenu() {
 
   return (
     <Popover.Root>
-      <Popover.Trigger className="appearance-trigger" aria-label="Appearance">
+      <Popover.Trigger
+        className={styles.appearanceTrigger}
+        aria-label="Appearance"
+      >
         <svg
           width="20"
           height="20"
@@ -45,19 +49,19 @@ export function AppearanceMenu() {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner
-          className="appearance-positioner"
+          className={styles.appearancePositioner}
           sideOffset={8}
           align="end"
           collisionPadding={12}
         >
-          <Popover.Popup className="appearance-popup">
-            <Popover.Title className="appearance-title">
+          <Popover.Popup className={styles.appearancePopup}>
+            <Popover.Title className={styles.appearanceTitle}>
               Appearance
             </Popover.Title>
-            <Popover.Description className="appearance-description">
+            <Popover.Description className={styles.appearanceDescription}>
               Choose the look of your workbench.
             </Popover.Description>
-            <fieldset className="appearance-options">
+            <fieldset className={styles.appearanceOptions}>
               <legend>Theme</legend>
               <label>
                 <input

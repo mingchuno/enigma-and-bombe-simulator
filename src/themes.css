@@ -1,360 +1,56 @@
-/* biome-ignore-all lint/style/noDescendingSpecificity: Theme overrides follow base component styles and responsive rules. */
-/* Two document themes share the original workbench layout. */
-:root {
-  --ink: #2d2c25;
-  --muted: #625e50;
-  --paper: #eee7d5;
-  --line: #b6ad96;
-  --green: #484b35;
-  --amber: #dfb664;
-  --serif: "Oswald", sans-serif;
-  --theme-field: #f7f1e3;
-  --theme-machine: #292b25;
-  --theme-recess: #191b17;
-  --theme-metal: #a7a58e;
-  --theme-inset: #e5ddc7;
-  background: var(--paper);
-  color: var(--ink);
-}
-:root {
-  .site-header {
-    border-bottom: 2px solid var(--ink);
-  }
-  .brand {
-    font-family: "Oswald", sans-serif;
-    font-weight: 500;
-    font-size: 27px;
-    text-transform: uppercase;
-  }
-  .brand em {
-    font: inherit;
-    color: inherit;
-  }
-  .brand svg {
-    stroke: var(--ink);
-  }
-  .header-note {
-    color: var(--muted);
-  }
-  .site-header nav button {
-    color: var(--ink);
-    font-family: "Oswald", sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-  .site-header nav button:hover {
-    background: #ded5bf;
-  }
-  .site-header nav button.active {
-    background: var(--green);
-    color: var(--theme-field);
-  }
-  .site-header nav button.active:after {
-    display: none;
-  }
-  .page-intro {
-    border-color: var(--ink);
-  }
-  .page-intro h1 {
-    font-size: clamp(32px, 3.7vw, 52px);
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    text-wrap: balance;
-  }
-  .page-intro p {
-    color: var(--muted);
-  }
-  .intro-tag {
-    border-radius: 0;
-    border-color: var(--line);
-    color: var(--ink);
-  }
-  h2,
-  h3 {
-    font-family: "Oswald", sans-serif;
-    letter-spacing: 0.01em;
-  }
-  .machine-panel {
-    background: var(--theme-machine);
-    border-radius: 3px;
-    box-shadow: 0 8px 20px #292b251c;
-    color: #efe8d6;
-  }
-  .machine-top,
-  .machine-options,
-  .machine-panel .help-row,
-  .machine-bottom {
-    border-color: #5c5d4e;
-  }
-  .machine-top strong {
-    font-family: "Oswald", sans-serif;
-    letter-spacing: 0.08em;
-  }
-  .machine-meta,
-  .rotor-heading,
-  .rotor-settings label,
-  .machine-options,
-  .keyboard-heading,
-  .machine-bottom {
-    color: #c5c2b0;
-  }
-  .rotor-window {
-    background: var(--theme-recess);
-    border-color: #686b5d;
-    border-radius: 2px;
-  }
-  .rotor-window strong {
-    color: #f2ecd9;
-    font-family: "Special Elite", monospace;
-  }
-  .rotor-window > span {
-    color: #aaa994;
-  }
-  .rotor-window:before,
-  .rotor-window:after {
-    background: var(--theme-metal);
-  }
-  .rotor-heading select {
-    background: #3b3e33;
-    border-color: #8e907b;
-    border-radius: 1px;
-    color: #f2ecd9;
-  }
-  .rotor-settings select,
-  .machine-options select {
-    color: #f2ecd9;
-    border-color: #8e907b;
-  }
-  .machine-panel option {
-    background: var(--theme-machine);
-    color: #f2ecd9;
-  }
-  .machine-key {
-    background: #161914;
-    border-color: #a7a58e;
-    color: #f3eddc;
-    font-family: "Special Elite", monospace;
-    box-shadow: 0 3px 5px #0005;
-  }
-  .machine-key:hover:not(:disabled) {
-    background: #464b3a;
-    border-color: #e6dfcc;
-  }
-  .machine-key.lit {
-    background: var(--amber);
-    color: #28271e;
-    border-color: var(--amber);
-  }
-  .machine-panel .concept-help {
-    color: #ddd5bd;
-  }
-  .concept-help {
-    color: var(--green);
-  }
-  .concept-help-body {
-    border-radius: 2px;
-  }
-  .signal-panel {
-    border-color: var(--line);
-  }
-  .signal-panel > .muted,
-  .field-hint,
-  .muted,
-  .trace-scrubber,
-  .message-footer,
-  .plugboard-form p,
-  .guide-content p {
-    color: var(--muted);
-  }
-  .trace-summary {
-    font-family: "Special Elite", monospace;
-  }
-  .message-panel {
-    border-bottom: 1px solid var(--ink);
-  }
-  .message-columns textarea,
-  .plugboard-form input,
-  .bombe-inputs textarea,
-  .bombe-inputs input {
-    border-color: var(--line);
-    border-radius: 1px;
-    background: var(--theme-field);
-    color: var(--ink);
-  }
-  .message-columns textarea {
-    font-family: "Special Elite", monospace;
-    font-size: 16px;
-  }
-  .message-columns textarea::placeholder {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 13px;
-    letter-spacing: 0;
-    color: var(--muted);
-  }
-  .output-field textarea {
-    background: #e7dfc9;
-  }
-  .primary-button {
-    border-radius: 2px;
-    background: var(--green);
-    color: var(--theme-field);
-  }
-  .primary-button:hover:not(:disabled) {
-    background: var(--ink);
-  }
-  .menu-panel,
-  .results-panel,
-  .learning-panel {
-    background: var(--theme-field);
-    border-color: var(--line);
-    border-radius: 2px;
-  }
-  .mode-switch button,
-  .mode-switch.compact button {
-    color: var(--ink);
-    border-radius: 1px;
-  }
-  .mode-switch button[aria-pressed="true"] {
-    color: var(--theme-field);
-    background: var(--green);
-  }
-  .mode-switch button:hover:not([aria-pressed="true"]) {
-    background: #ded5bf;
-  }
-  .learning-panel h2,
-  .guide-content h2 {
-    font-family: var(--serif);
-  }
-  .drum-cabinet {
-    background: var(--theme-machine);
-    border-radius: 2px;
-  }
-  .guide-feature,
-  .stepping-example,
-  .constraint-equation,
-  .notation-reading {
-    background: #e5ddc7;
-    border-radius: 2px;
-  }
-  .validation-badge,
-  .alignment-badge {
-    border-radius: 2px;
-    background: #e0dfc6;
-    color: #484b35;
-  }
-  footer {
-    border-color: var(--ink);
-  }
-  ::selection {
-    background: var(--green);
-    color: var(--theme-field);
-  }
-}
-/* Document typography and palettes inherit the original workbench layout. */
-:root[data-theme="manual"] {
-  .intro-tag {
-    font-family: "Oswald", sans-serif;
-    font-size: 14px;
-    text-transform: uppercase;
-  }
-}
-:root[data-theme="intercept"] {
-  --paper: #f0e4c9;
-  --theme-field: #faf2df;
-  --green: #7c352a;
-  --line: #b4a084;
-  --serif: "Special Elite", monospace;
-  .brand {
-    font-family: "Special Elite", monospace;
-    text-transform: none;
-    font-size: 26px;
-  }
-  .page-intro h1 {
-    font-family: var(--serif);
-    text-transform: none;
-    font-size: clamp(32px, 4vw, 54px);
-    line-height: 1.18;
-  }
-  .intro-tag {
-    border-color: var(--green);
-    color: var(--green);
-  }
-  h2 {
-    font-family: "Special Elite", monospace;
-  }
-}
+/* Theme selection is applied to <html> before React mounts (see theme.ts). */
+@layer tokens, base, shared, components, theme;
 
-@media (max-width: 600px) {
+@layer tokens {
   :root {
-    .brand {
-      font-size: 24px;
-    }
-    .page-intro h1 {
-      font-size: 34px;
-    }
+    color-scheme: light;
+    --color-text: #2d2c25;
+    --color-muted: #625e50;
+    --color-paper: #eee7d5;
+    --color-border: #b6ad96;
+    --color-accent: #484b35;
+    --color-lamp: #dfb664;
+    --color-field: #f7f1e3;
+    --color-output: #e7dfc9;
+    --color-inset: #e5ddc7;
+    --color-error: #9b352a;
+    --color-error-surface: #fbeae2;
+    --color-focus: #b9802c;
+    --color-caret: #a86b15;
+    --color-scrollbar: #a0ab9b;
+    --machine-surface: #292b25;
+    --machine-recess: #191b17;
+    --machine-metal: #a7a58e;
+    --machine-text: #efe8d6;
+    --machine-muted: #c5c2b0;
+    --machine-border: #5c5d4e;
+    --font-body: "IBM Plex Sans", sans-serif;
+    --font-display: "Oswald", sans-serif;
+    --font-typewriter: "Special Elite", monospace;
+    --font-heading: var(--font-display);
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    --brand-font: var(--font-display);
+    --brand-case: uppercase;
+    --brand-size: 27px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --radius-field: 1px;
+    --radius-control: 2px;
+    --radius-instrument: 3px;
   }
-  :root[data-theme="intercept"] .page-intro h1 {
-    font-size: 32px;
-  }
-}
 
-/* Supporting controls use the same document stock as the workbench. */
-:root {
-  .learning-panel > p,
-  .mechanics-explanation p,
-  .drum-inspector > p,
-  .contact-explainer p,
-  .paper-result p,
-  .paper-alternative p,
-  .operator-table :where(button) span,
-  .strip-row small,
-  .plug-sockets > span,
-  .plug-sockets small,
-  .output-label button {
-    color: var(--muted);
-  }
-  .mechanics-controls button:not(.primary-button),
-  .chain-pages button,
-  .mechanics-controls input,
-  .sense-controls select,
-  .paper-inputs input {
-    background: var(--theme-field);
-    color: var(--ink);
-    border-color: var(--line);
-    border-radius: 2px;
-  }
-  .operator-table th,
-  .core-reading,
-  .candidate-plaintext,
-  .strip-row > span {
-    background: var(--theme-inset);
-  }
-  .core-reading,
-  .candidate-plaintext,
-  .candidate-tabs button {
-    border-radius: 2px;
-  }
-  .inline-checkbox input[type="checkbox"],
-  input[type="range"] {
-    accent-color: var(--green);
-  }
-  .plug-sockets small {
-    border-color: var(--line);
-  }
-  .plug-sockets .connected,
-  .plug-sockets .connected small {
-    color: var(--green);
-  }
-  .plug-sockets .connected small,
-  .chain-pages button[aria-pressed="true"] {
-    background: var(--theme-inset);
-    border-color: var(--green);
-  }
-  .strip-row > span.collision {
-    background: #f2d6c8;
-    color: #853327;
-  }
-  .strip-row > span.collision small {
-    color: #853327;
+  :root[data-theme="intercept"] {
+    --color-paper: #f0e4c9;
+    --color-field: #faf2df;
+    --color-accent: #7c352a;
+    --color-border: #b4a084;
+    --font-heading: var(--font-typewriter);
+    --brand-font: var(--font-typewriter);
+    --brand-case: none;
+    --brand-size: 26px;
   }
 }

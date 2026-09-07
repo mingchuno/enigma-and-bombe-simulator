@@ -1,0 +1,45 @@
+@value fieldHint, textButton, learningPanel from "./Workbench.module.css";
+@layer components {
+  .operatorDiagramScroll > svg {
+    display: block;
+    width: 100%;
+    margin: 15px 0;
+  }
+  .operatorEdge path {
+    fill: none;
+    stroke: #68735f;
+    stroke-width: 1.5;
+  }
+  .operatorEdge text {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    fill: #42513b;
+    paint-order: stroke;
+    stroke: #fcfbf7;
+    stroke-width: 4px;
+  }
+  .operatorEdge .operatorOffset {
+    font-size: 10px;
+  }
+  .operatorEdge.selected path {
+    stroke: #995d1f;
+    stroke-width: 3;
+  }
+  .operatorEdge:where(.selected) text {
+    fill: #874a15;
+  }
+  .operatorLetter {
+    font-family: var(--font-mono);
+    font-size: 17px;
+    fill: #24382f;
+  }
+  .operatorDiagramScroll {
+    overflow-x: auto;
+    margin-top: var(--space-4);
+  }
+  .operatorDiagramScroll svg {
+    display: block;
+    width: 100%;
+    min-width: 540px;
+  }
+}

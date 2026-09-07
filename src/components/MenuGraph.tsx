@@ -1,3 +1,4 @@
+import styles from "./MenuGraph.module.css";
 import { ALPHABET } from "../engine/enigma.ts";
 import type { MenuEdge } from "../engine/crib-menu.ts";
 
@@ -41,7 +42,7 @@ export function MenuGraph({
   );
   const selectedEdge = edges[selected];
   return (
-    <div className="menu-visual">
+    <div className={styles.menuVisual}>
       <svg
         viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`}
         role="img"
@@ -55,7 +56,9 @@ export function MenuGraph({
               key={index}
               d={`M${a.x} ${a.y} Q${GRAPH_CENTER_X} ${EDGE_CURVE_BASE_Y + (index % EDGE_CURVE_LANES) * EDGE_CURVE_SPACING} ${b.x} ${b.y}`}
               className={
-                selected === index ? "menu-edge selected" : "menu-edge"
+                selected === index
+                  ? `${styles.menuEdge} ${styles.selected}`
+                  : styles.menuEdge
               }
             />
           );
@@ -69,8 +72,8 @@ export function MenuGraph({
               className={
                 selectedEdge &&
                 [selectedEdge.a, selectedEdge.b].includes(letter)
-                  ? "menu-node selected"
-                  : "menu-node"
+                  ? `${styles.menuNode} ${styles.selected}`
+                  : styles.menuNode
               }
             >
               <circle r={NODE_RADIUS} />
@@ -81,18 +84,18 @@ export function MenuGraph({
           );
         })}
       </svg>
-      <div className="menu-caption">
+      <div className={styles.menuCaption}>
         <span>{letters.length} letter nodes</span>
         <span>{edges.length} constraints</span>
         <span>
           <i /> Selected connection
         </span>
       </div>
-      <div className="alignment" aria-label="Crib menu letter pairs">
+      <div className={styles.alignment} aria-label="Crib menu letter pairs">
         {edges.map((edge, index) => (
           <button
             key={index}
-            className={selected === index ? "selected" : ""}
+            className={selected === index ? styles.selected : ""}
             aria-label={`Position ${edge.position + 1}: ${ALPHABET[edge.a]} to ${ALPHABET[edge.b]}`}
             aria-pressed={selected === index}
             onClick={() => onSelect(index)}

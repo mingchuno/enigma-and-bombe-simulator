@@ -1,0 +1,209 @@
+@layer shared {
+  .sectionHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .muted {
+    color: var(--color-muted);
+    font-size: 13px;
+  }
+  .textButton {
+    border: 0;
+    background: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 4px 0;
+    min-height: 36px;
+    font-size: 12px;
+  }
+  .textButton:hover:not(:disabled) {
+    color: #996421;
+  }
+  .errorMessage {
+    color: var(--color-error);
+    background: var(--color-error-surface);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: var(--space-3);
+  }
+  .primaryButton {
+    background: var(--color-accent);
+    color: #f3f2e7;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: 12px 18px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .primaryButton:hover:not(:disabled) {
+    background: #2b5342;
+  }
+  .validationBadge {
+    background: #e9efdf;
+    color: #496044;
+    border-radius: 30px;
+    padding: 5px 9px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  @media (max-width: 600px) {
+    .sectionHeading h2 {
+      font-size: 18px;
+    }
+    .textButton {
+      font-size: 11px;
+    }
+    .primaryButton {
+      font-size: 11px;
+      padding: 10px 12px;
+      gap: var(--space-2);
+    }
+    .validationBadge {
+      font-size: 9px;
+      padding: 4px 7px;
+    }
+    .textButton {
+      min-height: 44px;
+    }
+  }
+  .helpRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    margin-top: 10px;
+  }
+  :global([data-surface="machine"]) .helpRow {
+    border-bottom: 1px solid #3c574a;
+    padding-bottom: 13px;
+  }
+  .fieldHint {
+    font-size: 12px;
+    color: #5c6b55;
+    line-height: 1.7;
+    margin-top: 10px;
+    max-width: 76ch;
+  }
+  .inlineCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 12px;
+  }
+  .inlineCheckbox input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: #37573b;
+    flex-shrink: 0;
+  }
+  .learningPanel {
+    background: #fcfbf7;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 30px;
+  }
+  .learningPanel > p {
+    font-size: 14px;
+    margin-top: var(--space-4);
+    max-width: 72ch;
+    color: #53644a;
+  }
+  .learningPanel h2 {
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-weight: 400;
+  }
+  .learningPanel .scopeNote {
+    max-width: 100%;
+    background: #eee9da;
+    color: #5e573e;
+    font-size: 12px;
+    padding: 16px 18px;
+    margin-top: 26px;
+    border-radius: 5px;
+  }
+  .learningPanel .sourceLine {
+    font-size: 11px;
+    line-height: 1.8;
+    max-width: 100%;
+  }
+  @media (max-width: 850px) {
+    .learningPanel > .sectionHeading {
+      flex-wrap: wrap;
+    }
+    .learningPanel {
+      padding: var(--space-6);
+    }
+  }
+  @media (max-width: 600px) {
+    .learningPanel {
+      padding: 19px 15px;
+    }
+    .learningPanel h2 {
+      font-size: 27px;
+    }
+    .learningPanel > p {
+      font-size: 12px;
+    }
+    .helpRow {
+      gap: 0 14px;
+    }
+    .inlineCheckbox {
+      min-height: 36px;
+    }
+    .sourceLine a {
+      display: inline-block;
+      padding: 4px 0;
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) :global([data-surface="machine"]) .helpRow {
+    border-color: var(--machine-border);
+  }
+  :global(:root) .fieldHint,
+  :global(:root) .muted {
+    color: var(--color-muted);
+  }
+  :global(:root) .primaryButton {
+    border-radius: var(--radius-control);
+    background: var(--color-accent);
+    color: var(--color-field);
+  }
+  :global(:root) .primaryButton:hover:not(:disabled) {
+    background: var(--color-text);
+  }
+  :global(:root) .learningPanel {
+    background: var(--color-field);
+    border-color: var(--color-border);
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .learningPanel h2 {
+    font-family: var(--font-heading);
+  }
+  :global(:root) .validationBadge {
+    border-radius: var(--radius-control);
+    background: #e0dfc6;
+    color: #484b35;
+  }
+  :global(:root) .learningPanel > p {
+    color: var(--color-muted);
+  }
+  :global(:root) .inlineCheckbox input[type="checkbox"] {
+    accent-color: var(--color-accent);
+  }
+}

@@ -53,5 +53,7 @@ test("reloads offline and runs Enigma and the Bombe worker", async ({
   await expect(page.getByRole("status")).toHaveText("Search complete", {
     timeout: 30000,
   });
-  await expect(page.locator(".candidate-tabs")).toContainText("AAF");
+  await expect(page.locator("[data-testid='candidate-tabs']")).toContainText(
+    "AAF",
+  );
 });

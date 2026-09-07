@@ -1,0 +1,215 @@
+@value fieldHint, errorMessage, validationBadge, muted, sectionHeading from "./Workbench.module.css";
+
+@layer components {
+  .candidateTabs button {
+    flex-shrink: 0;
+    min-width: 78px;
+    border: 1px solid #cbd5c1;
+    background: transparent;
+    border-radius: 5px;
+    padding: 9px 12px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+  .candidateTabs button small {
+    display: block;
+    font-size: 9px;
+    margin-top: var(--space-1);
+    color: var(--color-muted);
+  }
+  .runSummary > span {
+    color: var(--color-muted);
+  }
+  .progressDetails b {
+    font-weight: 400;
+    margin: 0 5px;
+  }
+  .resultsPanel {
+    margin-top: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 23px 25px;
+    background: #fcfbf7;
+  }
+  .searchStatus {
+    font-size: 10px;
+    color: var(--color-muted);
+  }
+  .searchStatus.running {
+    color: #4b703c;
+  }
+  .progress {
+    display: block;
+    width: 100%;
+    height: 5px;
+    appearance: none;
+    border: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 23px 0 10px;
+    background: #e6e9df;
+  }
+  .progress::-webkit-progress-bar {
+    background: #e6e9df;
+  }
+  .progress::-webkit-progress-value {
+    background: #537844;
+  }
+  .progress::-moz-progress-bar {
+    background: #537844;
+  }
+  .progressDetails {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+  .resultsEmpty {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    padding: 32px 0 15px;
+  }
+  .searchGlyph {
+    font-family: var(--font-heading);
+    font-size: 55px;
+    color: #90a07f;
+    border-right: 1px solid var(--color-border);
+    padding-inline-end: 26px;
+  }
+  .resultsEmpty h3 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 23px;
+  }
+  .resultsEmpty p {
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-top: var(--space-2);
+    max-width: 55ch;
+  }
+  .runSummary {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 22px 0;
+    font-size: 11px;
+  }
+  .runSummary code {
+    display: block;
+    margin-top: 7px;
+    color: var(--color-text);
+  }
+  .runSummary strong {
+    font-weight: 500;
+  }
+  .candidateTabs {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding-bottom: 13px;
+  }
+  .candidateTabs button.selected {
+    background: #e5ecda;
+    border-color: #8fa37d;
+  }
+  .candidateDetail {
+    border-top: 1px solid var(--color-border);
+    padding-top: 18px;
+    margin-top: var(--space-2);
+  }
+  .candidateDetail h3 {
+    font-size: 14px;
+  }
+  .candidateDetail dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 24px;
+    margin: 20px 0;
+  }
+  .candidateDetail dt {
+    font-size: 10px;
+    color: var(--color-muted);
+  }
+  .candidateDetail dd {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin: 6px 0 0;
+    line-height: 1.8;
+  }
+  .candidatePlaintext {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: #eef1e5;
+    border-radius: 5px;
+    padding: var(--space-3);
+    overflow-wrap: anywhere;
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+  }
+  .candidateDetail > .muted {
+    font-size: 11px;
+    margin-top: var(--space-3);
+  }
+  @media (max-width: 1100px) {
+    .resultsPanel {
+      padding: var(--space-5);
+    }
+  }
+  @media (max-width: 600px) {
+    .resultsPanel {
+      padding: 19px 15px;
+      border-radius: 10px;
+    }
+    .progressDetails {
+      font-size: 9px;
+    }
+    .resultsEmpty {
+      gap: 18px;
+    }
+    .resultsEmpty h3 {
+      font-size: 21px;
+    }
+    .resultsEmpty p {
+      font-size: 11px;
+    }
+    .searchGlyph {
+      font-size: 42px;
+      padding-inline-end: 18px;
+    }
+    .searchStatus {
+      font-size: 9px;
+      max-width: 130px;
+      text-align: right;
+    }
+    .candidateDetail .sectionHeading {
+      align-items: flex-start;
+    }
+    .candidateDetail h3 {
+      font-size: 13px;
+    }
+    .candidateDetail > .muted {
+      font-size: 10px;
+    }
+  }
+  .progressDetails {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer theme {
+  :global(:root) .resultsPanel {
+    background: var(--color-field);
+    border-color: var(--color-border);
+    border-radius: var(--radius-control);
+  }
+  :global(:root) .candidatePlaintext {
+    background: var(--color-inset);
+  }
+  :global(:root) .candidatePlaintext,
+  :global(:root) .candidateTabs button {
+    border-radius: var(--radius-control);
+  }
+}

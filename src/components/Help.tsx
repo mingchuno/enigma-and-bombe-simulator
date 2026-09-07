@@ -1,3 +1,4 @@
+import styles from "./Help.module.css";
 import { Tooltip } from "@base-ui/react/tooltip";
 import type { ReactNode } from "react";
 import { useId, useRef, useState } from "react";
@@ -33,7 +34,7 @@ export function Help({
     >
       <Tooltip.Trigger
         id={id}
-        className="concept-help"
+        className={styles.conceptHelp}
         aria-label={`Explain ${term}`}
         aria-describedby={open ? `${id}-description` : undefined}
         closeOnClick={false}
@@ -60,7 +61,7 @@ export function Help({
       </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Positioner
-          className="concept-help-positioner"
+          className={styles.conceptHelpPositioner}
           side="top"
           align="start"
           sideOffset={8}
@@ -69,7 +70,7 @@ export function Help({
           <Tooltip.Popup
             id={`${id}-description`}
             role="tooltip"
-            className="concept-help-body"
+            className={styles.conceptHelpBody}
           >
             {children}
           </Tooltip.Popup>
@@ -81,8 +82,8 @@ export function Help({
 
 export function ConfigurationHelp() {
   return (
-    <div className="configuration-help">
-      <div className="configuration-help-items">
+    <div className={styles.configurationHelp}>
+      <div className={styles.configurationHelpItems}>
         <Help term="Rotor order">
           A rotor is a wheel containing 26 crossed wires. I–V have different
           wirings. The three slots are read left to right; changing their order

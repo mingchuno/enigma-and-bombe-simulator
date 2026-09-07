@@ -58,18 +58,18 @@ test("double stepping and trace inspection show the researched states", async ({
   await page
     .getByRole("textbox", { name: "Message input", exact: true })
     .fill("AA");
-  await expect(page.locator(".step-explanation strong")).toHaveText(
-    "KER → LFS",
-  );
+  await expect(
+    page.locator("[data-testid='step-explanation'] strong"),
+  ).toHaveText("KER → LFS");
   const slider = page.getByRole("slider", {
     name: "Inspect letter",
     exact: true,
   });
   await slider.focus();
   await slider.press("Home");
-  await expect(page.locator(".step-explanation strong")).toHaveText(
-    "KDQ → KER",
-  );
+  await expect(
+    page.locator("[data-testid='step-explanation'] strong"),
+  ).toHaveText("KDQ → KER");
 });
 
 test("Bombe finishes a complete position sweep and verifies the demo candidate", async ({
@@ -82,12 +82,16 @@ test("Bombe finishes a complete position sweep and verifies the demo candidate",
   await expect(page.getByRole("status")).toHaveText("Search complete", {
     timeout: 30000,
   });
-  await expect(page.locator(".candidate-tabs")).toContainText("AAF");
-  await expect(page.locator(".candidate-detail")).toContainText("AV BS CG DL");
-  await expect(page.locator(".candidate-plaintext")).toHaveText(
+  await expect(page.locator("[data-testid='candidate-tabs']")).toContainText(
+    "AAF",
+  );
+  await expect(page.locator("[data-testid='candidate-detail']")).toContainText(
+    "AV BS CG DL",
+  );
+  await expect(page.locator("[data-testid='candidate-plaintext']")).toHaveText(
     "WETTERVORHERSAGEFUERDIEBISKAYA",
   );
-  await expect(page.locator(".progress-details")).toContainText(
+  await expect(page.locator("[data-testid='progress-details']")).toContainText(
     "17,576 / 17,576",
   );
 });
@@ -178,7 +182,9 @@ test("museum example links the supplied parallel edge to a drum column", async (
       exact: true,
     })
     .click();
-  await expect(page.locator(".notation-reading:visible")).toContainText("ZZL");
+  await expect(
+    page.locator("[data-testid='notation-reading']:visible"),
+  ).toContainText("ZZL");
   await page
     .getByRole("button", { name: "Put the supplied menu on the drums" })
     .click();
@@ -190,17 +196,21 @@ test("museum example links the supplied parallel edge to a drum column", async (
   await page
     .getByRole("button", { name: "Show carry phase", exact: true })
     .click();
-  await expect(page.locator(".sense-verdict")).toHaveText(
+  await expect(page.locator("[data-testid='sense-verdict']")).toHaveText(
     "Not sensing during carry.",
   );
   await page
     .getByRole("spinbutton", { name: "Drive point", exact: true })
     .fill("39");
-  await expect(page.locator(".drive-phase")).toContainText("Sensing point 1");
+  await expect(page.locator("[data-testid='drive-phase']")).toContainText(
+    "Sensing point 1",
+  );
   await page
     .getByRole("checkbox", { name: "Show all 676 diagonal-board terminals" })
     .check();
-  await expect(page.locator(".diagonal-scroll svg")).toBeVisible();
+  await expect(
+    page.locator("[data-testid='diagonal-scroll'] svg"),
+  ).toBeVisible();
 });
 
 test("paper strips count actual coincidences under a shift and all modes fit mobile", async ({
@@ -219,7 +229,7 @@ test("paper strips count actual coincidences under a shift and all modes fit mob
   const shift = page.getByRole("slider", { name: "Shift punched strip" });
   await shift.focus();
   await shift.press("ArrowRight");
-  await expect(page.locator(".paper-result strong")).toHaveText(
+  await expect(page.locator("[data-testid='paper-result'] strong")).toHaveText(
     "3 coincidences / 3 overlapping letters",
   );
   for (const mode of ["Paper methods", "Drums & wiring", "Crib & search"]) {
@@ -243,12 +253,12 @@ test("invalid crib placements never claim that the alignment is clear", async ({
     await page
       .getByRole("spinbutton", { name: "Crib offset", exact: true })
       .fill(offset);
-    await expect(page.locator(".alignment-explorer")).not.toContainText(
-      "No self-encryption conflicts",
-    );
-    await expect(page.locator(".alignment-explorer")).toContainText(
-      "Choose a whole-number offset",
-    );
+    await expect(
+      page.locator("[data-testid='alignment-explorer']"),
+    ).not.toContainText("No self-encryption conflicts");
+    await expect(
+      page.locator("[data-testid='alignment-explorer']"),
+    ).toContainText("Choose a whole-number offset");
     await expect(
       page.getByRole("button", { name: "Run Bombe search" }),
     ).toBeDisabled();
@@ -266,8 +276,12 @@ test("editing a search resets its elapsed time and matches the selected search s
   await page
     .getByRole("combobox", { name: "Rotor orders to search" })
     .selectOption("all");
-  await expect(page.locator(".progress-details")).toContainText("1,054,560");
-  await expect(page.locator(".progress-details")).toContainText("0.0s");
+  await expect(page.locator("[data-testid='progress-details']")).toContainText(
+    "1,054,560",
+  );
+  await expect(page.locator("[data-testid='progress-details']")).toContainText(
+    "0.0s",
+  );
 });
 
 test("wide paper diagrams can be scrolled with the keyboard", async ({
@@ -296,7 +310,7 @@ test("wide paper diagrams can be scrolled with the keyboard", async ({
       .toBeGreaterThan(0);
   }
   await page.getByRole("checkbox", { name: "Overlay both sheets" }).uncheck();
-  await expect(page.locator(".paper-result")).toContainText(
+  await expect(page.locator("[data-testid='paper-result']")).toContainText(
     "each separate sheet",
   );
   await page
@@ -324,13 +338,13 @@ test("candidate limit explains partial search coverage", async ({ page }) => {
   await expect(page.getByRole("status")).toHaveText(
     "Candidate limit reached · partial search",
   );
-  await expect(page.locator(".results-panel")).toContainText(
+  await expect(page.locator("[data-testid='results-panel']")).toContainText(
     "Stopped after finding 50 crib-compatible candidates.",
   );
-  await expect(page.locator(".results-panel")).toContainText(
+  await expect(page.locator("[data-testid='results-panel']")).toContainText(
     "settings remain untested.",
   );
-  await expect(page.locator(".results-panel")).toContainText(
+  await expect(page.locator("[data-testid='results-panel']")).toContainText(
     "The percentage measures search coverage, not confidence.",
   );
   const progress = page.getByRole("progressbar");
@@ -469,11 +483,15 @@ test("changing any search assumption clears candidates and search progress", asy
     await expect(page.getByRole("status")).toHaveText(
       "Candidate limit reached · partial search",
     );
-    await page.locator(".candidate-tabs button").nth(1).click();
+    await page.locator("[data-testid='candidate-tabs'] button").nth(1).click();
     await edit();
     await expect(page.getByRole("status")).toHaveText("Ready");
     await expect(page.getByRole("progressbar")).toHaveAttribute("value", "0");
-    await expect(page.locator(".candidate-detail")).toHaveCount(0);
-    await expect(page.locator(".progress-details")).toContainText("0.0s");
+    await expect(page.locator("[data-testid='candidate-detail']")).toHaveCount(
+      0,
+    );
+    await expect(
+      page.locator("[data-testid='progress-details']"),
+    ).toContainText("0.0s");
   }
 });

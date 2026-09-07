@@ -1,0 +1,596 @@
+@value sectionHeading, fieldHint, errorMessage, muted, textButton, helpRow, primaryButton from "./Workbench.module.css";
+
+@layer components {
+  .machineBottom button {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+  .outputLabel button {
+    min-height: 36px;
+    margin-inline-end: -4px;
+    border: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    padding: var(--space-1);
+    color: #5b6e5f;
+  }
+  .messageFooter button {
+    font-size: 11px;
+  }
+  .workbenchGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 306px;
+    gap: 30px;
+    align-items: start;
+  }
+  .enigmaMain {
+    min-width: 0;
+  }
+  .machinePanel {
+    background: var(--color-accent);
+    color: #e5eada;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 23px 30px 15px;
+    box-shadow: 0 12px 30px #24382f12;
+  }
+  .machineTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #3c574a;
+    padding-bottom: var(--space-5);
+    gap: var(--space-3);
+  }
+  .machineName {
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+  }
+  .machineMeta {
+    color: #b4c3b5;
+    font-size: 11px;
+  }
+  .machineMeta b {
+    font-weight: 400;
+    margin: 0 7px;
+  }
+  .outputLabel {
+    font-size: 12px;
+    font-weight: 500;
+    display: block;
+  }
+  .machinePanel option {
+    color: #e5eada;
+    background: #183b32;
+  }
+  .machineOptions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 22px;
+    border-top: 1px solid #3c574a;
+    padding-top: 13px;
+    font-size: 11px;
+    color: #b4c3b5;
+  }
+  .machineOptions label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .machineOptions select {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #637c67;
+    color: #e5eada;
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+  .machineOptions > span {
+    font-size: 10px;
+  }
+  .keyboardHeading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 0 17px;
+    color: #b4c3b5;
+    font-size: 11px;
+  }
+  .keyboardHeading b {
+    color: var(--color-lamp);
+    font-size: 14px;
+  }
+  .tinyArrow {
+    margin: 0 7px;
+  }
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px 24px;
+  }
+  .keyRow {
+    display: flex;
+    justify-content: center;
+    gap: clamp(9px, 1.3vw, 19px);
+    width: 100%;
+  }
+  .machineKey {
+    border: 1px solid #78907b;
+    width: clamp(34px, 3.8vw, 47px);
+    height: clamp(34px, 3.8vw, 47px);
+    border-radius: 50%;
+    background: #214537;
+    color: #e6ecdf;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    box-shadow: 0 3px 5px #091d2540;
+    flex-shrink: 0;
+  }
+  .machineKey:hover:not(:disabled) {
+    background: #345e48;
+    border-color: #c6d5bb;
+  }
+  .machineKey.pressed {
+    border-color: #dfddbd;
+    box-shadow: inset 0 2px 5px #061c1860;
+  }
+  .machineKey.lit {
+    background: var(--color-lamp);
+    border-color: var(--color-lamp);
+    color: #183b32;
+    animation: lamp-on 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .machineBottom {
+    border-top: 1px solid #3c574a;
+    padding-top: 13px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #b4c3b5;
+  }
+  .machineBottom > span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .statusDot {
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background: #96b58d;
+    display: inline-block;
+  }
+  .messagePanel {
+    padding: 27px 0 22px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .messageColumns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .messageColumns > label {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 36px auto;
+    align-items: center;
+  }
+  .messageColumns :where(label) textarea {
+    grid-column: 1 / -1;
+  }
+  .messageColumns textarea {
+    width: 100%;
+    height: 112px;
+    background: #fcfbf7;
+    border: 1px solid #d5dacf;
+    border-radius: 8px;
+    margin-top: 9px;
+    padding: 13px 15px;
+    resize: vertical;
+    line-height: 1.75;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.055em;
+    word-break: break-all;
+    color: var(--color-text);
+  }
+  .outputLabel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 36px;
+  }
+  .outputField textarea {
+    background: #eaf0e3;
+    border-color: #d5dfca;
+  }
+  .messageFooter {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: 9px;
+    font-size: 10px;
+    color: var(--color-muted);
+  }
+  .plugboardPanel {
+    padding: 23px 0 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .plugboardForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin-top: 18px;
+    align-items: end;
+  }
+  .plugboardForm input {
+    width: 100%;
+    background: #fcfbf7;
+    border: 1px solid #d5dacf;
+    border-radius: 6px;
+    padding: 11px 12px;
+    margin-top: 7px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text);
+  }
+  .plugboardForm p {
+    font-size: 11px;
+    color: var(--color-muted);
+    max-width: 34ch;
+    line-height: 1.7;
+    padding-bottom: 3px;
+  }
+  .plugSockets {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 19px;
+    gap: 3px;
+  }
+  .plugSockets > span {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    color: #6b7869;
+    min-width: 16px;
+  }
+  .plugSockets small {
+    font-size: 10px;
+    color: #7b8975;
+    border-top: 1px solid #ccd4c6;
+    padding-top: var(--space-1);
+    width: 100%;
+    text-align: center;
+  }
+  .plugSockets .connected {
+    color: #183b32;
+    font-weight: 600;
+  }
+  .plugSockets .connected small {
+    background: #e1e9d5;
+    color: #32573e;
+    border-color: #aebf9e;
+  }
+  .transferStrip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 25px 0;
+  }
+  .transferStrip strong {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 22px;
+  }
+  .transferStrip p {
+    color: var(--color-muted);
+    font-size: 11px;
+    margin-top: var(--space-1);
+  }
+  @media (min-width: 1450px) {
+    .workbenchGrid {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 42px;
+    }
+    .machinePanel {
+      padding-inline-start: 40px;
+      padding-inline-end: 40px;
+    }
+    .keyboard {
+      padding-top: 7px;
+      padding-bottom: 31px;
+    }
+    .keyRow {
+      gap: 22px;
+    }
+  }
+  @media (max-width: 1100px) {
+    .workbenchGrid {
+      grid-template-columns: minmax(0, 1fr) 255px;
+      gap: 22px;
+    }
+    .machinePanel {
+      padding-inline-start: 22px;
+      padding-inline-end: 22px;
+    }
+    .machineMeta {
+      font-size: 9px;
+    }
+    .keyRow {
+      gap: 10px;
+    }
+    .machineKey {
+      width: 37px;
+      height: 37px;
+      font-size: 16px;
+    }
+    .keyboard {
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+    }
+    .machineOptions > span {
+      max-width: 210px;
+      text-align: right;
+      line-height: 1.5;
+    }
+  }
+  @media (max-width: 850px) {
+    .workbenchGrid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .machineKey {
+      width: 46px;
+      height: 46px;
+      font-size: 19px;
+    }
+    .keyRow {
+      gap: clamp(5px, calc((100% - 414px) / 8), 20px);
+    }
+    .machineMeta {
+      font-size: 11px;
+    }
+    .machineOptions > span {
+      max-width: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .machineBottom button {
+      min-height: 44px;
+      gap: var(--space-1);
+    }
+    .messageFooter button {
+      white-space: nowrap;
+      font-size: 10px;
+    }
+    .machinePanel {
+      border-radius: 12px;
+      padding: 18px 16px 14px;
+    }
+    .machineTop {
+      padding-bottom: 15px;
+    }
+    .machineMeta {
+      font-size: 9px;
+      max-width: 140px;
+      text-align: right;
+      line-height: 1.6;
+    }
+    .machineMeta b {
+      margin: 0 3px;
+    }
+    .machineName {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+    }
+    .machineOptions {
+      margin-top: var(--space-4);
+      font-size: 10px;
+      align-items: flex-start;
+    }
+    .machineOptions > span {
+      font-size: 9px;
+      max-width: 160px;
+    }
+    .keyboardHeading {
+      margin-top: var(--space-5);
+      font-size: 10px;
+    }
+    .keyboard {
+      gap: 9px;
+      padding-bottom: var(--space-5);
+    }
+    .keyRow {
+      gap: var(--space-2);
+    }
+    .machineKey {
+      width: calc((100% - 64px) / 9);
+      height: auto;
+      aspect-ratio: 1;
+      font-size: 14px;
+      max-width: 38px;
+    }
+    .machineBottom {
+      font-size: 9px;
+    }
+    .messagePanel {
+      padding-top: 23px;
+    }
+    .messageColumns {
+      gap: 13px;
+    }
+    .messageColumns textarea {
+      font-size: 12px;
+      padding: 11px;
+      height: 125px;
+      line-height: 1.75;
+    }
+    .messageColumns textarea::placeholder {
+      font-size: 12px;
+    }
+    .messageFooter {
+      align-items: flex-start;
+      font-size: 9px;
+      gap: 15px;
+    }
+    .messageFooter > span {
+      max-width: 22ch;
+    }
+    .plugboardForm {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: var(--space-4);
+    }
+    .plugboardForm p {
+      max-width: 50ch;
+      font-size: 11px;
+    }
+    .plugSockets {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 10px 4px;
+    }
+    .plugSockets > span {
+      font-size: 12px;
+    }
+    .transferStrip {
+      padding: 23px 0;
+      align-items: start;
+      gap: var(--space-3);
+    }
+    .transferStrip strong {
+      font-size: 21px;
+    }
+    .transferStrip p {
+      max-width: 23ch;
+      font-size: 10px;
+    }
+    .transferStrip .primaryButton {
+      margin-top: var(--space-1);
+    }
+    .messageFooter {
+      flex-wrap: wrap;
+    }
+    .messageFooter button {
+      margin-inline-start: auto;
+    }
+  }
+  @keyframes lamp-on {
+    from {
+      box-shadow: 0 2px 18px #e9bc6b55;
+    }
+    to {
+      box-shadow: 0 3px 5px #091d2540;
+    }
+  }
+}
+
+@layer theme {
+  :global(:root) .machinePanel {
+    background: var(--machine-surface);
+    border-radius: var(--radius-instrument);
+    box-shadow: 0 8px 20px #292b251c;
+    color: var(--machine-text);
+  }
+  :global(:root) .machineTop,
+  :global(:root) .machineOptions,
+  :global(:root) .machineBottom {
+    border-color: var(--machine-border);
+  }
+  :global(:root) .machineTop strong {
+    font-family: var(--font-display);
+    letter-spacing: 0.08em;
+  }
+  :global(:root) .machineMeta,
+  :global(:root) .machineOptions,
+  :global(:root) .keyboardHeading,
+  :global(:root) .machineBottom {
+    color: var(--machine-muted);
+  }
+  :global(:root) .machineOptions select {
+    color: #f2ecd9;
+    border-color: #8e907b;
+  }
+  :global(:root) .machinePanel option {
+    background: var(--machine-surface);
+    color: #f2ecd9;
+  }
+  :global(:root) .machineKey {
+    background: #161914;
+    border-color: #a7a58e;
+    color: #f3eddc;
+    font-family: var(--font-typewriter);
+    box-shadow: 0 3px 5px #0005;
+  }
+  :global(:root) .machineKey:hover:not(:disabled) {
+    background: #464b3a;
+    border-color: #e6dfcc;
+  }
+  :global(:root) .machineKey.lit {
+    background: var(--color-lamp);
+    color: #28271e;
+    border-color: var(--color-lamp);
+  }
+  :global(:root) .messageFooter,
+  :global(:root) .plugboardForm p {
+    color: var(--color-muted);
+  }
+  :global(:root) .messagePanel {
+    border-bottom: 1px solid var(--color-text);
+  }
+  :global(:root) .messageColumns textarea,
+  :global(:root) .plugboardForm input {
+    border-color: var(--color-border);
+    border-radius: var(--radius-field);
+    background: var(--color-field);
+    color: var(--color-text);
+  }
+  :global(:root) .messageColumns textarea {
+    font-family: var(--font-typewriter);
+    font-size: 16px;
+  }
+  :global(:root) .messageColumns textarea::placeholder {
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 0;
+    color: var(--color-muted);
+  }
+  :global(:root) .outputField textarea {
+    background: var(--color-output);
+  }
+  :global(:root) .plugSockets > span,
+  :global(:root) .plugSockets small,
+  :global(:root) .outputLabel button {
+    color: var(--color-muted);
+  }
+  :global(:root) .plugSockets small {
+    border-color: var(--color-border);
+  }
+  :global(:root) .plugSockets .connected,
+  :global(:root) .plugSockets .connected small {
+    color: var(--color-accent);
+  }
+  :global(:root) .plugSockets .connected small {
+    background: var(--color-inset);
+    border-color: var(--color-accent);
+  }
+}

@@ -1,0 +1,100 @@
+@layer components {
+  .appearanceTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 10px;
+    min-width: 44px;
+    min-height: 44px;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    font-size: 12px;
+    flex-shrink: 0;
+
+    &:hover,
+    &[data-popup-open] {
+      background: var(--color-field);
+    }
+  }
+  .appearancePositioner {
+    z-index: 30;
+  }
+  .appearancePopup {
+    width: 310px;
+    max-width: calc(100vw - 24px);
+    padding: var(--space-5);
+    background: var(--color-field);
+    color: var(--color-text);
+    border-radius: var(--radius-instrument);
+    box-shadow: 0 6px 24px #292b2533;
+  }
+  .appearancePopup .appearanceTitle {
+    font:
+      500 18px "IBM Plex Sans",
+      sans-serif;
+    margin: 0;
+  }
+  .appearanceDescription {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 6px 0 18px;
+    line-height: 1.5;
+  }
+  .appearanceOptions {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .appearanceOptions legend {
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-bottom: 6px;
+  }
+  .appearanceOptions label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 62px;
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  .appearanceOptions label + label {
+    border-top: 1px solid var(--color-border);
+  }
+  .appearanceOptions input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--color-accent);
+  }
+  .appearanceOptions label > span {
+    float: none;
+    color: var(--color-text);
+    font-size: 13px;
+  }
+  .appearanceOptions strong {
+    display: block;
+    font-weight: 500;
+  }
+  .appearanceOptions small {
+    display: block;
+    color: var(--color-muted);
+    font-size: 11px;
+    margin-top: var(--space-1);
+  }
+  @media (max-width: 1100px) {
+    .appearanceTrigger > span {
+      display: none;
+    }
+  }
+  @media (max-width: 700px) {
+    .appearanceTrigger {
+      order: 0;
+      margin-inline-start: auto;
+    }
+  }
+}

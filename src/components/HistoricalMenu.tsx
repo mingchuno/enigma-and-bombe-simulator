@@ -1,3 +1,4 @@
+import styles from "./HistoricalMenu.module.css";
 import { ScrollRegion } from "./ScrollRegion.tsx";
 import type { MenuEdge } from "../engine/crib-menu.ts";
 import { ALPHABET, ALPHABET_SIZE } from "../engine/enigma.ts";
@@ -17,12 +18,12 @@ export function HistoricalMenu({
 }) {
   const edge = edges[selected];
   return (
-    <div className="historical-menu">
+    <div className={styles.historicalMenu}>
       <ScrollRegion
-        className="operator-table-scroll"
+        className={styles.operatorTableScroll}
         label="Menu wiring schedule"
       >
-        <table className="operator-table">
+        <table className={styles.operatorTable}>
           <caption>{caption}</caption>
           <thead>
             <tr>
@@ -35,7 +36,7 @@ export function HistoricalMenu({
             {edges.map((item, index) => (
               <tr
                 key={item.position}
-                className={selected === index ? "selected" : ""}
+                className={selected === index ? styles.selected : ""}
               >
                 <td>
                   <button
@@ -55,7 +56,7 @@ export function HistoricalMenu({
         </table>
       </ScrollRegion>
       {edge && (
-        <p className="notation-reading">
+        <p data-testid="notation-reading" className={styles.notationReading}>
           <strong>Read it aloud:</strong> “Connect cable {ALPHABET[edge.a]} to
           cable {ALPHABET[edge.b]} through the scrambler for message letter{" "}
           {edge.position + 1}.”{" "}
